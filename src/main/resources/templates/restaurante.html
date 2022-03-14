@@ -11,49 +11,54 @@
     <header th:replace="fragments/nav.html :: nav"></header>
 
     <main class="flex-shrink-0">
-        <div class="container">
-            <h3 class="fs-1 fst-italic fw-bold text-center" style="color:brown" th:text="${restaurante.nombre}"></h3>
-            <div id="restaurantImages" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="/img/restaurante1.jpg" class="d-block w-100" alt="First slide">
+        <div class="container mt-3">
+            <div class="row justify-content-center">
+                <h3 class="fs-1 fst-italic fw-bold text-center" style="color:brown" th:text="${restaurante.nombre}"></h3>
+                <div id="restaurantImages" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="/img/restaurante1.jpg" class="d-block w-100" alt="First slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="/img/restaurante2.jpg" class="d-block w-100" alt="Second slide">
+                        </div>
                     </div>
-                    <div class="carousel-item">
-                        <img src="/img/restaurante2.jpg" class="d-block w-100" alt="Second slide">
-                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target ="#restaurantImages" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target ="#restaurantImages" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target ="#restaurantImages" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target ="#restaurantImages" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
-
-
-            <h3 class="mt-5 text-center">Bebidas</h3>
-                <div class="list-group list-group-horizontal">
-                    <a href="#" class="list-group-item border-0">
-                        <img src="/img/cocacola.jpg" width="400" height="200">
-                    </a>
-                    <a href="#" class="list-group-item border-0">
-                        <img src="/img/sprite2.jfif" width="400" height="200">
-                    </a>
-                </div>
-            </h3>
-
-            <h3 class="mt-5 text-center">Principales</h1>
-                <div class="list-group list-group-horizontal">
-                    <a href="platos" class="list-group-item border-0">
-                        <img src="/img/samosa.jpg" width="400" height="200">
-                    </a>
-                    <a href="platos" class="list-group-item border-0">
-                        <img src="/img/tika.jpg" width="400" height="200">
-                    </a>
-                </div>
-            </h3>
+        
+            <div class="row justify-content-center my-4">
+                <h4 class="font-italic" style="color:brown" align="center">Es la hora perfecta para comer una hamburguesa o una ensalada de bulgur o comida italiana o mexicana.</h4>
+                <h3 class="mt-5 text-center">Nuestros Platos Principales</h3>
+                    <div class="d-flex justify-content-center">
+                        <div class="col" th:each = "x : ${platos}">
+                            <div class="row">
+                                <div class="col">
+                                    <img th:src="@{/img/}+${x.nombre}+@{.jpg}" class="card-img-top" width="500" height="300">
+                                </div> 
+                                <div class="col">
+                                    <div class="row">
+                                        <h4 class="mt-5 text-center" th:text="${x.nombre}">Nombre del plato</h4>
+                                    </div>
+                                    <div class="row">
+                                        <h6 class="mt-5 text-center" th:text="${x.descripcion}">Descripcion del plato</h6>
+                                    </div>
+                                    <div class="row">
+                                        <h5 class="mt-5 text-center" th:text="${x.precio}">Precio del plato</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </h3>
+            </div>
         </div>
     </main>
 
