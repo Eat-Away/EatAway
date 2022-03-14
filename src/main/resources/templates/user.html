@@ -11,26 +11,26 @@
 
     <main class="flex-shrink-0">
         <div class="container px-5">
-            <h3 class="text-center my-4">Perfil de <span th:text="${user.username}">Paco Fernández</span></h3>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center mt-4">
                 <div class="col-5">
                     <div class="row">
                         <div class="col d-flex">
                             <div class="flex-shrink-0">
-                              <img class="img-thumbnail profile-pic rounded" th:src="@{/user/{id}/pic(id=${session.u.id})}" alt="...">
+                              <img class="rounded-circle iwthumb profile-pic" th:src="@{/user/{id}/pic(id=${session.u.id})}" alt="Profile pic">
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <p>Nombre: <span th:text="${user.username}">Paco</span></p>
-                                <p>Dirección: C/ bbb, 9</p>                       
+                                <p>Dirección: <span th:text="${user.direccion}">C/ bbb, 9</span></p>                       
                             </div>
                         </div> 
                     </div>
                     <div class="row">
-                        <div id="profile" class="border border-2 border-tertiary rounded">
-                            <input type="file" id="f_avatar" accept="image/jpeg,image/png">
-                            <img id="avatar" alt="imagen a subir" />
+                        <button class="btn btn-outline-success mt-3 col-6" data-bs-toggle="collapse" data-bs-target="#profile">Ajustes</button>
+                        <div id="profile" class="my-3 collapse">
+                            <input type="file" class="mb-2" id="f_avatar" accept="image/jpeg,image/png">
+                            <img id="avatar" class="mb-2" alt="imagen a subir" />
                             <form th:action="@{/user/__${user.id}__/pic}">
-                                <button id="postAvatar">Cambiar foto de perfil</button>
+                                <button type="button" class="btn btn-outline-primary" id="postAvatar">Cambiar foto de perfil</button>
                             </form>
                         </div>
                     </div>
@@ -99,8 +99,11 @@
                 .catch(e => console.log("sad", e))
         }
 
+        document.querySelector("#avatar").style.display = "none";
+
         // refresca previsualizacion cuando cambias imagen
         document.querySelector("#f_avatar").onchange = e => {
+            document.querySelector("#avatar").style.display = "inline";
             let img = document.querySelector("#avatar");
             let fileInput = document.querySelector("#f_avatar");
             console.log(img, fileInput);
@@ -112,7 +115,7 @@
             let url = document.querySelector("#postAvatar").parentNode.action;
             let img = document.querySelector("#avatar");
             let file = document.querySelector("#f_avatar");
-            postImage(img, url, "photo").then(() => {
+            postImage(img, url, "photo", file).then(() => {
                 let cacheBuster = "?" + new Date().getTime();
                 document.querySelector("a.nav-link>img.iwthumb").src = url + cacheBuster;
             });
