@@ -76,5 +76,5 @@ VALUES(5, 'Meriendas');
 INSERT INTO LABEL (id,nombre)
 VALUES(6, 'Burritos');
 
-
+ALTER SEQUENCE "PUBLIC"."ID" RESTART WITH 1024;
 

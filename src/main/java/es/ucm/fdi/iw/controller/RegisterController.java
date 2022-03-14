@@ -2,7 +2,7 @@ package es.ucm.fdi.iw.controller;
 
 import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +16,9 @@ public class RegisterController {
     @Autowired
     private EntityManager entityManager;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
     @GetMapping("/registro")
     public String registro(Model model){
         model.addAttribute("usuario", new Cliente());
@@ -23,14 +26,12 @@ public class RegisterController {
     }
     @Transactional
     @PostMapping("/registro")
-    public String hacerRegistro(@ModelAttribute Cliente usuario ,Model model){ 
-        BCryptPasswordEncoder cifrador = new BCryptPasswordEncoder();
-        usuario.setEnabled(true);
+    public String hacerRegistro(@ModelAttribute Cliente usuario ,Model model){
         usuario.setRoles("USER");
-        usuario.setPassword(cifrador.encode(usuario.getPassword()));
-        model.addAttribute("usuario", usuario);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         entityManager.persist(usuario);
         entityManager.flush();
+        model.addAttribute("usuario", usuario);
         return "finRegistro";
     }
 }

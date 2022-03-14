@@ -41,7 +41,7 @@ public class User implements Transferable<User.Transfer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID")
-    //@SequenceGenerator(name = "ID", sequenceName = "ID")
+    @SequenceGenerator(name = "ID", sequenceName = "ID")
 	private long id;
 
     @Column(nullable = false, unique = true)
