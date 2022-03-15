@@ -20,34 +20,21 @@
                 <table class="table">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">REFERENCIA</th>
                         <th scope="col">CLIENTE</th>
                         <th scope="col">RESTAURANTE</th>
                         <th scope="col"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>BurguerKing</td>
+                      <tr th:each = "x : ${pedidos}">
+                        <th scope="row" th:text =${x.id}></th>
+                        <td th:text = ${x.lastName}></td>
+                        <td th:text = ${x.nombre}></td>
                         <td><button type="button" class="btn btn-success">Info</button></td>
                         <td><button type="button" class="btn btn-success">Recoger</button></td>
                       </tr>
                       <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Telepizza</td>
-                        <td><button type="button" class="btn btn-success">Info</button></td>
-                        <td><button type="button" class="btn btn-success">Recoger</button></td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td> Pili </td>
-                        <td> Tacobell</td>
-                        <td><button type="button" class="btn btn-success">Info</button></td>
-                        <td><button type="button" class="btn btn-success">Recoger</button></td>
-                      </tr>
                     </tbody>
                   </table>                    
                 

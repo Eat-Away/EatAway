@@ -52,21 +52,14 @@ INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion
 VALUES (19,'Five Guys', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
 -- TABLA PLATOS
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (1, 'Hamburguesa de carne y queso', 'Hamburguesa', 10.99, 1);
+VALUES (1, 'Carne de vacuno, queso estilo americano y cheddar fundidos, bacon crujiente, salsa BBQ ahumada, cebolla roja a la plancha, pepinillo y salsa baconesa en pan brioche tostado con dos sesamos. Junto de guarnicion a elegir y salsa baconesa.', 'Hamburguesa', 10.99, 1);
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (2, 'Sandwich Vips Club', 'Sandwich', 9.99, 1);
+VALUES (2, 'Pan blanco, tres pisos de pollo, bacon, jamon York, queso americano y queso Emmental, mayonesa, tomate y lechuga. Disponible tambien con pan integral.', 'Sandwich', 13.55, 1);
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (3, 'Costillas Ibericas', 'Carne', 16.99, 2);
+VALUES (3, 'Combo de: Aros de cebolla con salsa especial VIPS, Quesadilla de jamon York y queso con pico de gallo, crema agria y guacamole, Alitas Chili BBQ y Nachos Tex-Mex.', 'Combo', 9.35, 1);
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (4, 'Rigatoni al horno', 'Pasta', 15.99, 3);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (5, 'Barbacoa', 'Pizza', 12.99, 6);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (6, 'Insalata di foie', 'Ensalada', 12.99, 9);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (7, 'Chocolate cake', 'Tarta', 5.99, 15);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (8, 'Patatas Cheedar and Bacon', 'Entrantes', 2.00, 18);
+VALUES (4, 'Cremosas croquetas de jamon iberico coronadas con paleta iberica y un toque de salsa mayo-sriracha.', 'Croquetas', 8.55, 1);
+
 -- TABLA EXTRA
 INSERT INTO Extra (id, nombre, precio, plato_id)
 VALUES (1, 'Bacon', 3.0, 1);
