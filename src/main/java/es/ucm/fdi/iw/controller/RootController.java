@@ -64,10 +64,6 @@ public class RootController {
         return "repartidor";
     }
 
-    @GetMapping("/listaPedidos")
-    public String listaPedidos(Model model) {
-        return "listaPedidos";
-    }
 
     @GetMapping("/carrito")
     public String carrito(Model model) {
