@@ -36,22 +36,22 @@
         
             <div class="row justify-content-center my-4">
                 <h4 class="font-italic" style="color:brown" align="center">Es la hora perfecta para comer una hamburguesa o una ensalada de bulgur o comida italiana o mexicana.</h4>
-                <h3 class="mt-5 text-center">Nuestros Platos Principales</h3>
+                <h3 class="mt-5 text-center">Nuestros Platos Principales</h3><p></p><p></p>
                     <div class="d-flex justify-content-center">
                         <div class="col" th:each = "x : ${platos}">
-                            <div class="row">
+                            <div class="row" th:each="y : @{1}">
                                 <div class="col">
-                                    <img th:src="@{/img/}+${x.nombre}+@{.jpg}" class="card-img-top" width="500" height="300">
+                                    <img th:src="@{/img/}+${x.nombre}+@{.jpg}" class="card-img-top" width="383" height="180">
                                 </div> 
                                 <div class="col">
                                     <div class="row">
-                                        <h4 class="mt-5 text-center" th:text="${x.nombre}">Nombre del plato</h4>
+                                        <h4 class="font-italic" th:text="${x.nombre}">Nombre del plato</h4>
                                     </div>
                                     <div class="row">
-                                        <h6 class="mt-5 text-center" th:text="${x.descripcion}">Descripcion del plato</h6>
+                                        <h6 class="font-italic"  th:text="${x.descripcion}">Descripcion del plato</h6>
                                     </div>
                                     <div class="row">
-                                        <h5 class="mt-5 text-center" th:text="${x.precio}">Precio del plato</h5>
+                                        <h5 class="font-italic" th:text="${x.precio}+€ ">Precio del plato</h5>
                                     </div>
                                 </div>
                             </div>
