@@ -27,6 +27,7 @@ public class RegisterController {
     @Transactional
     @PostMapping("/registro")
     public String hacerRegistro(@ModelAttribute Cliente usuario ,Model model){
+        usuario.setEnabled(true);
         usuario.setRoles("USER");
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         entityManager.persist(usuario);
