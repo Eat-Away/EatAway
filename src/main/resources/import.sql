@@ -58,7 +58,7 @@ VALUES (2, 'Pan blanco, tres pisos de pollo, bacon, jamon York, queso americano 
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
 VALUES (3, 'Combo de: Aros de cebolla con salsa especial VIPS, Quesadilla de jamon York y queso con pico de gallo, crema agria y guacamole, Alitas Chili BBQ y Nachos Tex-Mex.', 'Combo', 9.35, 1);
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (4, 'Cremosas croquetas de jamon iberico coronadas con paleta iberica y un toque de salsa mayo-sriracha', 'Croquetas', 8.55, 1);
+VALUES (4, 'Cremosas croquetas de jamon iberico coronadas con paleta iberica y un toque de salsa mayo-sriracha.', 'Croquetas', 8.55, 1);
 -- TABLA EXTRA
 INSERT INTO Extra (id, nombre, precio, plato_id)
 VALUES (1, 'Bacon', 3.0, 1);
