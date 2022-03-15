@@ -53,6 +53,20 @@ VALUES (19,'Five Guys', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
 -- TABLA PLATOS
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
 VALUES (1, 'Hamburguesa de carne y queso', 'Hamburguesa', 10.99, 1);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (2, 'Sandwich Vips Club', 'Sandwich', 9.99, 1);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (3, 'Costillas Ibericas', 'Carne', 16.99, 2);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (4, 'Rigatoni al horno', 'Pasta', 15.99, 3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (5, 'Barbacoa', 'Pizza', 12.99, 6);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (6, 'Insalata di foie', 'Ensalada', 12.99, 9);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (7, 'Chocolate cake', 'Tarta', 5.99, 15);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (8, 'Patatas Cheedar and Bacon', 'Entrantes', 2.00, 18);
 -- TABLA EXTRA
 INSERT INTO Extra (id, nombre, precio, plato_id)
 VALUES (1, 'Bacon', 3.0, 1);
