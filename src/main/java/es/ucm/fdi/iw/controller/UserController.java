@@ -192,6 +192,10 @@ public class UserController {
             new FileInputStream(f) : UserController.defaultPic());
         return os -> FileCopyUtils.copy(in, os);
     }
+	@GetMapping("/listaPedidos")
+    public String listaPedidos(Model model) {
+        return "listaPedidos";
+    }
 
     /**
      * Uploads a profile pic for a user id
