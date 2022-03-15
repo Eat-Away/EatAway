@@ -49,7 +49,9 @@ public class RootController {
     }
 
     @GetMapping("/perfilRestaurante")
-    public String perfilRestaurante(Model model){
+    public String perfilRestaurante(Model model, @RequestParam long id){
+        List<Restaurante> availableRestaurants = entityManager.createQuery("SELECT x FROM Restaurante x WHERE propietario_id="+id).getResultList();
+        model.addAttribute("availableRestaurants", availableRestaurants);
         return "perfilRestaurante";
     }
 
