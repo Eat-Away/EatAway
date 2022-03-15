@@ -9,14 +9,16 @@
 <body class="d-flex flex-column h-100">
     <header th:replace="fragments/nav.html :: nav"></header>
     <div class="container mt-3">
+        
         <div class="row justify-content-center">
-            <h3 class="text-center">Pollo Crujiente</h3>
+            <h3 class="text-center" th:text="${plato.nombre}"></h3>
             <div class="card-group col-8">
                 <a class="card mx-1 rounded" href="#">
                     <img src="/img/hamburguesa.jpg" class="card-img-top" alt="..." href="{/]" width="1000" height="400" >
                 </a>
-                <h4 class="Ingredientes mt-3">Pollo crujiente, salsa BBQ chipotle sobre tomate, lechuga, pepinillo y salsa baconesa en pan brioche tostado</h4>
-                <h6>Precio: 14,95 € </h6>
+                <h4 class="Ingredientes mt-3" th:text="${plato.descripcion}"></h4>
+                <h6 class="Ingredientes mt-3"  th:text="${plato.precio}"></h6>
+               
             </div> 
         </div>
         <div class="row justify-content-center my-4">
@@ -31,10 +33,10 @@
             </div>  
       
             <div class="col-3">
-                <input class="form-control" list="datalistOptions" id="punto-carne" placeholder="Elige el punto de la carne">
-                <datalist id="datalistOptions">
+                <input class="form-control" list="datalistOptions2" id="punto-carne" placeholder="Elige el punto de la carne">
+                <datalist id="datalistOptions2">
                     <option value="Poco hecha">
-                    <option value="Hecha">
+                    <option value="Al punto">
                     <option value="Muy hecha">
                 </datalist>
             </div>
