@@ -16,7 +16,12 @@ public class Plato {
     private String descripcion;
     private double precio;
     private String ingredientes;
+
     @OneToMany
     @JoinColumn(name = "Plato_id")
     private List<Extra> extras = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name="Plato_id")
+    private List<PlatoPedido> platoPedidos = new ArrayList<>();
 }

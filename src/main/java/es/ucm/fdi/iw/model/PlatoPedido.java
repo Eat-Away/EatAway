@@ -9,9 +9,11 @@ public class PlatoPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen")
     @SequenceGenerator(name = "gen", sequenceName = "gen")
-    private int id;
+    private long id;
     private int cantidad;
     @ManyToOne
     private Plato plato;
+    @ManyToOne
+    private Pedido pedido;
 }
 

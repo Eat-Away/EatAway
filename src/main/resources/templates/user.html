@@ -12,7 +12,7 @@
     <main class="flex-shrink-0">
         <div class="container px-5">
             <div class="row justify-content-center mt-4">
-                <div class="col-5">
+                <div class="col-5 me-3">
                     <div class="row">
                         <div class="col d-flex">
                             <div class="flex-shrink-0">
@@ -25,38 +25,48 @@
                         </div> 
                     </div>
                     <div class="row">
-                        <button class="btn btn-outline-success mt-3 col-6" data-bs-toggle="collapse" data-bs-target="#profile">Ajustes</button>
-                        <div id="profile" class="my-3 collapse">
-                            <input type="file" class="mb-2" id="f_avatar" accept="image/jpeg,image/png">
-                            <img id="avatar" class="mb-2" alt="imagen a subir" />
-                            <form th:action="@{/user/__${user.id}__/pic}">
-                                <button type="button" class="btn btn-outline-primary" id="postAvatar">Cambiar foto de perfil</button>
-                            </form>
+                        <button class="btn btn-outline-success mt-3 col-6" data-bs-toggle="collapse" data-bs-target="#ajustes">Ajustes</button>
+                        <div id="ajustes" class="collapse my-3 px-0">
+                            <div id="profile" class="mb-4 col-10">
+                                <h5>Cambiar foto de perfil</h5>
+                                <input type="file" class="mb-2 form-control" id="f_avatar" accept="image/jpeg,image/png">
+                                <img id="avatar" class="mb-2 img-fluid" alt="imagen a subir"/>
+                                <form th:action="@{/user/__${user.id}__/pic}">
+                                    <button type="button" class="btn btn-outline-secondary" id="postAvatar" data-bs-toggle="collapse" data-bs-target="#ajustes">Cambiar foto de perfil</button>
+                                </form>
+                            </div>
+                            <div class="mb-4 col-10">
+                                <h5>Cambiar dirección de entrega</h5>
+                                <label for="direccion">Nueva dirección:</label>
+                                <input type="text" class="mb-2 form-control" id="direccion">
+                                <form th:action="@{/user/__${user.id}__/dir}">
+                                    <button type="button" class="btn btn-outline-secondary" id="postDir">Cambiar dirección</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-5">
+                <div class="col-5 ms-3">
                     <p class="h4">Pedidos anteriores</p>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item ps-0">
-                            <h5>Foster's Hollywood</h5>
-                            <ul classs="list-group">
-                                <li class="list-group-item border-0">
+                        <li class="list-group-item" th:each = "x: ${user.pedidos}">
+                            <h5 th:text="${x.restaurante.nombre}">Restaurante</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0" th:each="y: ${x.contenidoPedido}">
                                     <div class="me-auto">
-                                        <div class="fw-bold">Hamburguesa Vip</div>
-                                        <p class="mb-0"><small>Patatas fritas</small></p>
-                                        <p class="mb-0"><small>Carne al punto</small></p>
+                                        <div class="fw-bold" th:text="${y.plato.nombre}">Hamburguesa Vip</div>
+                                        <p class="mb-0" th:each="z: ${y.plato.extras}"><small th:text="${z.nombre}">Patatas fritas</small></p>
                                     </div>
                                 </li>
-                                <li class="list-group-item border-0">
+                                <!--<li class="list-group-item border-0">
                                     <div class="me-auto">
                                         <div class="fw-bold">Costilla</div>
                                         <p class="mb-0"><small>Carne poco hecha</small></p>
                                     </div>
-                                </li>
+                                </li>-->
                             </ul>
                         </li>
-                        <li class="list-group-item">
+                        <!--<li class="list-group-item">
                             <h5>Sol naciente</h5>
                             <ul classs="list-group">
                                 <li class="list-group-item border-0">
@@ -71,13 +81,13 @@
                                     </div>
                                 </li>
                             </ul>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </div>
 
             <!-- para enviar mensajes; algo feo -->
-            <div class="py-5 position-absolute bottom-0 row ">
+            <div class="py-5 position-absolute bottom-0 end-0">
                 <form th:action="@{/user/__${user.id}__/msg}" method="POST">
                     <input type="text" id="message" placeholder="escribe a este usuario" />
                     <button id="sendmsg" class="btn btn-secondary" type="submit">Enviar</button>
@@ -109,12 +119,25 @@
             console.log(img, fileInput);
             readImageFileData(fileInput.files[0], img);
         };
+
         // click en boton de enviar avatar
         document.querySelector("#postAvatar").onclick = e => {
             e.preventDefault();
             let url = document.querySelector("#postAvatar").parentNode.action;
             let img = document.querySelector("#avatar");
             let file = document.querySelector("#f_avatar");
+            postImage(img, url, "photo", file).then(() => {
+                let cacheBuster = "?" + new Date().getTime();
+                document.querySelector("a.nav-link>img.iwthumb").src = url + cacheBuster;
+            });
+        };
+
+        // click en boton de cambiar direccion
+        document.querySelector("#postDir").onclick = e => {
+            e.preventDefault();
+            let url = document.querySelector("#postDir").parentNode.action;
+            let dir = document.querySelector("#direccion");
+
             postImage(img, url, "photo", file).then(() => {
                 let cacheBuster = "?" + new Date().getTime();
                 document.querySelector("a.nav-link>img.iwthumb").src = url + cacheBuster;
