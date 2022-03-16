@@ -20,7 +20,7 @@ import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
-
+import es.ucm.fdi.iw.model.Extra;
 /**
  *  Non-authenticated requests only.
  */
@@ -44,7 +44,12 @@ public class RootController {
     }
 
     @GetMapping("/platos")
-    public String platos(Model model) {
+    public String platos(Model model, @RequestParam long id) {
+        String query = "Select x From Plato x Where id="+id;
+        Plato plato = (Plato) entityManager.createQuery(query).getSingleResult();
+        List<Extra> extras = (List<Extra>)entityManager.createQuery(query).getResultList();
+        model.addAttribute("platos", plato);
+        model.addAttribute("extras", extras);
         return "platos";
     }
 
