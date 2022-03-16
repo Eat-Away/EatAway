@@ -39,22 +39,24 @@
                 <h3 class="mt-5 text-center">Nuestros Platos Principales</h3><p></p><p></p>
                     <div class="d-flex justify-content-center">
                         <div class="col" th:each = "x : ${platos}">
-                            <div class="row">
-                                <div class="col">
-                                    <img th:src="@{/img/}+${x.nombre}+@{.jpg}" class="card-img-top" width="383" height="180">
-                                </div> 
-                                <div class="col">
-                                    <div class="row">
-                                        <h4 class="font-italic" th:text="${x.nombre}">Nombre del plato</h4>
-                                    </div>
-                                    <div class="row">
-                                        <h6 class="font-italic"  th:text="${x.descripcion}">Descripcion del plato</h6>
-                                    </div>
-                                    <div class="row">
-                                        <h5 class="font-italic" th:text="${x.precio}+€ ">Precio del plato</h5>
+                            <a class="link-success" style="text-decoration: none;" th:href="@{/platos?id=}+${x.id}">
+                                <div class="row">
+                                    <div class="col">
+                                        <img th:src="@{/img/}+${x.nombre}+@{.jpg}" class="card-img-top" width="383" height="180">
+                                    </div> 
+                                    <div class="col">
+                                        <div class="row">
+                                            <h4 class="font-italic" th:text="${x.nombre}">Nombre del plato</h4>
+                                        </div>
+                                        <div class="row">
+                                            <h6 class="font-italic"  th:text="${x.descripcion}">Descripcion del plato</h6>
+                                        </div>
+                                        <div class="row">
+                                            <h5 class="font-italic" th:text="${x.precio}+€ ">Precio del plato</h5>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </h3>
