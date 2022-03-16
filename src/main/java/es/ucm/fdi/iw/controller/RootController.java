@@ -21,7 +21,7 @@ import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
-
+import es.ucm.fdi.iw.model.Extra;
 /**
  *  Non-authenticated requests only.
  */
