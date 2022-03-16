@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
@@ -44,7 +45,13 @@ public class RootController {
     }
 
     @GetMapping("/platos")
-    public String platos(Model model) {
+    public String platos(Model model, @RequestParam long id) {
+        String query = "Select x From Plato x Where id="+id;
+        Plato plato = (Plato) entityManager.createQuery(query).getSingleResult();
+        query = "SELECT x FROM Extra x WHERE Plato_id=" + plato.getId();
+        List<Extra> extras = (List<Extra>)entityManager.createQuery(query).getResultList();
+        model.addAttribute("plato", plato);
+        model.addAttribute("extras", extras);
         return "platos";
     }
 
