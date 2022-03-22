@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +22,7 @@ import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
+import es.ucm.fdi.iw.model.UsrRestaurante;
 import es.ucm.fdi.iw.model.Extra;
 /**
  *  Non-authenticated requests only.
@@ -56,9 +58,17 @@ public class RootController {
     }
 
     @GetMapping("/perfilRestaurante")
-    public String perfilRestaurante(Model model, @RequestParam long id){
-        List<Restaurante> availableRestaurants = entityManager.createQuery("SELECT x FROM Restaurante x WHERE propietario_id="+id).getResultList();
-        model.addAttribute("availableRestaurants", availableRestaurants);
+    public String perfilRestaurante(Model model, HttpSession session, @RequestParam long id){
+        User u =(User)session.getAttribute("u");
+        Restaurante r = entityManager.find(Restaurante.class, id);
+
+        if (u.getId() != r.getPropietario().getId()) {
+            return "index";
+        }
+
+        model.addAttribute("restaurante", r);
+        model.addAttribute("availableRestaurants", r.getPropietario().getRestaurantes());
+        model.addAttribute("propietario", r.getPropietario());
         return "perfilRestaurante";
     }
 
