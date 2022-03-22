@@ -2,6 +2,9 @@ package es.ucm.fdi.iw.model;
 
 import lombok.Data;
 import javax.persistence.*;
+
+import org.springframework.lang.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,7 @@ public class Restaurante{
     private double valoracion;
     
     @Lob
+    @Nullable
     private byte[] foto;
 
     @OneToMany

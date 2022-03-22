@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +36,26 @@ public class RootController {
 
 	private static final Logger log = LogManager.getLogger(RootController.class);
 
+
+    @GetMapping("/addRestaurante")
+    public String formularioRegistro(Model model, @RequestParam long id){
+        model.addAttribute("restaurante", new Restaurante());
+        return "addRestaurante";
+    }
+
+    @Transactional
+    @PostMapping("/addRestaurante")
+    public String procesaFormulario(@ModelAttribute Restaurante restaurante, HttpSession session, Model model){
+        log.traceEntry("Ha entrado al procesado de formulario {}", restaurante);
+        User u =(User)session.getAttribute("u");
+        restaurante.setPropietario(u);
+        restaurante.setValoracion(0.0);
+        entityManager.persist(restaurante);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha creado con éxito el restaurante nuevo");
+        return perfilRestaurante(model, session, u.getId());
+    }
+
     @GetMapping("/restaurante")
     public String restaurante(Model model, @RequestParam long id) {
         String query = "Select x From Restaurante x Where id="+id;
@@ -56,6 +77,7 @@ public class RootController {
         model.addAttribute("extras", extras);
         return "platos";
     }
+    
 
     @GetMapping("/perfilRestaurante")
     public String perfilRestaurante(Model model, HttpSession session, @RequestParam long id){

@@ -6,6 +6,9 @@
     </head>
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
+        <div class="container" th:if="${message != null}">
+            <div class="alert alert-success" role="alert" th:text="${message}"></div>
+        </div>
         <div class="container">
             <h1>Perfil de dueño de restaurantes</h1>
             <h3 th:text="@{Nombre: }+${propietario.firstName}"></h3>

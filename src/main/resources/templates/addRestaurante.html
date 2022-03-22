@@ -2,15 +2,31 @@
 <html class="h-100" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:replace="fragments/head :: header" />
-        <title>EatAway: Perfil Restaurante</title>
+        <title>EatAway: Añadir Restaurante</title>
     </head>
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
         <div class="container">
-            <form th:action="@{/perfilRestaurante?id=}+${propietario.id}" th:object="restaurante" method="post">
+            <h1>Añadir un restaurante nuevo</h1>
+            <form action="#" th:action="@{/addRestaurante}" th:object="${restaurante}" method="post">
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre del Restaurante:</label>
                     <input type="text" class="form-control" id="nombre" th:field="*{nombre}">
+                </div>
+                <div class="container">
+                    <label for="descripcion" class="form-label">Descripción del Restaurante:</label>
+                    <input type="text" class="form-control" id="descripcion" th:field="*{descripcion}">
+                </div>
+                <div class="container">
+                    <label for="horario" class="form-label">Horario de Atención:</label>
+                    <input type="text" class="form-control" id="horario" th:field="*{horario}">
+                </div>
+                <div class="container">
+                    <label for="direccion" class="form-label">Dirección del Restaurante:</label>
+                    <input type="text" class="form-control" id="direccion" th:field="*{direccion}">
+                </div>
+                <div class="container">
+                    <button type="submit" class="btn btn-success">Registrar</button>
                 </div>
             </form>
         </div>

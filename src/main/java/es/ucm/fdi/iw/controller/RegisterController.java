@@ -32,7 +32,6 @@ public class RegisterController {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         entityManager.persist(usuario);
         entityManager.flush();
-        model.addAttribute("usuario", usuario);
         return "finRegistro";
     }
 }
