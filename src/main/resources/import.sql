@@ -59,6 +59,11 @@ INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
 VALUES (3, 'Combo de: Aros de cebolla con salsa especial VIPS, Quesadilla de jamon York y queso con pico de gallo, crema agria y guacamole, Alitas Chili BBQ y Nachos Tex-Mex.', 'Combo', 9.35, 1);
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
 VALUES (4, 'Cremosas croquetas de jamon iberico coronadas con paleta iberica y un toque de salsa mayo-sriracha.', 'Croquetas', 8.55, 1);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (5, 'Bacon crujiente, champiñones y ajetes sobre Mozzarella fundida y una cremosa salsa blanca en base de focaccia.', 'Pizza', 10.50, 1);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
+VALUES (6, 'Aguacate, mango, fresas, queso de cabra, queso feta, tomate cherry, cebolla roja y nueces, aliñada con vinagreta de lima y cilantro sobre una base de quinoa y mezcla de lechugas con brotes.', 'Ensalada', 9.35, 1);
+
 -- TABLA EXTRA
 INSERT INTO Extra (id, nombre, precio, plato_id)
 VALUES (1, 'Bacon', 3.0, 1);
