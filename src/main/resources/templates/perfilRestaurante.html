@@ -6,6 +6,13 @@
     </head>
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
+        <div class="container">
+            <h1>Perfil de dueño de restaurantes</h1>
+            <h3 th:text="@{Nombre: }+${propietario.firstName}"></h3>
+            <h3 th:text="@{Apellido: }+${propietario.lastName}"></h3>
+            <h2>Operaciones del dueño de restaurante:</h2>
+            <a th:href="@{/addRestaurante?id=}+${propietario.id}"><button type="button" class="btn btn-success">Añadir restaurante nuevo</button></a>
+        </div>
         <div th:each ="x: ${availableRestaurants}">
             <div class="container">
             <div class="col">

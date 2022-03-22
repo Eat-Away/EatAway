@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <th:block th:replace="fragments/head :: header" />
+        <title>EatAway: Perfil Restaurante</title>
+    </head>
+    <body class="d-flex flex-column h-100">
+        <header th:replace="fragments/nav.html :: nav"></header>
+        <div class="container">
+            <form th:action="@{/perfilRestaurante?id=}+${propietario.id}" th:object="restaurante" method="post">
+                <div class="container">
+                    <label for="nombre" class="form-label">Nombre del Restaurante:</label>
+                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}">
+                </div>
+            </form>
+        </div>
+        <th:block th:replace="fragments/footer.html :: footer" />
+    </body>
+</html>
