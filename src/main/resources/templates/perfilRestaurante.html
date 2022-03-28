@@ -24,6 +24,7 @@
                     <img th:src="@{/img/}+${x.nombre}+@{.jpg}" width="300px" height="300px" alt="Logo del restaurante">
                 </div>
                 <a th:href="@{/addPlato?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir plato</button></a>
+                <a th:href="@{/addExtra?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir extras</button></a>
                 <select class="mt-5">
                     
                     <option selected>Ofertas</option>

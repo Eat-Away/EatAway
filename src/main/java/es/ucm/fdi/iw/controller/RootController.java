@@ -10,14 +10,16 @@ import javax.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.ResponseStatus;
 import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Plato;
@@ -35,6 +37,11 @@ public class RootController {
 	private EntityManager entityManager;
 
 	private static final Logger log = LogManager.getLogger(RootController.class);
+
+    @ResponseStatus(
+		value=HttpStatus.FORBIDDEN, 
+		reason="Alto ahí, no tienes permiso para hacer esto")  // 403
+	public static class PermisoDenegadoException extends RuntimeException {}
 
 
     @GetMapping("/addRestaurante")
@@ -56,6 +63,31 @@ public class RootController {
         return perfilRestaurante(model, session, u.getId());
     }
 
+    @GetMapping("/addExtra")
+    public String altaExtra(Model model, @RequestParam long id){
+        List<Plato> listaPlatos = entityManager.find(Restaurante.class, id).getPlatos();
+        model.addAttribute("extra", new Extra());
+        model.addAttribute("platos", listaPlatos);
+        return "addExtra";
+    }
+
+    @Transactional
+    @PostMapping("/addExtra")
+    public String procesaAltaExtra(@RequestParam long idPlato, @ModelAttribute Extra extra, HttpSession session, Model model){
+         //Obtiene el usuario que agrega el plato para al procesarse vuelva al perfilRestaurante
+        User u = (User)session.getAttribute("u");
+        u = entityManager.find(User.class, u.getId());
+        Plato p = entityManager.find(Plato.class, idPlato);
+        if(p == null || p.getRestaurante().getPropietario().getId() != u.getId()){
+            throw new PermisoDenegadoException();
+        }
+        extra.setPlato(p);
+        entityManager.persist(extra);
+        p.getExtras().add(extra);
+        model.addAttribute("message", "Se ha añadido el extra nuevo en el plato "+p.getNombre()+" para el restaurante "+p.getRestaurante().getNombre());
+        return perfilRestaurante(model, session, u.getId());
+    }
+
     @GetMapping("/addPlato")
     public String altaPlato(Model model, @RequestParam long id){
         Restaurante r = entityManager.find(Restaurante.class, id);
@@ -71,7 +103,7 @@ public class RootController {
         u = entityManager.find(User.class, u.getId());
         Restaurante r = entityManager.find(Restaurante.class, idRestaurante);
         if (r == null || r.getPropietario().getId() != u.getId()) {
-            // protestar
+            throw new PermisoDenegadoException();
         }
 
         plato.setRestaurante(r);
