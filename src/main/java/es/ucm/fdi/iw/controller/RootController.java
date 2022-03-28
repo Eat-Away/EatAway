@@ -56,6 +56,33 @@ public class RootController {
         return perfilRestaurante(model, session, u.getId());
     }
 
+    @GetMapping("/addPlato")
+    public String altaPlato(Model model, @RequestParam long id){
+        Restaurante r = entityManager.find(Restaurante.class, id);
+        model.addAttribute("plato", new Plato());
+        model.addAttribute("restaurante", r);
+        return "addPlato";
+    }
+
+    @Transactional
+    @PostMapping("/addPlato")
+    public String procesaAltaPlato(@RequestParam long idRestaurante, @ModelAttribute Plato plato, HttpSession session, Model model){
+        User u = (User)session.getAttribute("u"); //Obtiene el usuario que agrega el plato para al procesarse vuelva al perfilRestaurante
+        u = entityManager.find(User.class, u.getId());
+        Restaurante r = entityManager.find(Restaurante.class, idRestaurante);
+        if (r == null || r.getPropietario().getId() != u.getId()) {
+            // protestar
+        }
+
+        plato.setRestaurante(r);
+        entityManager.persist(plato);
+        
+        r.getPlatos().add(plato);
+
+        model.addAttribute("message", "Se ha añadido el plato nuevo en "+r.getNombre());
+        return perfilRestaurante(model, session, u.getId());
+    }
+
     @GetMapping("/restaurante")
     public String restaurante(Model model, @RequestParam long id) {
         String query = "Select x From Restaurante x Where id="+id;
