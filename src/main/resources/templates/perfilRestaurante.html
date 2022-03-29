@@ -6,6 +6,7 @@
     </head>
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
+        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
         <div class="container" th:if="${message != null}">
             <div class="alert alert-success" role="alert" th:text="${message}"></div>
         </div>
@@ -18,44 +19,17 @@
         </div>
         <div th:each ="x: ${availableRestaurants}">
             <div class="container">
-            <div class="col">
-                <div class="text-align: left">
-                    <h1 th:text="${x.nombre}"></h1>
-                    <img th:src="@{/img/}+${x.nombre}+@{.jpg}" width="300px" height="300px" alt="Logo del restaurante">
-                </div>
-                <a th:href="@{/addPlato?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir plato</button></a>
-                <a th:href="@{/addExtra?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir extras</button></a>
-                <select class="mt-5">
-                    
-                    <option selected>Ofertas</option>
-                    <option value="1">Añadir</option>
-                    <option value="2">Eliminar</option>
-                    <option value="3">Modificar</option><select class="mt-5">
-                </select>
-                <select class="mt-5">
-                
-                    <option selected>Platos</option>
-                    <option value="1">Añadir</option>
-                    <option value="2">Eliminar</option>
-                    <option value="3">Modificar</option><select class="mt-5">
-                </select>
-                <select class="mt-5">
-                    
-                    <option selected>Menú</option>
-                    <option value="1">Añadir</option>
-                    <option value="2">Eliminar</option>
-                    <option value="3">Modificar</option><select class="mt-5">
-                </select>
-                <select class="mt-5">
-                    
-                    <option selected>Restaurantes</option>
-                    <option value="1">Añadir</option>
-                    <option value="2">Eliminar</option>
-                    <option value="3">Modificar</option><select class="mt-5">
-                </select>
-                
-                
-            </div>  
+                <div class="col">
+                    <div class="text-align: left">
+                        <h1 th:text="${x.nombre}"></h1>
+                        <img th:src="@{/img/}+${x.nombre}+@{.jpg}" width="300px" height="300px" alt="Logo del restaurante">
+                    </div>
+                    <a th:href="@{/addPlato?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir plato</button></a>
+                    <a th:href="@{/addExtra?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir extras</button></a>
+                    <button type="button" class="btn btn-danger del" th:data-id-restaurante="${x.id}">Eliminar Restaurante</button>
+                    <a th:href="@{/delPlato?id=}+${x.id}"><button type="button" class="btn btn-danger">Eliminar Plato</button></a>
+                    <a th:href="@{/delExtra?id=}+${x.id}"><button type="button" class="btn btn-danger">Eliminar Extras</button></a>
+                </div>  
             </div>
             <div class="container">
                 <div class="row align-items start">
