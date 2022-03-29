@@ -6,7 +6,6 @@
     </head>
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
-        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
         <div class="container" th:if="${message != null}">
             <div class="alert alert-success" role="alert" th:text="${message}"></div>
         </div>
@@ -26,10 +25,10 @@
                     </div>
                     <a th:href="@{/addPlato?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir plato</button></a>
                     <a th:href="@{/addExtra?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir extras</button></a>
-                    <button type="button" class="btn btn-danger del" th:data-id-restaurante="${x.id}">Eliminar Restaurante</button>
+                    <button type="button" class="btn btn-danger del" th:attr="data-id-restaurante=${x.id}">Eliminar Restaurante</button>
                     <a th:href="@{/delPlato?id=}+${x.id}"><button type="button" class="btn btn-danger">Eliminar Plato</button></a>
                     <a th:href="@{/delExtra?id=}+${x.id}"><button type="button" class="btn btn-danger">Eliminar Extras</button></a>
-                </div>  
+                </div>
             </div>
             <div class="container">
                 <div class="row align-items start">
@@ -59,6 +58,7 @@
                 </div>
             </div>
         </div>
+        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
         <th:block th:replace="fragments/footer.html :: footer" />
     </body>
 </html>

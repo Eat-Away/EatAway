@@ -1,5 +1,9 @@
-document.querySelectorAll(".del").foreach(b => {
+document.querySelectorAll(".del").forEach(b => {
      b.addEventListener("click", del => {
-         console.log(confirm("Deseas eliminar " + del.target.dataset.idRestaurante + "?"))
+        if(confirm("Deseas eliminar " + del.target.dataset.idRestaurante + "?") == true){
+            console.log("Va a eliminar el restaurante")
+         }else{
+             console.log("No va a eliminar nada")
+         }
      })
  })
