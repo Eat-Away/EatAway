@@ -25,6 +25,10 @@ public class Plato {
     private List<Extra> extras = new ArrayList<>();
 
     @OneToMany
+    @JoinColumn(name = "Plato_id")
+    private List<Comentario> comentarios = new ArrayList<>();
+
+    @OneToMany
     @JoinColumn(name="Plato_id")
     private List<PlatoPedido> platoPedidos = new ArrayList<>();
 }

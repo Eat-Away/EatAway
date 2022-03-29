@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import es.ucm.fdi.iw.model.Comentario;
 import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Plato;
@@ -120,6 +122,28 @@ public class RootController {
         List<Plato> listaPlatos = entityManager.find(Restaurante.class, id).getPlatos();
         model.addAttribute("platos", listaPlatos);
         return "delPlato"; 
+    }
+
+    @Transactional
+    @PostMapping("/delPlato")
+    public String procesarBorradoPlato(@RequestParam long idPlato, Model model, HttpSession session){
+        User u = (User)session.getAttribute("u");
+        u = entityManager.find(User.class, u.getId());
+        Plato p = entityManager.find(Plato.class, idPlato);
+        if(p == null || p.getRestaurante().getPropietario().getId() != u.getId()){
+            throw new PermisoDenegadoException();
+        }
+        for (Extra e : p.getExtras()){
+            entityManager.remove(e);
+        }
+        for (Comentario c : p.getComentarios()){
+            entityManager.remove(c);
+        }
+
+        entityManager.remove(p);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha borrado el plato " + p.getNombre() + " exitosamente");
+        return perfilRestaurante(model, session, u.getId());
     }
 
     @GetMapping("/restaurante")
