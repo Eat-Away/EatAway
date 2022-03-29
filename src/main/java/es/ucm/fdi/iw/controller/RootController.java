@@ -115,6 +115,13 @@ public class RootController {
         return perfilRestaurante(model, session, u.getId());
     }
 
+    @GetMapping("/delPlato")
+    public String deletePlato(@RequestParam long id, Model model){
+        List<Plato> listaPlatos = entityManager.find(Restaurante.class, id).getPlatos();
+        model.addAttribute("platos", listaPlatos);
+        return "delPlato"; 
+    }
+
     @GetMapping("/restaurante")
     public String restaurante(Model model, @RequestParam long id) {
         String query = "Select x From Restaurante x Where id="+id;
