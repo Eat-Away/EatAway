@@ -26,18 +26,23 @@
                 <input class="form-control" list="datalistOptions" id="guarnición" placeholder="Elige tu guarnición">
                 <datalist id="datalistOptions">
                     <option value=>
-              
+                    <!--<option th:each="x : ${plato.extras}" th:value="${x.id}" th:text="${x.nombre}">Extra patatas</option>-->
+                    <!--<option value="Patatas fritas">
+                    <option value="Patatas Gajo">
+                    <option value="Ketchup">
+                    <option value="Mayonesa">-->
                 </datalist>
             </div>  
       
-            <div class="col-3">
+            <!--<div class="col-3">
                 <input class="form-control" list="datalistOptions2" id="punto-carne" placeholder="Elige el punto de la carne">
                 <datalist id="datalistOptions2">
+                    <option th:each="x : ${plato.extras}" th:value="${x.id}" th:text="${x.nombre}">Extra patatas</option>
                     <option value="Poco hecha">
                     <option value="Al punto">
                     <option value="Muy hecha">
                 </datalist>
-            </div>
+            </div>-->
         </div>     
         <div class="row justify-content-center mb-3">
             <div class="col-4">
@@ -50,6 +55,13 @@
                 <button class="btn btn-success">Añadir al pedido</button>
             </div> 
         </div>
+        <!--<div>
+            <form th:action="@{/adopcion}" method="POST">
+                <input type="text" name="extraNombre" required>
+                <input type="hidden" name="platoId" th:value="${plato.id}">
+                <button type="submit">Enviar</button>
+            </form>
+        </div>-->
     </div>
     <th:block th:replace="fragments/footer.html :: footer" />
 </body>
