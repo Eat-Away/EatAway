@@ -63,6 +63,30 @@ public class RootController {
         return perfilRestaurante(model, session, u.getId());
     }
 
+    @Transactional
+    @PostMapping("/delRestaurante")
+    public String borraRestaurante(@RequestParam long id, HttpSession session, Model model){
+        User u = (User)session.getAttribute("u");
+        u = entityManager.find(User.class, u.getId());
+        Restaurante rest = entityManager.find(Restaurante.class, id);
+        if(rest == null || rest.getPropietario().getId() != u.getId()){
+            throw new PermisoDenegadoException();
+        }
+        for(Plato p: rest.getPlatos()){
+            for (Extra e : p.getExtras()){
+                entityManager.remove(e);
+            }
+            for (Comentario c : p.getComentarios()){
+                entityManager.remove(c);
+            }
+            entityManager.remove(p);
+        }
+        entityManager.remove(rest);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha borrado el restaurante "+ rest.getNombre() + " exitosamente!");
+        return perfilRestaurante(model, session, u.getId());
+    }
+
     @GetMapping("/addExtra")
     public String altaExtra(Model model, @RequestParam long id){
         List<Plato> listaPlatos = entityManager.find(Restaurante.class, id).getPlatos();

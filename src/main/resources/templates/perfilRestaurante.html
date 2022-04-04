@@ -25,7 +25,10 @@
                     </div>
                     <a th:href="@{/addPlato?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir plato</button></a>
                     <a th:href="@{/addExtra?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir extras</button></a>
-                    <button type="button" class="btn btn-danger del" th:attr="data-id-restaurante=${x.id}">Eliminar Restaurante</button>
+                    <form th:action="@{/delRestaurante}" method="post">
+                        <input type="hidden" th:value="${x.id}" id="id" name="id">
+                        <button type="button" class="btn btn-danger del" th:attr="data-id-usuario=${propietario.id}">Eliminar Restaurante</button>
+                    </form>
                     <a th:href="@{/delPlato?id=}+${x.id}"><button type="button" class="btn btn-danger">Eliminar Plato</button></a>
                     <a th:href="@{/delExtra?id=}+${x.id}"><button type="button" class="btn btn-danger">Eliminar Extras</button></a>
                 </div>
