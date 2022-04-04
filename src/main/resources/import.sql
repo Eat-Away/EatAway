@@ -13,7 +13,7 @@ VALUES (4, 'RESTAURANTE', TRUE, 'RESTAURANTE,USER', 'restaurante',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
 -- TABLA RESTAURANTE
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
-VALUES (1,'Vips', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
+VALUES (1,'Vips', 'Calle Falsa, 123', '24/7', 'Te queremos en Vips', 4.0, 4);
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
 VALUES (2,'Fosters Hollywood', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)

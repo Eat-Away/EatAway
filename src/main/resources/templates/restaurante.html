@@ -40,7 +40,7 @@
                     <div class="d-flex justify-content-center">
                         <div class="col" th:each = "x, iterStat : ${platos}">
                             <a class="link-success" style="text-decoration: none;" th:href="@{/platos?id=}+${x.id}">
-                                <th:block th:remove="${iterStat.index % 2 == 0 ? none : tag}">
+                                <tr>
                                     <div type="row">
                                         <div class="col">
                                             <img th:src="@{/img/}+${x.nombre}+@{.jpg}" class="card-img-top" width="383" height="380">
@@ -57,7 +57,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                <th:block th:if="${iterStat.index % 2 == 0}" th:utext="'</div>'"/>
+                                <tr th:if="${(iterStat.index + 1) % 2 == 0}" th:utext="'</div>'"/>
                             </a>
                         </div>
                     </div>
