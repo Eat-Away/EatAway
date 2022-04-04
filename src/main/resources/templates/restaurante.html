@@ -37,27 +37,23 @@
             <div class="row justify-content-center my-4">
                 <h4 class="font-italic text-center" style="color:brown" th:text="${restaurante.descripcion}">Es la hora perfecta para comer una hamburguesa o una ensalada de bulgur o comida italiana o mexicana.</h4>
                 <h3 class="mt-5 text-center">Nuestros Platos Principales</h3>
-                    <div class="d-flex justify-content-center">
-                        <div class="col" th:each = "x, iterStat : ${platos}">
-                            <a class="link-success" style="text-decoration: none;" th:href="@{/platos?id=}+${x.id}">
-                                <tr>
-                                    <div type="row">
+                    <div class="d-flex justify-content-center w-100">
+                        <div class="row mt-3 justify-content-center">
+                            <a class="link-success col-3  mx-2"  th:each = "x : ${platos}" style="text-decoration: none;" th:href="@{/platos?id=}+${x.id}">
+                                <!-- <tr> -->
+                                    <div type="row ">
                                         <div class="col">
                                             <img th:src="@{/img/}+${x.nombre}+@{.jpg}" class="card-img-top" width="383" height="380">
                                         </div> 
                                         <div class="col">
-                                            <div class="row">
-                                                <h4 class="font-italic" th:text="${x.nombre}">Nombre del plato</h4>
-                                            </div>
-                                            <div class="row">
-                                                <h6 class="font-italic"  th:text="${x.descripcion}">Descripcion del plato</h6>
-                                            </div>
-                                            <div class="row">
-                                                <h5 class="font-italic" th:text="${x.precio}+€ ">Precio del plato</h5>
-                                            </div>
+                                            <h4 class="font-italic" th:text="${x.nombre}">Nombre del plato</h4>
+                                        
+                                            <h6 class="font-italic"  th:text="${x.descripcion}">Descripcion del plato</h6>
+                                        
+                                            <h5 class="font-italic" th:text="${x.precio}+€ ">Precio del plato</h5>
                                         </div>
                                     </div>
-                                <tr th:if="${(iterStat.index + 1) % 2 == 0}" th:utext="'</div>'"/>
+                                <!-- <tr th:if="${(iterStat.index + 1) % 2 == 0}" th:utext="'</div>'"/> -->
                             </a>
                         </div>
                     </div>
