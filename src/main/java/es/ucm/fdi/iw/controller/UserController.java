@@ -181,20 +181,89 @@ public class UserController {
                 "static/img/default-pic.jpg")));
     }
 
-    /**
+	/**
      * Downloads a profile pic for a user id
      * 
      * @param id
      * @return
      * @throws IOException
      */
-    @GetMapping("{id}/pic")
-    public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
+    @GetMapping("{id}/conf")
+    public StreamingResponseBody getConf(@PathVariable long id) throws IOException {
         File f = localData.getFile("user", ""+id+".jpg");
         InputStream in = new BufferedInputStream(f.exists() ?
             new FileInputStream(f) : UserController.defaultPic());
         return os -> FileCopyUtils.copy(in, os);
     }
+
+	@PostMapping("{id}/conf")
+	@ResponseBody
+	@Transactional
+	public String setConf(@RequestParam MultipartFile photo, @RequestParam String firstName, 
+	@RequestParam String lastName, @RequestParam String direction, @PathVariable long id, 
+	HttpServletResponse response, HttpSession session, Model model) throws IOException{
+
+		User target = entityManager.find(User.class, id);
+        model.addAttribute("user", target);
+		
+		// check permissions
+		User requester = (User)session.getAttribute("u");
+		if (requester.getId() != target.getId() &&
+				! requester.hasRole(Role.ADMIN)) {
+            throw new NoEsTuPerfilException();
+		}
+		
+		//Profile pic update
+		if(!photo.isEmpty()){
+			log.info("Updating photo for user {}", id);
+			File f = localData.getFile("user", ""+id+".jpg");
+
+			try (BufferedOutputStream stream =
+					new BufferedOutputStream(new FileOutputStream(f))) {
+				byte[] bytes = photo.getBytes();
+				stream.write(bytes);
+				log.info("Uploaded new configuration for {} into {}!", id, f.getAbsolutePath());
+			} catch (Exception e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				log.warn("Error uploading " + id + " ", e);
+			}
+		}
+		//else{
+			//log.info("failed to upload photo: emtpy file?");
+		//}
+
+		if(!firstName.isBlank()){
+			log.info("Updating first name for user {}", id);
+			target.setFirstName(firstName);
+		}
+		if(!lastName.isBlank()){
+			log.info("Updating last name for user {}", id);
+			target.setLastName(lastName);
+		}
+		if(!direction.isBlank()){
+			log.info("Updating direction for user {}", id);
+			target.setDireccion(direction);
+		}
+		entityManager.persist(target);
+		entityManager.flush();
+
+		return "{\"status\":\"configuration uploaded correctly\"}";
+	}
+
+	/**
+     * Downloads a profile pic for a user id
+     * 
+     * @param id
+     * @return
+     * @throws IOException
+     */
+    /*@GetMapping("{id}/pic")
+    public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
+        File f = localData.getFile("user", ""+id+".jpg");
+        InputStream in = new BufferedInputStream(f.exists() ?
+            new FileInputStream(f) : UserController.defaultPic());
+        return os -> FileCopyUtils.copy(in, os);
+    }*/
 
     /**
      * Uploads a profile pic for a user id
@@ -203,7 +272,7 @@ public class UserController {
      * @return
      * @throws IOException
      */
-    @PostMapping("{id}/pic")
+    /*@PostMapping("{id}/pic")
 	@ResponseBody
     public String setPic(@RequestParam("photo") MultipartFile photo, @PathVariable long id, 
         HttpServletResponse response, HttpSession session, Model model) throws IOException {
@@ -234,7 +303,7 @@ public class UserController {
 			}
 		}
 		return "{\"status\":\"photo uploaded correctly\"}";
-    }
+    }*/
     
     /**
      * Returns JSON with all received messages
@@ -306,6 +375,7 @@ public class UserController {
 		messagingTemplate.convertAndSend("/user/"+u.getUsername()+"/queue/updates", json);
 		return "{\"result\": \"message sent.\"}";
 	}	
+	
 	@GetMapping("/{id}/listaPedidos")
     public String listaPedidos(Model model,@PathVariable long id) {
 

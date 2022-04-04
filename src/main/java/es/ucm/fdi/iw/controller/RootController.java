@@ -11,13 +11,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -27,8 +25,8 @@ import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
-import es.ucm.fdi.iw.model.UsrRestaurante;
-import es.ucm.fdi.iw.model.Extra;
+
+
 /**
  *  Non-authenticated requests only.
  */
@@ -105,7 +103,7 @@ public class RootController {
         u = entityManager.find(User.class, u.getId());
         Restaurante r = entityManager.find(Restaurante.class, idRestaurante);
         if (r == null || r.getPropietario().getId() != u.getId()) {
-            throw new PermisoDenegadoException();
+            //throw new PermisoDenegadoException();
         }
 
         plato.setRestaurante(r);
@@ -148,9 +146,9 @@ public class RootController {
 
     @GetMapping("/restaurante")
     public String restaurante(Model model, @RequestParam long id) {
-        String query = "Select x From Restaurante x Where id="+id;
+        String query = "Select x From Restaurante x Where id = " + id;
         Restaurante restaur = (Restaurante) entityManager.createQuery(query).getSingleResult();
-        query = "SELECT x FROM Plato x WHERE RESTAURANTE_ID=" + id;
+        query = "SELECT x FROM Plato x WHERE RESTAURANTE_ID = " + id;
         List<Plato> platos = (List<Plato>)entityManager.createQuery(query).getResultList();
         model.addAttribute("restaurante", restaur);
         model.addAttribute("platos", platos);
@@ -159,12 +157,11 @@ public class RootController {
 
     @GetMapping("/platos")
     public String platos(Model model, @RequestParam long id) {
-        String query = "Select x From Plato x Where id="+id;
+        String query = "Select x From Plato x Where id = " + id;
         Plato plato = (Plato) entityManager.createQuery(query).getSingleResult();
-        query = "SELECT x FROM Extra x WHERE Plato_id=" + plato.getId();
-        List<Extra> extras = (List<Extra>)entityManager.createQuery(query).getResultList();
+        //Restaurante restaurante = entityManager.find(Restaurante.class, id);
         model.addAttribute("plato", plato);
-        model.addAttribute("extras", extras);
+        //model.addAttribute("restaurante", restaurante);
         return "platos";
     }
     
