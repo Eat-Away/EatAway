@@ -9,13 +9,26 @@ function initMap(lat, lng) {
       map: map
     });
 }
-function information(id,nombre) {
+function information(id,nombre,dirEntrega,direccion,firstName,lastName) {
 
-    document.querySelector("#datos").innerHTML= "Nombre restaurante: " + nombre;
+    document.querySelector("#datos").innerHTML= 
+    "Nombre restaurante: " + nombre +"<br />" +
+    "Direccion del restaurante: " + direccion + "<br />" +
+    "<br />" +
+    "Nombre Cliente: " + firstName +" "+ lastName+"<br />" +
+    "Direccion de la entrega: " + dirEntrega + "<br />" ;
+    ;
 }
 document.querySelectorAll(".info").forEach(b => {
     const id = b.dataset.id;
+    const lat = b.dataset.lat;
+    const lng = b.dataset.lng;
+    const dirEntrega = b.dataset.dir;
     const nombre = b.dataset.nombre;
-    b.addEventListener('click',function(){initMap(0,0);information(id,nombre)});
+    const direccion = b.dataset.direccion;
+    const firstName = b.dataset.nom;
+    const lastName = b.dataset.apellido;
+    
+    b.addEventListener('click',function(){alert(lat);initMap(lat,lng);information(id,nombre,dirEntrega,direccion,firstName,lastName)});
 });
   

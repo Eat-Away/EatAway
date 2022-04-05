@@ -43,4 +43,7 @@ public class Pedido {
     private Restaurante restaurante;
     @ManyToOne
     private Repartidor repartidor;
+
+    private double lat;
+    private double lng;
 }

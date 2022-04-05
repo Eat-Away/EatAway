@@ -2,9 +2,9 @@
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password)
 VALUES (1, 'ADMIN', TRUE, 'ADMIN,USER', 'a',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
-INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password, direccion)
+INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password, direccion,first_name,last_name)
 VALUES (2, 'CLIENTE', TRUE, 'USER', 'b',
-    '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W', 'C/ de las Moscas, 5, 8ºF');
+    '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W', 'C/ de las Moscas, 5, 8ºF','Alberto','Ferichola');
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password, valoracion)
 VALUES (3, 'REPARTIDOR', TRUE, 'REPARTIDOR,USER', 'repartidor',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W', 0.0);
@@ -108,10 +108,11 @@ VALUES (5, 'Patatas cheedar', 1.0, 13);
 INSERT INTO Comentario (id, texto, user_id, plato_id, restaurante_id)
 VALUES (1, 'Tiene buen sabor', 2, 1, 1);
 -- TABLA PEDIDO
-INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion)
-VALUES (1,'Calle Falsisima, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, 3, 1, 0.0);
-INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion)
-VALUES (2,'Calle Falsisima, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, 3, 2, 0.0);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (1,'Calle Falsisima1, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, null, 1, 0.0,40.420177,-3.703928);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (2,'Calle Falsisima2, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, null, 2, 0.0,0,0);
+
 --TABLA PLATOPEDIDO               
 INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
 VALUES (1, 1, 1, 1);

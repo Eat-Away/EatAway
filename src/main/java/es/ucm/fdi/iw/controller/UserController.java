@@ -379,9 +379,9 @@ public class UserController {
 	@GetMapping("/{id}/listaPedidos")
     public String listaPedidos(Model model,@PathVariable long id) {
 
-		String query = "SELECT new es.ucm.fdi.iw.dto.PedidoDto(Y.id,X.firstName,X.lastName,Z.nombre)"
+		String query = "SELECT new es.ucm.fdi.iw.dto.PedidoDto(Y.lat,Y.lng,Y.id,Y.dirEntrega,X.firstName,X.lastName,Z.nombre,Z.direccion)"
 		+"FROM User X JOIN Pedido Y ON X.id = Y.cliente JOIN Restaurante Z ON Y.restaurante = Z.id " +
-		"WHERE Y.repartidor = " + id;
+		"WHERE Y.repartidor = null";
 		List<PedidoDto> pedidos = (List<PedidoDto>)entityManager.createQuery(query).getResultList();
 		model.addAttribute("pedidos",pedidos);
 

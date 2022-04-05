@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 @DiscriminatorValue("REPARTIDOR")
 public class Repartidor extends User{
-    @OneToMany
-    //@JoinColumn(name="Pedido_id")
-    private List<Pedido> pedidos = new ArrayList<>();
+    @OneToOne
+    private Pedido pedido;
+    
     private double valoracion;
 }
