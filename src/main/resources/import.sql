@@ -8,8 +8,8 @@ VALUES (2, 'CLIENTE', TRUE, 'USER', 'b',
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password, valoracion)
 VALUES (3, 'REPARTIDOR', TRUE, 'REPARTIDOR,USER', 'repartidor',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W', 0.0);
-INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password)
-VALUES (4, 'RESTAURANTE', TRUE, 'RESTAURANTE,USER', 'restaurante',
+INSERT INTO IWUser (id, disc_rol, enabled, roles, username, first_name, last_name, password)
+VALUES (4, 'RESTAURANTE', TRUE, 'RESTAURANTE,USER', 'restaurante', 'Juan', 'Cuesta',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
 -- TABLA RESTAURANTE
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)

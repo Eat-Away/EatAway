@@ -9,37 +9,74 @@
         <div class="container" th:if="${message != null}">
             <div class="alert alert-success" role="alert" th:text="${message}"></div>
         </div>
-        <div class="container">
-            <h1>Perfil de dueño de restaurantes</h1>
-            <h3 th:text="@{Nombre: }+${propietario.firstName}"></h3>
-            <h3 th:text="@{Apellido: }+${propietario.lastName}"></h3>
-            <h2>Operaciones del dueño de restaurante:</h2>
-            <a th:href="@{/addRestaurante?id=}+${propietario.id}"><button type="button" class="btn btn-success">Añadir restaurante nuevo</button></a>
-        </div>
-        <div th:each ="x: ${availableRestaurants}">
-            <div class="container">
-                <div class="col">
-                    <div class="text-align: left">
-                        <h1 th:text="${x.nombre}"></h1>
-                        <img th:src="@{/img/}+${x.nombre}+@{.jpg}" width="300px" height="300px" alt="Logo del restaurante">
+        <div class="container mt-4">
+            <div class="row mb-3">
+                <div class="col-5 mb-5">
+                    <h3>Mis datos personales</h3>
+                    <h5 class="fw-normal" th:text="'Nombre: ' + ${propietario.firstName}"></h5>
+                    <h5 class="fw-normal" th:text="'Apellido: ' + ${propietario.lastName}"></h5>
+                </div>
+                <div class="col-6">
+                    <h4>Configuración de mis restaurantes</h4>
+                    <button type="button" class="btn btn-success me-2"  id="modifRestButton">Modificar restaurante existente</button>
+                    <a th:href="@{/addRestaurante?id=}+${propietario.id}" class="btn btn-success">
+                        <!-- <button type="button" class="btn btn-success">Añadir restaurante nuevo</button> -->
+                        Añadir restaurante nuevo
+                    </a>
+                    <div class="row ps-0 mt-2" id="restaurantOptions" hidden>
+                        <div class="col-6">
+                            <input class="form-control mb-2" id="restSelInput" list="datalistOptions" placeholder="Restaurante...">
+                            <datalist id="datalistOptions">
+                                <option class="optionList" th:each = "x : ${availableRestaurants}" th:text="${x.nombre}" th:id="${x.nombre}"></option>
+                            </datalist>
+                            <button id="buscarRestBtn" class="btn btn-secondary">Buscar</button>
+                        </div>
                     </div>
-                    <a th:href="@{/addPlato?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir plato</button></a>
-                    <a th:href="@{/addExtra?id=}+${x.id}"><button type="button" class="btn btn-success">Añadir extras</button></a>
-                    <form th:action="@{/delRestaurante}" method="post">
-                        <input type="hidden" th:value="${x.id}" id="id" name="id">
-                        <button type="button" class="btn btn-danger del" th:attr="data-id-usuario=${propietario.id}">Eliminar Restaurante</button>
-                    </form>
-                    <a th:href="@{/delPlato?id=}+${x.id}"><button type="button" class="btn btn-danger">Eliminar Plato</button></a>
-                    <a th:href="@{/delExtra?id=}+${x.id}"><button type="button" class="btn btn-danger">Eliminar Extras</button></a>
                 </div>
             </div>
-            <div class="container">
-                <div class="row align-items start">
-                <div class="col">
-                    <h2>Valoracion media:</h2>
-                </div> 
-                    <div class="col">
-                        <h2>Últimas valoraciones</h2>
+        </div>
+        <div class="container mb-5 restaurant" th:each ="x: ${availableRestaurants}" th:id="${x.nombre}+'Rest'" hidden>
+            <h3 th:text="${x.nombre}"></h3>
+            <div class="row align-items-center">
+                <div class="col-4">
+                    <img th:src="@{/img/}+${x.nombre}+@{.jpg}" width="300px" height="300px" alt="Logo del restaurante">
+                </div>
+                <div class="col-8">
+                    <div class="row mb-3">
+                        <a th:href="@{/addPlato?id=}+${x.id}" class="text-decoration-none btn btn-outline-success col-3 me-2">
+                            <!-- <button type="button" class="btn btn-outline-success">Añadir plato</button> -->
+                            Añadir plato
+                        </a>
+                        <a th:href="@{/addExtra?id=}+${x.id}" class="text-decoration-none btn btn-outline-success col-3">
+                            <!-- <button type="button" class="btn btn-outline-success">Añadir extras</button> -->
+                            Añadir extras
+                        </a>
+                    </div>
+                    <div class="row mb-3">
+                        <a th:href="@{/delPlato?id=}+${x.id}" class="text-decoration-none btn btn-outline-danger col-3 me-2">
+                            <!-- <button type="button" class="btn btn-outline-danger">Eliminar Plato</button> -->
+                            Eliminar plato
+                        </a>
+                        <a th:href="@{/delExtra?id=}+${x.id}" class="text-decoration-none btn btn-outline-danger col-3">
+                            <!-- <button type="button" class="btn btn-outline-danger">Eliminar Extras</button> -->
+                            Eliminar extras
+                        </a>
+                    </div>
+                    <div class="row">
+                        <form th:action="@{/delRestaurante}" method="post" class="ps-0">
+                            <input type="hidden" th:value="${x.id}" id="id" name="id">
+                            <button type="button" class="btn btn-danger del" th:attr="data-id-usuario=${propietario.id}">Eliminar Restaurante</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-4">
+                <div class="row align-items-start">
+                    <div class="col-4">
+                        <h5 th:text="'Valoración media: ' + ${x.valoracion}"></h5>
+                    </div> 
+                    <div class="col-4">
+                        <h5>Últimas valoraciones</h5>
                         <ol>
                             <li>Reseña 1</li>
                             <li>Reseña 2</li>
@@ -48,8 +85,8 @@
                             <li>Reseña 5</li>
                         </ol>
                     </div>
-                    <div class="col">
-                        <h2>Últimos pedidos realizados</h2>
+                    <div class="col-4">
+                        <h5>Últimos pedidos realizados</h5>
                         <ol>
                             <li>Pedido 1</li>
                             <li>Pedido 2</li>
@@ -61,7 +98,34 @@
                 </div>
             </div>
         </div>
-        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
         <th:block th:replace="fragments/footer.html :: footer" />
+        
+        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
+        <script>
+            document.querySelector("#modifRestButton").onclick = e => {
+                e.preventDefault();
+                let options = document.querySelector("#restaurantOptions");
+                if(options.hasAttribute("hidden")){
+                    options.removeAttribute("hidden");
+                }
+                else{
+                    options.setAttribute("hidden", true);
+                }
+            }
+            document.querySelector("#buscarRestBtn").onclick = e => {
+                e.preventDefault();
+                let restName =  document.querySelector("#restSelInput").value;
+                let restaurants = document.getElementsByClassName("restaurant");
+                for(var i = 0; i < restaurants.length; i++){
+                    if(!restaurants[i].hasAttribute("hidden")){
+                        restaurants[i].setAttribute("hidden", true);
+                        break; //solo hay un restaurante con hidden a falso
+                    }
+                }
+                console.log(restName + 'Rest');
+                let restaurant = document.getElementById(restName + 'Rest');
+                restaurant.removeAttribute("hidden");
+            }
+        </script>
     </body>
 </html>
