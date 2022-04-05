@@ -17,7 +17,7 @@ VALUES (1,'Vips', 'Calle Falsa, 123', '24/7', 'Te queremos en Vips.  El sitio pe
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
 VALUES (2,'Fosters Hollywood', 'Calle Falsa, 123', '24/7', 'Conoce en Fosters Hollywood el sabor de la comida americana: hamburguesas, costillas... Descubre nuestra carta y encuentra tu restaurante mas cercano.', 4.0, 4);
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
-VALUES (3,'Ginos Ristorante', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
+VALUES (3,'Ginos Ristorante', 'Calle Falsa, 123', '24/7', 'Ginos Ristorante. Pizzas de masa napoletana, pastas importadas directamente desde Italia... Vente y disfruta de Ginos', 4.0, 4);
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
 VALUES (4,'McDonalds', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
