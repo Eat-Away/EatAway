@@ -48,7 +48,7 @@
                             <!-- <button type="button" class="btn btn-outline-success">Añadir plato</button> -->
                             Añadir plato
                         </a>
-                        <form th:action="@{/delRestaurante}" method="post" class="ps-0 col-3">
+                        <form th:action="@{/delRestaurante}" method="post" class="ps-0 col-3" id="delRestaurante">
                             <input type="hidden" th:value="${x.id}" id="id" name="id">
                             <button type="button" class="btn btn-danger del" th:attr="data-id-usuario=${propietario.id}">Eliminar Restaurante</button>
                         </form>
