@@ -8,7 +8,7 @@
         <header th:replace="fragments/nav.html :: nav"></header>
         <div class="container">
             <h1 th:text="@{Añadir un plato para }+${restaurante.nombre}"></h1>
-            <form action="#" th:action="@{/addPlato?idRestaurante=}+${restaurante.id}" th:object="${plato}" method="post">
+            <form action="#" th:action="@{/restaurante/addPlato?idRestaurante=}+${restaurante.id}" th:object="${plato}" method="post">
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre del plato:</label>
                     <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>

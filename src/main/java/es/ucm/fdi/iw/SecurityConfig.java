@@ -50,12 +50,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.ignoringAntMatchers("/api/**")
 				.and()
 	        .authorizeRequests()
-	            .antMatchers("/css/**", "/js/**", "/img/**", "/", "/error", "/listaPedidos","/restaurante", "/platos", "/repartidor", "/perfilRestaurante", "/pedidoCliente", "/registro").permitAll()
+	            .antMatchers("/css/**", "/js/**", "/img/**", "/", "/error", "/restaurante", "/platos", "/registro").permitAll()
 				.antMatchers("/api/**").permitAll()            // <-- public api access	
 				.antMatchers("/admin/**").hasRole("ADMIN")	   // <-- administration
-				.antMatchers("/addRestaurante/**").hasRole("RESTAURANTE") // <-- Dueños de restaurante
 	            .antMatchers("/user/**", "/carrito").hasRole("USER")	   // <-- logged-in users
-	            .anyRequest().authenticated()
+				.antMatchers("/restaurante/**", "/addRestaurante/**").hasRole("RESTAURANTE") // <-- Dueños de restaurante
+	            .antMatchers("/repartidor/**").hasRole("REPARTIDOR") // <-- Usuarios con rol repartidor
+				.anyRequest().authenticated()
 	            .and()
 			.formLogin()
 				.loginPage("/login")

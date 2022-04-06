@@ -1,10 +1,7 @@
 package es.ucm.fdi.iw.controller;
 
 import es.ucm.fdi.iw.LocalData;
-import es.ucm.fdi.iw.dto.PedidoDto;
-import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Message;
-import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Transferable;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
@@ -376,17 +373,8 @@ public class UserController {
 		return "{\"result\": \"message sent.\"}";
 	}	
 	
-	@GetMapping("/{id}/listaPedidos")
-    public String listaPedidos(Model model,@PathVariable long id) {
-
-		String query = "SELECT new es.ucm.fdi.iw.dto.PedidoDto(Y.lat,Y.lng,Y.id,Y.dirEntrega,X.firstName,X.lastName,Z.nombre,Z.direccion)"
-		+"FROM User X JOIN Pedido Y ON X.id = Y.cliente JOIN Restaurante Z ON Y.restaurante = Z.id " +
-		"WHERE Y.repartidor = null";
-		List<PedidoDto> pedidos = (List<PedidoDto>)entityManager.createQuery(query).getResultList();
-		model.addAttribute("pedidos",pedidos);
-
-
-		return "listaPedidos";
-
-	}
+	@GetMapping("/{id}/pedidoCliente")
+    public String pedidoCliente(Model model) {
+        return "pedidoCliente";
+    }
 }

@@ -60,13 +60,13 @@
                             </li>
 
                             <li class="nav-item mx-2" th:if="${session.u.hasRole('RESTAURANTE')}">
-                                <a class="nav-link" th:href="@{/perfilRestaurante?id={id}(id=${session.u.id})}">
+                                <a class="nav-link" th:href="@{/restaurante/{id}/(id=${session.u.id})}">
                                     <img class="iwthumb rounded" th:src="@{/user/{id}/conf(id=${session.u.id})}">
                                     <span th:text="${session.u.username}">Pepe</span>
                                 </a>
                             </li>
                             <li class="nav-item mx-2" th:if="${session.u.hasRole('REPARTIDOR')}">
-                                <a class="nav-link" th:href="@{/repartidor?id={id}(id=${session.u.id})}">
+                                <a class="nav-link" th:href="@{/repartidor/{id}(id=${session.u.id})}">
                                     <img class="iwthumb rounded" th:src="@{/user/{id}/conf(id=${session.u.id})}">
                                     <span th:text="${session.u.username}">Pepe</span>
                                 </a>

@@ -43,27 +43,27 @@
                 </div>
                 <div class="col-8">
                     <div class="row mb-3">
-                        <a th:href="@{/addPlato?id=}+${x.id}" class="text-decoration-none btn btn-outline-success col-3 me-2">
+                        <a th:href="@{'/restaurante/'+${id}+ '/addPlato?id='}+${x.id}" class="text-decoration-none btn btn-outline-success col-3 me-2">
                             <!-- <button type="button" class="btn btn-outline-success">Añadir plato</button> -->
                             Añadir plato
                         </a>
-                        <a th:href="@{/addExtra?id=}+${x.id}" class="text-decoration-none btn btn-outline-success col-3">
+                        <a th:href="@{'/restaurante/'+${id}+ '/addExtra?id='}+${x.id}" class="text-decoration-none btn btn-outline-success col-3">
                             <!-- <button type="button" class="btn btn-outline-success">Añadir extras</button> -->
                             Añadir extras
                         </a>
                     </div>
                     <div class="row mb-3">
-                        <a th:href="@{/delPlato?id=}+${x.id}" class="text-decoration-none btn btn-outline-danger col-3 me-2">
+                        <a th:href="@{'/restaurante/'+${id}+ '/delPlato?id='}+${x.id}" class="text-decoration-none btn btn-outline-danger col-3 me-2">
                             <!-- <button type="button" class="btn btn-outline-danger">Eliminar Plato</button> -->
                             Eliminar plato
                         </a>
-                        <a th:href="@{/delExtra?id=}+${x.id}" class="text-decoration-none btn btn-outline-danger col-3">
+                        <a th:href="@{'/restaurante/'+${id}+'/delExtra?id='}+${x.id}" class="text-decoration-none btn btn-outline-danger col-3">
                             <!-- <button type="button" class="btn btn-outline-danger">Eliminar Extras</button> -->
                             Eliminar extras
                         </a>
                     </div>
                     <div class="row">
-                        <form th:action="@{/delRestaurante}" method="post" class="ps-0">
+                        <form th:action="@{'/restaurante/delRestaurante'}" method="post" class="ps-0">
                             <input type="hidden" th:value="${x.id}" id="id" name="id">
                             <button type="button" class="btn btn-danger del" th:attr="data-id-usuario=${propietario.id}">Eliminar Restaurante</button>
                         </form>
@@ -102,6 +102,7 @@
         
         <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
         <script>
+            //Muestra el datalist al pinchar en el botón de modificar restaurante
             document.querySelector("#modifRestButton").onclick = e => {
                 e.preventDefault();
                 let options = document.querySelector("#restaurantOptions");
@@ -112,6 +113,7 @@
                     options.setAttribute("hidden", true);
                 }
             }
+            //Muestra el restaurante seleccionado en el datalist
             document.querySelector("#buscarRestBtn").onclick = e => {
                 e.preventDefault();
                 let restName =  document.querySelector("#restSelInput").value;
@@ -122,7 +124,6 @@
                         break; //solo hay un restaurante con hidden a falso
                     }
                 }
-                console.log(restName + 'Rest');
                 let restaurant = document.getElementById(restName + 'Rest');
                 restaurant.removeAttribute("hidden");
             }

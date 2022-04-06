@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import es.ucm.fdi.iw.model.User;
-import es.ucm.fdi.iw.model.User.Role;
 
 /**
  * Called when a user is first authenticated (via login).
@@ -75,16 +74,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		session.setAttribute("ws", ws + "/ws");
 
 		// redirects to 'admin' or 'user/{id}', depending on the user
-		/*String nextUrl = u.hasRole(User.Role.ADMIN) ? 
-			"admin/" :
-			"user/" + u.getId();*/
 		String nextUrl;
 		if(u.hasRole(User.Role.ADMIN)){
 			nextUrl = "admin/";
 		}else if(u.hasRole(User.Role.RESTAURANTE)){
-			nextUrl = "perfilRestaurante?id="+u.getId();
+			nextUrl = "restaurante/"+u.getId();
 		}else if(u.hasRole(User.Role.REPARTIDOR)){
-			nextUrl = "repartidor?id="+u.getId();
+			nextUrl = "repartidor/"+u.getId();
 		}else{
 			nextUrl = "user/"+u.getId();
 		}
