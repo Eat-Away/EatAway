@@ -63,7 +63,7 @@
                         </a>
                     </div>
                     <div class="row">
-                        <form th:action="@{'/restaurante/delRestaurante'}" method="post" class="ps-0">
+                        <form th:action="@{/restaurante/delRestaurante}" method="post" class="ps-0" id="delRestaurante">
                             <input type="hidden" th:value="${x.id}" id="id" name="id">
                             <button type="button" class="btn btn-danger del" th:attr="data-id-usuario=${propietario.id}">Eliminar Restaurante</button>
                         </form>
@@ -74,7 +74,8 @@
                 <div class="row align-items-start">
                     <div class="col-4">
                         <h5 th:text="'Valoración media: ' + ${x.valoracion}"></h5>
-                    </div> 
+                    </div>
+                    
                     <div class="col-4">
                         <h5>Últimas valoraciones</h5>
                         <ol>
@@ -94,6 +95,35 @@
                             <li>Pedido 4</li>
                             <li>Pedido 5</li>
                         </ol>
+                    </div>
+                    <div class="col-9">
+                        <table class="table">
+                            <thead>
+                                <th scope="col">Nombre del Plato</th>
+                                <th scope="col">Foto del Plato</th>
+                                <th scope="col">Acciones disponibles</th>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p: ${x.platos}">
+                                    <td th:text="${p.nombre}"></td>
+                                    <td><img th:src="@{/img/}+${p.nombre}+@{.jpg}" width="100px" height="100px" alt="Foto del plato"></td>
+                                    <td>
+                                        <a th:href="@{/addExtra?id=}+${p.id}" class="text-decoration-none btn btn-outline-success col-3">
+                                            <!-- <button type="button" class="btn btn-outline-success">Añadir extras</button> -->
+                                            Añadir extras
+                                        </a>
+                                        <a th:href="@{/delPlato?id=}+${p.id}" class="text-decoration-none btn btn-outline-danger col-3">
+                                            <!-- <button type="button" class="btn btn-outline-danger">Eliminar Plato</button> -->
+                                            Eliminar plato
+                                        </a>
+                                        <a th:href="@{/delExtra?id=}+${p.id}" class="text-decoration-none btn btn-outline-danger col-3">
+                                            <!-- <button type="button" class="btn btn-outline-danger">Eliminar Extras</button> -->
+                                            Eliminar extras
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
