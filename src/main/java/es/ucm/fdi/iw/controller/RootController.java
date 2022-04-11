@@ -41,10 +41,6 @@ public class RootController {
         Restaurante restaur = entityManager.find(Restaurante.class, id);
         List<Plato> platos = restaur.getPlatos();
 
-        //String query = "Select x From Restaurante x Where id = " + id;
-        //Restaurante restaur = (Restaurante) entityManager.createQuery(query).getSingleResult();
-        //query = "SELECT x FROM Plato x WHERE RESTAURANTE_ID = " + id;
-        //List<Plato> platos = (List<Plato>)entityManager.createQuery(query).getResultList();
         model.addAttribute("restaurante", restaur);
         model.addAttribute("platos", platos);
         return "restaurante";
@@ -52,29 +48,14 @@ public class RootController {
 
     @GetMapping("/platos")
     public String platos(Model model, @RequestParam long id) {
-        String query = "Select x From Plato x Where id = " + id;
-        Plato plato = (Plato) entityManager.createQuery(query).getSingleResult();
+        //String query = "Select x From Plato x Where id = " + id;
+        //Plato plato = (Plato) entityManager.createQuery(query).getSingleResult();
         //Restaurante restaurante = entityManager.find(Restaurante.class, id);
+        Plato plato = entityManager.find(Plato.class, id);
         model.addAttribute("plato", plato);
         //model.addAttribute("restaurante", restaurante);
         return "platos";
     }
-    
-
-    /* @GetMapping("/perfilRestaurante")
-    public String perfilRestaurante(Model model, HttpSession session, @RequestParam long id){
-        User u =(User)session.getAttribute("u");
-        Restaurante r = entityManager.find(Restaurante.class, id);
-
-        if (u.getId() != r.getPropietario().getId()) {
-            return "index";
-        }
-
-        model.addAttribute("restaurante", r);
-        model.addAttribute("availableRestaurants", r.getPropietario().getRestaurantes());
-        model.addAttribute("propietario", r.getPropietario());
-        return "perfilRestaurante";
-    } */
 
 
 	@GetMapping("/login")
@@ -89,7 +70,6 @@ public class RootController {
 
 	@GetMapping("/")
     public String index(Model model) {
-        
         List<Restaurante> availableRestaurants = entityManager.createQuery("SELECT x FROM Restaurante x").getResultList();
         model.addAttribute("availableRestaurants", availableRestaurants);
 
