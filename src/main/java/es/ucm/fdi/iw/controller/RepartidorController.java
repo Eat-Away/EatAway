@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.ucm.fdi.iw.dto.PedidoDto;
-import es.ucm.fdi.iw.model.Pedido;
+
 /**
  *  Gestión de usuarios de tipo repartidor.
  *
@@ -38,10 +38,10 @@ public class RepartidorController {
     public String listaPedidos(Model model, @PathVariable long id) {
 		String query = "SELECT COUNT(X.pedido) FROM User X WHERE X.id =" + id;
 		Long n = (Long)entityManager.createQuery(query).getSingleResult();
-		if(n == 1){
+		if(n == 1){ //Si el repartidor ya tiene asignado un pedido
 			return "repartidor";
 		}
-		else{
+		else{ //Si no tiene asignado ningún pedido
 			query = "SELECT new es.ucm.fdi.iw.dto.PedidoDto(Y.lat,Y.lng,Y.id,Y.dirEntrega,X.firstName,X.lastName,Z.nombre,Z.direccion)"
 			+"FROM User X JOIN Pedido Y ON X.id = Y.cliente JOIN Restaurante Z ON Y.restaurante = Z.id " +
 			"WHERE Y.repartidor = null";
@@ -52,4 +52,5 @@ public class RepartidorController {
 		}
 	}
     
+
 }

@@ -22,17 +22,18 @@
   <header th:replace="fragments/nav.html :: nav"></header>
 
   <main class="flex-shrink-0">
-    <h1 style='text-align: center;'>PEDIDOS</h1>
+    <h1 class="text-center my-3">PEDIDOS DISPONIBLES</h1>
     <div class="container">
       <div class="row">
         <!-- Pedidos Clientes-->
         <div class="col">
-          <table class="table">
-            <thead>
+          <table class="table table-hover">
+            <thead class="table-success">
               <tr>
-                <th scope="col">REFERENCIA</th>
+                <th scope="col">PEDIDO</th>
                 <th scope="col">CLIENTE</th>
                 <th scope="col">RESTAURANTE</th>
+                <th scope="col"></th>
                 <th scope="col"></th>
               </tr>
             </thead>

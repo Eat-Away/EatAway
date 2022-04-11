@@ -30,7 +30,7 @@ document.querySelectorAll(".info").forEach(b => {
     const lastName = b.dataset.apellido;
     
     b.addEventListener('click', function () {
-      alert(lat + " " + lng);
+      console.log(lat + " " + lng);
       initMap(lat,lng);
       information(id,nombre,dirEntrega,direccion,firstName,lastName)
     });
