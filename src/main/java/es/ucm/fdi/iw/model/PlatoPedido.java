@@ -3,6 +3,9 @@ package es.ucm.fdi.iw.model;
 import javax.persistence.*;
 import lombok.Data;
 
+/**
+ * Clase que sirve para relacionar un plato con un pedido
+ */
 @Entity
 @Data
 public class PlatoPedido {

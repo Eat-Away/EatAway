@@ -5,6 +5,9 @@ import javax.persistence.*;
 import lombok.Data;
 import java.util.List;
 
+/**
+ * Descripcion de un plato de un restaurante
+ */
 @Entity
 @Data
 public class Plato {

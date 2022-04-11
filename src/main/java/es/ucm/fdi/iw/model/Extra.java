@@ -3,6 +3,9 @@ package es.ucm.fdi.iw.model;
 import javax.persistence.*;
 import lombok.Data;
 
+/**
+ * Ingredientes extra que un cliente puede añadir a un plato concreto
+ */
 @Entity
 @Data
 public class Extra {

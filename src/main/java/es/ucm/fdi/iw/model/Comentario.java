@@ -3,6 +3,9 @@ package es.ucm.fdi.iw.model;
 import javax.persistence.*;
 import lombok.Data;
 
+/**
+ * Comentario que un usuario puede dejar a un plato concreto.
+ */
 @Entity
 @Data
 public class Comentario {

@@ -6,6 +6,10 @@ import java.util.List;
 
 import lombok.Data;
 
+/** 
+ * Un usuario registrado con el rol CLIENTE.
+ * Por defecto, cuando un usuario se registre en la app se le asignará este rol.
+ */
 @Entity
 @Data
 @DiscriminatorValue("CLIENTE")

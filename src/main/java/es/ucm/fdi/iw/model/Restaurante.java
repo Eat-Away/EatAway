@@ -8,6 +8,9 @@ import org.springframework.lang.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Descripción de un restaurante
+ */
 @Entity
 @Data
 public class Restaurante{

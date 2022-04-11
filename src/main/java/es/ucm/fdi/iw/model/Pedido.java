@@ -8,6 +8,9 @@ import javax.persistence.*;
 
 import lombok.Data;
 
+/**
+ * Información de un pedido
+ */
 @Entity
 @Data
 @Table(name="Pedido")
@@ -32,11 +35,10 @@ public class Pedido {
     private double precioEntrega;
     private double precioServicio;
     private LocalDateTime fechaPedido;
-    private double valoracion;
+    private Double valoracion; //Double para que pueda ser null
     @OneToMany
     @JoinColumn(name="pedido_id")
     private List<PlatoPedido> contenidoPedido = new ArrayList<>();
-    //private Map<Plato,Integer> contenidoPedido = new HashMap<>(); //<ID Plato, Cantidad>
     @ManyToOne
     private Cliente cliente;
     @ManyToOne
