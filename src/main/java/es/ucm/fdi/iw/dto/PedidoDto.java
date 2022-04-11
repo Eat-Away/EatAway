@@ -19,14 +19,14 @@ public class PedidoDto{
     //restaurante
     private String nombre;
     private String direccion;
-    //pedido
     
+    //pedido
     private long id;
     private String dirEntrega;
     private double lat;
     private double lng;
+    
     //cliente
-
     private String firstName;
     private String lastName;
 
