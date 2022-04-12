@@ -63,7 +63,7 @@
                         </a>
                     </div>
                     <div class="row">
-                        <form th:action="@{/restaurante/delRestaurante}" method="post" class="ps-0" id="delRestaurante">
+                        <form th:action="@{/restaurante/delRestaurante}" method="post" class="ps-0" name="delRestaurante">
                             <input type="hidden" th:value="${x.id}" id="id" name="id">
                             <button type="button" class="btn btn-danger del" th:attr="data-id-usuario=${propietario.id}">Eliminar Restaurante</button>
                         </form>

@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +27,7 @@ public class RepartidorController {
     @Autowired
 	private EntityManager entityManager;
 
-	private static final Logger log = LogManager.getLogger(RepartidorController.class);
+	//private static final Logger log = LogManager.getLogger(RepartidorController.class);
 
     @GetMapping("/{id}")
     public String index(Model model) {
@@ -45,7 +45,7 @@ public class RepartidorController {
 			query = "SELECT new es.ucm.fdi.iw.dto.PedidoDto(Y.lat,Y.lng,Y.id,Y.dirEntrega,X.firstName,X.lastName,Z.nombre,Z.direccion)"
 			+"FROM User X JOIN Pedido Y ON X.id = Y.cliente JOIN Restaurante Z ON Y.restaurante = Z.id " +
 			"WHERE Y.repartidor = null";
-			List<PedidoDto> pedidos = (List<PedidoDto>)entityManager.createQuery(query).getResultList();
+			List<PedidoDto> pedidos = (List<PedidoDto>)entityManager.createQuery(query, PedidoDto.class).getResultList();
 			model.addAttribute("pedidos", pedidos);
 
 			return "listaPedidos";

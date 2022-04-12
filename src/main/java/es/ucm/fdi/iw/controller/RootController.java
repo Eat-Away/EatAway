@@ -70,7 +70,8 @@ public class RootController {
 
 	@GetMapping("/")
     public String index(Model model) {
-        List<Restaurante> availableRestaurants = entityManager.createQuery("SELECT x FROM Restaurante x").getResultList();
+        String query = "SELECT x FROM Restaurante x"; 
+        List<Restaurante> availableRestaurants = entityManager.createQuery(query, Restaurante.class).getResultList();
         model.addAttribute("availableRestaurants", availableRestaurants);
 
         List<String> filterOptions = new ArrayList<>();
@@ -80,7 +81,8 @@ public class RootController {
         filterOptions.add("Precio Descendente");
         filterOptions.add("Populares");
         
-        List<Label> labelOptions = entityManager.createQuery("Select x from Label x").getResultList();
+        query = "Select x from Label x";
+        List<Label> labelOptions = entityManager.createQuery(query, Label.class).getResultList();
 
         model.addAttribute("filterOptions",filterOptions);
         model.addAttribute("labelOptions",labelOptions);
