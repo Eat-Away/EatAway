@@ -5,9 +5,9 @@ VALUES (1, 'ADMIN', TRUE, 'ADMIN,USER', 'a',
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password, direccion,first_name,last_name)
 VALUES (2, 'CLIENTE', TRUE, 'USER', 'b',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W', 'C/ de las Moscas, 5, 8ºF','Alberto','Ferichola');
-INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password, valoracion)
+INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password)
 VALUES (3, 'REPARTIDOR', TRUE, 'REPARTIDOR,USER', 'repartidor',
-    '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W', 0.0);
+    '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, first_name, last_name, password)
 VALUES (4, 'RESTAURANTE', TRUE, 'RESTAURANTE,USER', 'restaurante', 'Juan', 'Cuesta',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
