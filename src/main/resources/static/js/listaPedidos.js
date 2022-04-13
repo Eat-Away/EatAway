@@ -32,7 +32,8 @@ document.querySelectorAll(".info").forEach(b => {
     b.addEventListener('click', function () {
       console.log(lat + " " + lng);
       initMap(lat,lng);
-      information(id,nombre,dirEntrega,direccion,firstName,lastName)
+      information(id,nombre,dirEntrega,direccion,firstName,lastName);
     });
 });
+
   

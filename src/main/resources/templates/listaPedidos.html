@@ -46,7 +46,10 @@
                 <td><button type="button" th:attr="data-lat=${x.lat},data-lng=${x.lng},data-id=${x.id},data-dir= ${x.dirEntrega},
                   data-nombre=${x.nombre},data-direccion=${x.direccion},
                   data-nom=${x.firstName}, data-apellido=${x.lastName}" class="btn info btn-success">Info</button></td>
-                <td><button type="button" class="btn btn-success">Recoger</button></td>
+                <td>
+                  <form th:action="@{/repartidor/} + ${idRepartidor}+ @{/getPedido/} + ${x.id}" method="post">
+                    <button type="submit" class="btn btn-success">Recoger</button></td>
+                  </form>
               </tr>
               <tr>
             </tbody>
