@@ -56,7 +56,9 @@
                                 </form>
                             </div>
                             <div class="col">
-                                <button type="button" class="btn btn-outline-warning">Editar restaurante</button>
+                                <a th:href="@{'/restaurante/'+${id}+'/editRestaurante?id='}+${x.id}">
+                                    <button type="button" class="btn btn-outline-warning">Editar restaurante</button>
+                                </a>
                             </div>
                         </div>
                     </div>

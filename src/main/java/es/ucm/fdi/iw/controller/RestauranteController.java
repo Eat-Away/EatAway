@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
 import es.ucm.fdi.iw.model.Comentario;
 import es.ucm.fdi.iw.model.Extra;
+import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
@@ -31,12 +32,8 @@ import es.ucm.fdi.iw.model.User;
 public class RestauranteController {
     @Autowired
     private EntityManager entityManager;
-    
 	private static final Logger log = LogManager.getLogger(AdminController.class);
 
-     /**
-     * Landing page for a restaurant profile
-     */
 	@GetMapping("{id}")
     public String perfilRestaurante(Model model, HttpSession session, @PathVariable long id){
         User u =(User)session.getAttribute("u");
@@ -51,6 +48,8 @@ public class RestauranteController {
         model.addAttribute("propietario", r.getPropietario());
         return "perfilRestaurante";
     }
+
+    //GESTION DE RESTAURANTES
 
     @GetMapping("/{id}/addRestaurante")
     public String formularioRegistro(Model model, @RequestParam long id){
@@ -85,6 +84,30 @@ public class RestauranteController {
         model.addAttribute("message", "Se ha borrado el restaurante "+ rest.getNombre() + " exitosamente!");
         return perfilRestaurante(model, session, u.getId());
     }
+
+    @GetMapping("/{id}/editRestaurante")
+    public String editarRestaurante(@RequestParam long id, Model model){
+        Restaurante rest = entityManager.find(Restaurante.class, id);
+        model.addAttribute("restaurante", rest);
+        return "editRestaurante";
+    }
+
+    @Transactional
+    @PostMapping("/editRestaurante")
+    public String procesarEditar(@ModelAttribute Restaurante restaurante, HttpSession session, Model model){
+        User u = (User) session.getAttribute("u");
+        Restaurante r = entityManager.find(Restaurante.class, restaurante.getId());
+        restaurante.setPropietario(u);
+        restaurante.setComentarios(r.getComentarios());
+        restaurante.setPedidos(r.getPedidos());
+        restaurante.setPlatos(r.getPlatos());
+        restaurante.setValoracion(r.getValoracion());
+        entityManager.merge(restaurante);
+        entityManager.flush();
+        return perfilRestaurante(model, session, u.getId());
+    }
+
+    //GESTION DE EXTRAS
 
     @GetMapping("/{id}/addExtra")
     public String altaExtra(Model model, @RequestParam long id){
@@ -133,6 +156,8 @@ public class RestauranteController {
         model.addAttribute("message", "Se ha borrado el extra " + ex.getNombre() + " del plato " + ex.getPlato().getNombre() + " exitosamente");
         return perfilRestaurante(model, session, u.getId());
     }
+
+    //GESTION DE PLATOS
 
     @GetMapping("/{id}/addPlato")
     public String altaPlato(Model model, @RequestParam long id){

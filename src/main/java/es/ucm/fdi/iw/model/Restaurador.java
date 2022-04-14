@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @DiscriminatorValue("RESTAURANTE")
 public class Restaurador extends User{
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Restaurante> restaurantes = new ArrayList<>();
     @OneToMany
     //@JoinColumn(name="Pedidos_ids")
