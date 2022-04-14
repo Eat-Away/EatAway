@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
 import es.ucm.fdi.iw.model.Comentario;
 import es.ucm.fdi.iw.model.Extra;

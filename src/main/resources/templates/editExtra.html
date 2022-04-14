@@ -34,17 +34,14 @@
             function updateForm(){
                 var selector = document.getElementById("id");
                 var chosen = selector.value;
-                var formData = new FormData(document.getElementById("formEditExtra"));
-                //var msg = [[${textoPrueba}]];
-                console.log(formData.get('nombre'));
+                var extrasSize = /*[[${extras.size}]]*/ [];
                 if(chosen == -1){
                     console.log("Deberia limpiar el formulario")
-                    formData.append('nombre', 'Nombre');
-                    formData.append('precio', 'Precio');
+                    document.getElementById("formEditExtra").reset();
                 }else{
                 console.log("Deberia actualizar el formulario a los datos el extra con ID "+ chosen);
-                    formData.set('nombre', chosen);
-                    formData.set('precio', chosen);
+                    document.getElementById("nombre").value = /*[[${extras[0].nombre}]]*/ [];
+                    document.getElementById("precio").value = /*[[${extras[0].precio}]]*/ [];
                 }
             }
         </script>
