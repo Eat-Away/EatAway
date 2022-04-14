@@ -41,32 +41,22 @@
                 <div class="col-4">
                     <img th:src="@{/img/}+${x.nombre}+@{.jpg}" width="300px" height="300px" alt="Logo del restaurante">
                 </div>
-                <div class="col-8">
-                    <div class="row mb-3">
-                        <a th:href="@{'/restaurante/'+${id}+ '/addPlato?id='}+${x.id}" class="text-decoration-none btn btn-outline-success col-3 me-2">
-                            <!-- <button type="button" class="btn btn-outline-success">Añadir plato</button> -->
-                            Añadir plato
-                        </a>
-                        <a th:href="@{'/restaurante/'+${id}+ '/addExtra?id='}+${x.id}" class="text-decoration-none btn btn-outline-success col-3">
-                            <!-- <button type="button" class="btn btn-outline-success">Añadir extras</button> -->
-                            Añadir extras
-                        </a>
-                    </div>
-                    <div class="row mb-3">
-                        <a th:href="@{'/restaurante/'+${id}+ '/delPlato?id='}+${x.id}" class="text-decoration-none btn btn-outline-danger col-3 me-2">
-                            <!-- <button type="button" class="btn btn-outline-danger">Eliminar Plato</button> -->
-                            Eliminar plato
-                        </a>
-                        <a th:href="@{'/restaurante/'+${id}+'/delExtra?id='}+${x.id}" class="text-decoration-none btn btn-outline-danger col-3">
-                            <!-- <button type="button" class="btn btn-outline-danger">Eliminar Extras</button> -->
-                            Eliminar extras
-                        </a>
-                    </div>
-                    <div class="row">
-                        <form th:action="@{/restaurante/delRestaurante}" method="post" class="ps-0" name="delRestaurante" th:id="@{delRestaurante?id=}+${p.id}">
-                            <input type="hidden" th:value="${x.id}" id="id" name="id">
-                            <button type="button" class="btn btn-danger delRest" th:attr="data-idrestaurante=${x.id}, data-nombrerestaurante=${x.nombre}">Eliminar Restaurante</button>
-                        </form>
+                <div class="col-4">
+                    <div class="container">
+                        <h4>Configuración del restaurante</h4>
+                        <div class="row align-items-start">
+                            <div class="col">
+                                <a th:href="@{'/restaurante/'+${id}+ '/addPlato?id='}+${x.id}" class="text-decoration-none btn btn-outline-success">
+                                    Añadir plato
+                                </a>
+                            </div>
+                            <div class="col">
+                                <form th:action="@{/restaurante/delRestaurante}" method="post" name="delRestaurante" th:id="@{delRestaurante?id=}+${x.id}">
+                                    <input type="hidden" th:value="${x.id}" id="id" name="id">
+                                    <button type="button" class="btn btn-danger delRest" th:attr="data-idrestaurante=${x.id}, data-nombrerestaurante=${x.nombre}">Eliminar Restaurante</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,8 +101,7 @@
                                         <div class="container">
                                             <div class="row align-items-start">
                                                 <div class="col">
-                                                    <a th:href="@{/addExtra?id=}+${p.id}" class="text-decoration-none btn btn-outline-success">
-                                                        <!-- <button type="button" class="btn btn-outline-success">Añadir extras</button> -->
+                                                    <a th:href="@{'/restaurante/'+${id}+ '/addExtra?id='}+${p.id}" class="text-decoration-none btn btn-outline-success">
                                                         Añadir extras
                                                     </a>
                                                 </div>
@@ -123,8 +112,7 @@
                                                     </form>
                                                 </div>
                                                 <div class="col">
-                                                    <a th:href="@{/delExtra?id=}+${p.id}" class="text-decoration-none btn btn-outline-danger">
-                                                        <!-- <button type="button" class="btn btn-outline-danger">Eliminar Extras</button> -->
+                                                    <a th:href="@{'/restaurante/'+${id}+ '/delExtra?id='}+${p.id}" class="text-decoration-none btn btn-outline-danger">
                                                         Eliminar extras
                                                     </a>
                                                 </div>

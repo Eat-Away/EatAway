@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <th:block th:replace="fragments/head :: header" />
+        <title>EatAway: Eliminar Extra</title>
+    </head>
+    <body class="d-flex flex-column h-100">
+        <header th:replace="fragments/nav.html :: nav"></header>
+        <div class="container">
+            <h1>Eliminar un extra</h1>
+            <form action="#" th:action="@{/restaurante/delExtra}" method="post">
+                <div class="container">
+                    <label for="idExtra">Selecciona un extra a eliminar:</label>
+                    <select class="form-select" id="idExtra" name="idExtra">
+                        <option th:each="extra: ${extras}" th:value="${extra.id}" th:text="${extra.nombre}"></option>
+                    </select>
+                </div>
+                <div class="container">
+                    <label for="confirmacion" class="form-check-label">Confirmo que quiero eliminar el extra seleccionado</label>
+                    <input type="checkbox" class="form-check-input" id="confirmacion" required>
+                </div>
+                <div class="container">
+                    <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+        <th:block th:replace="fragments/footer.html :: footer" />
+    </body>
+</html>

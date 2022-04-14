@@ -97,9 +97,9 @@ public class RestauranteController {
 
     @GetMapping("/{id}/addExtra")
     public String altaExtra(Model model, @RequestParam long id){
-        List<Plato> listaPlatos = entityManager.find(Restaurante.class, id).getPlatos();
+        Plato listaPlatos = entityManager.find(Plato.class, id);
         model.addAttribute("extra", new Extra());
-        model.addAttribute("platos", listaPlatos);
+        model.addAttribute("plato", listaPlatos);
         return "addExtra";
     }
 
@@ -117,6 +117,29 @@ public class RestauranteController {
         entityManager.persist(extra);
         p.getExtras().add(extra);
         model.addAttribute("message", "Se ha añadido el extra nuevo en el plato "+p.getNombre()+" para el restaurante "+p.getRestaurante().getNombre());
+        return perfilRestaurante(model, session, u.getId());
+    }
+
+    @GetMapping("/{id}/delExtra")
+    public String bajaExtra(Model model, @RequestParam long id){
+        Plato plato = entityManager.find(Plato.class, id);
+        List<Extra> listaExtras = plato.getExtras();
+        model.addAttribute("extras", listaExtras);
+        return "delExtra";
+    }
+
+    @Transactional
+    @PostMapping("/delExtra")
+    public String procesaBajaExtra(Model model, @RequestParam long idExtra, HttpSession session){
+        User u = (User) session.getAttribute("u");
+        u = entityManager.find(User.class, u.getId());
+        Extra ex = entityManager.find(Extra.class, idExtra);
+        if(ex == null || ex.getPlato().getRestaurante().getPropietario().getId() != u.getId()){
+            throw new PermisoDenegadoException();
+        }
+        entityManager.remove(ex);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha borrado el extra " + ex.getNombre() + " del plato " + ex.getPlato().getNombre() + " exitosamente");
         return perfilRestaurante(model, session, u.getId());
     }
 
