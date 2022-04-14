@@ -2,7 +2,7 @@
 document.querySelectorAll(".delRest").forEach(b => {
      b.addEventListener("click", delRest => {
         if(confirm("Deseas eliminar el restaurante "+delRest.target.dataset.nombrerestaurante+"?") == true){
-            document.getElementById("delRestaurante?id="+delPlato.target.dataset.idrestaurante).submit();
+            document.getElementById("delRestaurante?id="+delRest.target.dataset.idrestaurante).submit();
          }
      })
  })

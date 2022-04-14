@@ -23,15 +23,15 @@ public class Plato {
     @ManyToOne
     private Restaurante restaurante;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "Plato_id")
     private List<Extra> extras = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "Plato_id")
     private List<Comentario> comentarios = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name="Plato_id")
     private List<PlatoPedido> platoPedidos = new ArrayList<>();
 }

@@ -32,11 +32,11 @@ public class Restaurante{
     @Nullable
     private byte[] foto;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name="Restaurante_id")
     private List<Pedido> pedidos = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name="Restaurante_id")
     private List<Comentario> comentarios = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class Restaurante{
     @JoinColumn(name="Restaurante_id")
     private List<Label> labels = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name="Restaurante_id")
     private List<Plato> platos = new ArrayList<>();
 }

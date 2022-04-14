@@ -36,7 +36,7 @@ public class Pedido {
     private double precioServicio;
     private LocalDateTime fechaPedido;
     private Double valoracion; //Double para que pueda ser null
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name="pedido_id")
     private List<PlatoPedido> contenidoPedido = new ArrayList<>();
     @ManyToOne

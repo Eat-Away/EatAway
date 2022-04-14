@@ -80,15 +80,6 @@ public class RestauranteController {
         if(rest == null || rest.getPropietario().getId() != u.getId()){
             throw new PermisoDenegadoException();
         }
-        for(Plato p: rest.getPlatos()){
-            for (Extra e : p.getExtras()){
-                entityManager.remove(e);
-            }
-            for (Comentario c : p.getComentarios()){
-                entityManager.remove(c);
-            }
-            entityManager.remove(p);
-        }
         entityManager.remove(rest);
         entityManager.flush();
         model.addAttribute("message", "Se ha borrado el restaurante "+ rest.getNombre() + " exitosamente!");
@@ -179,13 +170,6 @@ public class RestauranteController {
         if(p == null || p.getRestaurante().getPropietario().getId() != u.getId()){
             throw new PermisoDenegadoException();
         }
-        for (Extra e : p.getExtras()){
-            entityManager.remove(e);
-        }
-        for (Comentario c : p.getComentarios()){
-            entityManager.remove(c);
-        }
-
         entityManager.remove(p);
         entityManager.flush();
         model.addAttribute("message", "Se ha borrado el plato " + p.getNombre() + " exitosamente");
