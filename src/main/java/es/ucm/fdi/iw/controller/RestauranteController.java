@@ -94,7 +94,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/editRestaurante")
-    public String procesarEditar(@ModelAttribute Restaurante restaurante, HttpSession session, Model model){
+    public String procesarEditarRestaurante(@ModelAttribute Restaurante restaurante, HttpSession session, Model model){
         User u = (User) session.getAttribute("u");
         Restaurante r = entityManager.find(Restaurante.class, restaurante.getId());
         restaurante.setPropietario(u);
@@ -104,6 +104,7 @@ public class RestauranteController {
         restaurante.setValoracion(r.getValoracion());
         entityManager.merge(restaurante);
         entityManager.flush();
+        model.addAttribute("message", "Se ha editado el restaurante "+restaurante.getNombre() + " exitosamente");
         return perfilRestaurante(model, session, u.getId());
     }
 
@@ -157,6 +158,14 @@ public class RestauranteController {
         return perfilRestaurante(model, session, u.getId());
     }
 
+    @GetMapping("/{id}/editExtra")
+    public String editarExtra(Model model, @RequestParam long id){
+        Plato plato = entityManager.find(Plato.class, id);
+        model.addAttribute("textoPrueba", "Hola desde Java para JS");
+        model.addAttribute("extras", plato.getExtras());
+        model.addAttribute("nombrePlato", plato.getNombre());
+        return "editExtra";
+    }
     //GESTION DE PLATOS
 
     @GetMapping("/{id}/addPlato")
@@ -201,4 +210,25 @@ public class RestauranteController {
         return perfilRestaurante(model, session, u.getId());
     }
 
+    @GetMapping("/{id}/editPlato")
+    public String editarPlato(@RequestParam long id, Model model){
+        Plato plato = entityManager.find(Plato.class, id);
+        model.addAttribute("plato", plato);
+        return "editPlato";
+    }
+
+    @Transactional
+    @PostMapping("/editPlato")
+    public String procesarEditarPlato(@ModelAttribute Plato plato, HttpSession session, Model model){
+        User u = (User) session.getAttribute("u");
+        Plato p = entityManager.find(Plato.class, plato.getId());
+        plato.setComentarios(p.getComentarios());
+        plato.setExtras(p.getExtras());
+        plato.setPlatoPedidos(p.getPlatoPedidos());
+        plato.setRestaurante(p.getRestaurante());
+        entityManager.merge(plato);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha actualizado el plato " + plato.getNombre() + " del restaurante " + plato.getRestaurante().getNombre() + " exitosamente");
+        return perfilRestaurante(model, session, u.getId());
+    }
 }
