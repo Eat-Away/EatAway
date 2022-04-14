@@ -147,13 +147,6 @@ public class RestauranteController {
         return perfilRestaurante(model, session, u.getId());
     }
 
-    @GetMapping("/{id}/delPlato")
-    public String deletePlato(@RequestParam long id, Model model){
-        List<Plato> listaPlatos = entityManager.find(Restaurante.class, id).getPlatos();
-        model.addAttribute("platos", listaPlatos);
-        return "delPlato"; 
-    }
-
     @Transactional
     @PostMapping("/delPlato")
     public String procesarBorradoPlato(@RequestParam long idPlato, Model model, HttpSession session){
