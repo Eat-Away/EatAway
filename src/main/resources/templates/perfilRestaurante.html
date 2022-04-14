@@ -19,8 +19,7 @@
                 <div class="col-6">
                     <h4>Configuración de mis restaurantes</h4>
                     <button type="button" class="btn btn-success me-2"  id="modifRestButton">Modificar restaurante existente</button>
-                    <a th:href="@{/addRestaurante?id=}+${propietario.id}" class="btn btn-success">
-                        <!-- <button type="button" class="btn btn-success">Añadir restaurante nuevo</button> -->
+                    <a  th:href="@{'/restaurante/'+${id}+ '/addRestaurante?id='}+${propietario.id}" class="btn btn-success">
                         Añadir restaurante nuevo
                     </a>
                     <div class="row ps-0 mt-2" id="restaurantOptions" hidden>
@@ -41,7 +40,7 @@
                 <div class="col-4">
                     <img th:src="@{/img/}+${x.nombre}+@{.jpg}" width="300px" height="300px" alt="Logo del restaurante">
                 </div>
-                <div class="col-4">
+                <div class="col">
                     <div class="container">
                         <h4>Configuración del restaurante</h4>
                         <div class="row align-items-start">
@@ -53,8 +52,11 @@
                             <div class="col">
                                 <form th:action="@{/restaurante/delRestaurante}" method="post" name="delRestaurante" th:id="@{delRestaurante?id=}+${x.id}">
                                     <input type="hidden" th:value="${x.id}" id="id" name="id">
-                                    <button type="button" class="btn btn-danger delRest" th:attr="data-idrestaurante=${x.id}, data-nombrerestaurante=${x.nombre}">Eliminar Restaurante</button>
+                                    <button type="button" class="btn btn-outline-danger delRest" th:attr="data-idrestaurante=${x.id}, data-nombrerestaurante=${x.nombre}">Eliminar Restaurante</button>
                                 </form>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-outline-warning">Editar restaurante</button>
                             </div>
                         </div>
                     </div>
@@ -68,25 +70,19 @@
                     
                     <div class="col-4">
                         <h5>Últimas valoraciones</h5>
-                        <ol>
-                            <li>Reseña 1</li>
-                            <li>Reseña 2</li>
-                            <li>Reseña 3</li>
-                            <li>Reseña 4</li>
-                            <li>Reseña 5</li>
+                        <p th:if="${#lists.isEmpty(x.comentarios)}">No hay comentarios recientes</p>
+                        <ol th:each="comentario,comStat: ${x.comentarios}" th:unless="${comStat.index > 5}">
+                            <li th:text="|De ${comentario.autor.username}  para el plato  ${comentario.plato.nombre}: ${comentario.texto}|"></li>
                         </ol>
                     </div>
                     <div class="col-4">
                         <h5>Últimos pedidos realizados</h5>
-                        <ol>
-                            <li>Pedido 1</li>
-                            <li>Pedido 2</li>
-                            <li>Pedido 3</li>
-                            <li>Pedido 4</li>
-                            <li>Pedido 5</li>
+                        <p th:if="${#lists.isEmpty(x.pedidos)}">No hay pedidos recientes</p>
+                        <ol th:each="pedido,pedStat: ${x.pedidos}" th:unless="${pedStat.index > 5}">
+                            <li th:text="|Para ${pedido.cliente.username} en ${pedido.dirEntrega} por ${pedido.precioServicio}€|"></li>
                         </ol>
                     </div>
-                    <div class="col-9">
+                    <div class="col">
                         <table class="table">
                             <thead>
                                 <th scope="col">Nombre del Plato</th>
@@ -104,6 +100,12 @@
                                                     <a th:href="@{'/restaurante/'+${id}+ '/addExtra?id='}+${p.id}" class="text-decoration-none btn btn-outline-success">
                                                         Añadir extras
                                                     </a>
+                                                </div>
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-outline-warning">Editar Plato</button>
+                                                </div>
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-outline-warning">Editar Extras</button>
                                                 </div>
                                                 <div class="col">
                                                     <form th:action="@{/restaurante/delPlato}" method="post" name="delPlato" th:id="@{delPlato?id=}+${p.id}">

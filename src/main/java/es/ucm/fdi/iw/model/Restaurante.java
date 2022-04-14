@@ -34,6 +34,10 @@ public class Restaurante{
 
     @OneToMany
     @JoinColumn(name="Restaurante_id")
+    private List<Pedido> pedidos = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name="Restaurante_id")
     private List<Comentario> comentarios = new ArrayList<>();
 
     @OneToMany
