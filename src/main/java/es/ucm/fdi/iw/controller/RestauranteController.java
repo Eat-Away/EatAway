@@ -1,5 +1,7 @@
 package es.ucm.fdi.iw.controller;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -163,11 +165,36 @@ public class RestauranteController {
     @GetMapping("/{id}/editExtra")
     public String editarExtra(Model model, @RequestParam long id){
         Plato plato = entityManager.find(Plato.class, id);
-        model.addAttribute("textoPrueba", "Hola desde Java para JS");
-        model.addAttribute("extras", plato.getExtras());
+        List<Extra> listaExtras = plato.getExtras();
+        List<String> listaNombres = new ArrayList<>();
+        List<Double> listaPrecios = new ArrayList<>();
+        Iterator<Extra> iterador = listaExtras.iterator();
+        Extra ex;
+        while(iterador.hasNext()){
+            ex = iterador.next();
+            listaNombres.add(ex.getNombre());
+            listaPrecios.add(ex.getPrecio());
+        }
+        model.addAttribute("listaNombres", listaNombres);
+        model.addAttribute("listaPrecios", listaPrecios);
+        model.addAttribute("extras", listaExtras);
         model.addAttribute("nombrePlato", plato.getNombre());
         return "editExtra";
     }
+
+    @Transactional
+    @PostMapping("/editExtra")
+    public String procesarEditarExtra(@ModelAttribute Extra extra, HttpSession session, Model model){
+        User u = (User) session.getAttribute("u");
+        u = entityManager.find(User.class, u.getId());
+        Extra ex = entityManager.find(Extra.class, extra.getId());
+        extra.setPlato(ex.getPlato());
+        entityManager.merge(extra);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha actualizado el extra " + ex.getNombre() + " del plato " + ex.getPlato().getNombre() + " de " + ex.getPlato().getRestaurante().getNombre() + " exitosamente!");
+        return perfilRestaurante(model, session, u.getId());
+    }
+
     //GESTION DE PLATOS
 
     @GetMapping("/{id}/addPlato")
@@ -230,7 +257,7 @@ public class RestauranteController {
         plato.setRestaurante(p.getRestaurante());
         entityManager.merge(plato);
         entityManager.flush();
-        model.addAttribute("message", "Se ha actualizado el plato " + plato.getNombre() + " del restaurante " + plato.getRestaurante().getNombre() + " exitosamente");
+        model.addAttribute("message", "Se ha actualizado el plato " + p.getNombre() + " del restaurante " + plato.getRestaurante().getNombre() + " exitosamente");
         return perfilRestaurante(model, session, u.getId());
     }
 }

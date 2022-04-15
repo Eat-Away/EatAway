@@ -25,7 +25,7 @@
                     <input type="text" class="form-control" id="precio" name="precio" value="" required>
                 </div>
                 <div class="container">
-                    <button type="submit" class="btn btn-success">Añadir</button>
+                    <button type="submit" class="btn btn-success">Editar</button>
                 </div>
             </form>
         </div>
@@ -34,14 +34,15 @@
             function updateForm(){
                 var selector = document.getElementById("id");
                 var chosen = selector.value;
-                var extrasSize = /*[[${extras.size}]]*/ [];
+                var nombres = /*[[${listaNombres}]]*/ [];
+                var precios = /*[[${listaPrecios}]]*/ [];
                 if(chosen == -1){
                     console.log("Deberia limpiar el formulario")
                     document.getElementById("formEditExtra").reset();
                 }else{
                 console.log("Deberia actualizar el formulario a los datos el extra con ID "+ chosen);
-                    document.getElementById("nombre").value = /*[[${extras[0].nombre}]]*/ [];
-                    document.getElementById("precio").value = /*[[${extras[0].precio}]]*/ [];
+                    document.getElementById("nombre").value = nombres[chosen-1];
+                    document.getElementById("precio").value = precios[chosen-1];
                 }
             }
         </script>
