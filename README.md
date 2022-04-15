@@ -57,9 +57,18 @@ Disponemos de 4 tipos de usuarios. Dependiendo de cuál se trate, se podrá acce
 * **[Carrito:](http://localhost:8080/carrito)**
     - En esta vista el cliente podrá ver los productos que ha ido añadiendo a su pedido, y cuando esté preparado para pagar, efectuar la compra y supervisar el estado de su pedido, así como hablar con el repartidor que vaya a entregarle su comida
 
-## Uso de la base de datos
+## Cuentas precreadas y credenciales de acceso
 
-En import.sql podemos encontrar diferentes tablas como por ejemplo de los restaurantes, usuarios, platos, extras, pedidos y categorías. Cada una de ellas contienen diferentes campos de datos para poder crear la base de datos.
+Dentro del import.sql que crea la base de datos inicial de la aplicación contamos con varios usuarios precreados para acceder a los diferentes roles de la aplicación. Estos son los respectivos usuarios con su rol y contraseña:
+
+| Nombre de Usuario | Contraseña | Rol | Vistas Exclusivas del rol |
+| --------- | --------- | --------- | --------- |
+| a | aa | Administrador | admin.html |
+| b | aa | Usuario Normal | user.html, pedidoCliente.html |
+| repartidor | aa | Usuario Repartidor | repartidor.html, listaPedidos.html |
+| restaurante | aa | Propietario de Restaurantes | addExtra.html, addPlato.html, addRestaurante.html, delExtra.html, editExtra.html, editPlato.html, editRestaurante.html, perfilRestaurante.html |
+
+## Vistas en detalle
 
 En la vista *user.html* podemos encontrar el uso de la base de datos para poder obtener el nombre y la dirección del usuario:             
 ```
@@ -80,3 +89,19 @@ En la vista *perfilRestaurante.html* solo tendrá acceso un usuario registrado c
 En la vista *listaPedidos.html* usamos la base de datos para sacar el nombre y el id del pedido.
 
 En *finRegistro.html* la base de datos también está siendo usada para poder sacar el nombre del usuario que ha sido registrado.
+
+## Funcionalidades pendientes de arreglar
+[comment]: <> (Habría que ir poniendo aquí que cosas fallan)
+* Vista de Administración está en blanco
+* Implementar funcionalidad en el carrito
+* Cambiar la ruta de donde se cargan las imágenes que sean contenido de usuarios
+* Implementar poder subir imágenes
+* Poder listar los extras de cada plato en su vista
+* Poder añadir platos con extras (si se piden) al carrito
+* Procesar pedidos
+* Hacer que un pedido en curso pueda pasar a estar listo para recoger (Lo hace el propietario del restaurante?)
+* Que el repartidor pueda marcar un pedido como completado
+* El usuario debe poder valorar un pedido una vez finalizado
+* Dinamizar los últimos pedidos de los usuarios
+* Darle funcionamiento a los botones de categoría, filtrado y búsqueda del index
+* Añadir pruebas con Karate
