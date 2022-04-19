@@ -30,15 +30,15 @@
                                 <input type="text" class="form-control" id="horario" th:field="*{horario}" required>
                             -->
                             <label for="horario">Horario de apertura</label>
-                            <div id="horario">
+                            <div id="horario" onchange="updateHorario()">
                                 <div class="row align-items-center mb-2">
                                     <div class="form-check col">
-                                        <input type="checkbox" class="form-check-input ms-1" id="lunes" onchange="updateHorario()">
+                                        <input type="checkbox" class="form-check-input ms-1" id="lunes">
                                         <label for="lunes" class="form-check-label ps-2">Lunes</label>
                                     </div>
                                     <div class="col">
                                         <label>Desde: </label>
-                                        <select class="form-select-sm" onchange="updateHorario()">
+                                        <select class="form-select-sm">
                                             <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
                                         </select>
                                     </div>
