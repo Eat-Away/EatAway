@@ -7,44 +7,22 @@
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
         <div class="container">
-            <h1 th:text="|Editar un extra para el plato ${nombrePlato}|"></h1>
+            <h1 th:text="|Editar el extra ${extra.nombre} para el plato ${nombrePlato}|"></h1>
             <form action="#" th:action="@{/restaurante/editExtra}" th:object="${extra}" method="post" id="formEditExtra" name="formEditExtra">
                 <div class="container">
-                    <label for="id">Selecciona un extra:</label>
-                    <select class="form-select" id="id" name="id" onchange="updateForm()">
-                        <option value="-1">Selecciona una opción</option>
-                        <option th:each="extraId: ${extras}" th:value="${extraId.id}" th:text="${extraId.nombre}"></option>
-                    </select>
-                </div>
-                <div class="container">
                     <label for="nombre" class="form-label">Nombre del extra:</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" value="" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre" th:value="${extra.nombre}" required>
                 </div>
                 <div class="container">
                     <label for="precio" class="form-label">Precio del extra:</label>
-                    <input type="text" class="form-control" id="precio" name="precio" value="" required>
+                    <input type="text" class="form-control" id="precio" name="precio" th:value="${extra.precio}" required>
                 </div>
                 <div class="container">
+                    <input type="hidden" name="id" id="id" th:value="${extra.id}">
                     <button type="submit" class="btn btn-success">Editar</button>
                 </div>
             </form>
         </div>
         <th:block th:replace="fragments/footer.html :: footer" />
-        <script th:inline="javascript">
-            function updateForm(){
-                var selector = document.getElementById("id");
-                var chosen = selector.value;
-                var nombres = /*[[${listaNombres}]]*/ [];
-                var precios = /*[[${listaPrecios}]]*/ [];
-                if(chosen == -1){
-                    console.log("Deberia limpiar el formulario")
-                    document.getElementById("formEditExtra").reset();
-                }else{
-                console.log("Deberia actualizar el formulario a los datos el extra con ID "+ chosen);
-                    document.getElementById("nombre").value = nombres[chosen-1];
-                    document.getElementById("precio").value = precios[chosen-1];
-                }
-            }
-        </script>
     </body>
 </html>

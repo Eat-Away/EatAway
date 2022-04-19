@@ -14,3 +14,11 @@ document.querySelectorAll(".delPlato").forEach(b => {
         }
     })
 })
+ //Controla el borrado de extras
+ document.querySelectorAll(".delExtra").forEach(b => {
+    b.addEventListener("click", delExtra => {
+       if(confirm("Deseas eliminar el extra "+delExtra.target.dataset.nombreextra+"?") == true){
+           document.getElementById("delExtra?id="+delExtra.target.dataset.idextra).submit();
+        }
+    })
+})

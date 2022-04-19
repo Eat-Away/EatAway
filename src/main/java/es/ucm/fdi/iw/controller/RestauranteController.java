@@ -139,14 +139,6 @@ public class RestauranteController {
         return perfilRestaurante(model, session, u.getId());
     }
 
-    @GetMapping("/{id}/delExtra")
-    public String bajaExtra(Model model, @RequestParam long id){
-        Plato plato = entityManager.find(Plato.class, id);
-        List<Extra> listaExtras = plato.getExtras();
-        model.addAttribute("extras", listaExtras);
-        return "delExtra";
-    }
-
     @Transactional
     @PostMapping("/delExtra")
     public String procesaBajaExtra(Model model, @RequestParam long idExtra, HttpSession session){
@@ -164,21 +156,9 @@ public class RestauranteController {
 
     @GetMapping("/{id}/editExtra")
     public String editarExtra(Model model, @RequestParam long id){
-        Plato plato = entityManager.find(Plato.class, id);
-        List<Extra> listaExtras = plato.getExtras();
-        List<String> listaNombres = new ArrayList<>();
-        List<Double> listaPrecios = new ArrayList<>();
-        Iterator<Extra> iterador = listaExtras.iterator();
-        Extra ex;
-        while(iterador.hasNext()){
-            ex = iterador.next();
-            listaNombres.add(ex.getNombre());
-            listaPrecios.add(ex.getPrecio());
-        }
-        model.addAttribute("listaNombres", listaNombres);
-        model.addAttribute("listaPrecios", listaPrecios);
-        model.addAttribute("extras", listaExtras);
-        model.addAttribute("nombrePlato", plato.getNombre());
+        Extra extra = entityManager.find(Extra.class, id);
+        model.addAttribute("extra", extra);
+        model.addAttribute("nombrePlato", extra.getPlato().getNombre());
         return "editExtra";
     }
 
