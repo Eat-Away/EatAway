@@ -6,30 +6,246 @@
     </head>
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
-        <div class="container">
-            <h1>Añadir un restaurante nuevo</h1>
-            <form action="#" th:action="@{/restaurante/addRestaurante}" th:object="${restaurante}" method="post">
-                <div class="container">
-                    <label for="nombre" class="form-label">Nombre del Restaurante:</label>
-                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>
-                </div>
-                <div class="container">
-                    <label for="descripcion" class="form-label">Descripción del Restaurante:</label>
-                    <input type="text" class="form-control" id="descripcion" th:field="*{descripcion}" required>
-                </div>
-                <div class="container">
-                    <label for="horario" class="form-label">Horario de Atención:</label>
-                    <input type="text" class="form-control" id="horario" th:field="*{horario}" required>
-                </div>
-                <div class="container">
-                    <label for="direccion" class="form-label">Dirección del Restaurante:</label>
-                    <input type="text" class="form-control" id="direccion" th:field="*{direccion}" required>
-                </div>
-                <div class="container">
-                    <button type="submit" class="btn btn-success">Registrar</button>
-                </div>
-            </form>
-        </div>
+
+        <main class="flex-shrink-0">
+            <div class="container w-50">
+                <h2>Añadir un restaurante nuevo</h2>
+                <form th:action="@{/restaurante/addRestaurante}" th:object="${restaurante}" method="post">
+                    <div class="row row-cols-1 justify-content-center">
+                        <div class="col mb-2">
+                            <label for="nombre" class="form-label">Nombre del Restaurante:</label>
+                            <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>
+                        </div>  
+                        <div class="col mb-2">
+                            <label for="direccion" class="form-label">Dirección del Restaurante:</label>
+                            <input type="text" class="form-control" id="direccion" th:field="*{direccion}" required>
+                        </div>
+                        <div class="col mb-2">
+                            <label for="descripcion" class="form-label">Descripción del Restaurante:</label>
+                            <textarea class="form-control" id="descripcion" th:field="*{descripcion}" required></textarea>
+                        </div>
+                        <div class="col mb-2">
+                            <!--
+                                <label for="horario" class="form-label">Horario de apertura</label>
+                                <input type="text" class="form-control" id="horario" th:field="*{horario}" required>
+                            -->
+                            <label for="horario">Horario de apertura</label>
+                            <div id="horario">
+                                <div class="row align-items-center mb-2">
+                                    <div class="form-check col">
+                                        <input type="checkbox" class="form-check-input ms-1" id="lunes" onchange="updateHorario()">
+                                        <label for="lunes" class="form-check-label ps-2">Lunes</label>
+                                    </div>
+                                    <div class="col">
+                                        <label>Desde: </label>
+                                        <select class="form-select-sm" onchange="updateHorario()">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label>Hasta:</label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-2">
+                                    <div class="form-check col">
+                                        <input type="checkbox" class="form-check-input ms-1" id="martes" >
+                                        <label for="martes" class="form-check-label ps-2">Martes</label>
+                                    </div>
+                                    <div class="col">
+                                        <label>Desde: </label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label>Hasta:</label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-2">
+                                    <div class="form-check col">
+                                        <input type="checkbox" class="form-check-input ms-1" id="miercoles" >
+                                        <label for="miercoles" class="form-check-label ps-2">Miércoles</label>
+                                    </div>
+                                    <div class="col">
+                                        <label>Desde: </label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label>Hasta:</label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-2">
+                                    <div class="form-check col">
+                                        <input type="checkbox" class="form-check-input ms-1" id="jueves" >
+                                        <label for="jueves" class="form-check-label ps-2">Jueves</label>
+                                    </div>
+                                    <div class="col">
+                                        <label>Desde: </label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label>Hasta:</label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-2">
+                                    <div class="form-check col">
+                                        <input type="checkbox" class="form-check-input ms-1" id="viernes" >
+                                        <label for="viernes" class="form-check-label ps-2">Viernes</label>
+                                    </div>
+                                    <div class="col">
+                                        <label>Desde: </label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label>Hasta:</label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-2">
+                                    <div class="form-check col">
+                                        <input type="checkbox" class="form-check-input ms-1" id="sabado" >
+                                        <label for="sabado" class="form-check-label ps-2">Sábado</label>
+                                    </div>
+                                    <div class="col">
+                                        <label>Desde: </label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label>Hasta:</label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-2">
+                                    <div class="form-check col">
+                                        <input type="checkbox" class="form-check-input ms-1" id="domingo" >
+                                        <label for="domingo" class="form-check-label ps-2">Domingo</label>
+                                    </div>
+                                    <div class="col">
+                                        <label>Desde: </label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label>Hasta:</label>
+                                        <select class="form-select-sm">
+                                            <option th:each="x : ${horarioSelect}" th:attr="value=${x}" th:text="${x}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Tu elección</label>
+                                <p style="white-space: pre;" id="eleccionHorario" class="form-control" th:field="*{horario}" required></p>
+                            </div>
+                        </div>
+                        <div class="col mb-2">
+                            <button type="submit" class="btn btn-success">Registrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+
         <th:block th:replace="fragments/footer.html :: footer" />
+
+        <script>
+            function imprimirHorario(diasMismoLength, diasMismo, desde, hasta, seguido){
+                let horario = "";
+                if(diasMismoLength == 1)
+                        horario = diasMismo[0] + ": " + desde[0] + "-" + hasta[0];
+                else if(diasMismoLength == 2)
+                    horario = diasMismo[0] + " y " + diasMismo[1] + ": " + desde[0] + "-" + hasta[0];
+                else if(diasMismoLength > 2){
+                    if(seguido)
+                        horario = diasMismo[0] + " a " + diasMismo[diasMismoLength - 1] + ": " + desde[0] + "-" + hasta[0];
+                    else{
+                        for(let i = 0; i < diasMismoLength-2; i++){
+                            horario += diasMismo[i] + ", "
+                        }
+                        horario += diasMismo[diasMismoLength-2] + " y " + diasMismo[diasMismoLength-1] + ": " + desde[0] + "-" + hasta[0];
+                    }
+                }
+                return horario;
+            }
+
+            const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+            const dias = document.getElementById('horario').children;
+            function updateHorario(){
+                let diaCheck, seguido = true;
+                let horario = "";
+                let diasChecked = [], desde = [], hasta = [], diasMismo = [];
+
+                let pos = 0;
+                for(let i = 0; i < dias.length; i++){
+                    diaCheck = dias[i].children[0].children[0].checked;
+                    if(diaCheck){
+                        diasChecked[pos] = diasSemana[i];
+                        desde[pos] = dias[i].children[1].children[1].value;
+                        hasta[pos] = dias[i].children[2].children[1].value;
+                        pos++;
+                    }
+                }
+
+                diasMismo = [diasChecked[0]];
+                diaPos = diasSemana.findIndex((element) => element == diasChecked[0]) + 1;
+                while(diasChecked.length > 1){
+                    if(diasChecked[1] == diasSemana[diaPos]){
+                        if(desde[0] == desde[1] && hasta[0] == hasta[1]){
+                            diasMismo.push(diasChecked[1]);
+                            diasChecked.splice(1, 1); //elmina el dia en la pos 1
+                            desde.splice(1, 1); //elimina el horario de apertura en la pos i
+                            hasta.splice(1, 1); //elimina el horario de cierre en la pos i
+                        }
+                        else{
+                            horario += imprimirHorario(diasMismo.length, diasMismo, desde, hasta, seguido) + "\r\n";
+        
+                            desde.splice(0, 1);
+                            hasta.splice(0, 1);
+                            diasMismo.splice(0, diasMismo.length); //Limpiar array
+                            diasChecked.shift() //Elimina el primer elemento
+                            if(diasChecked.length > 0)
+                                diasMismo = [diasChecked[0]];
+                        }
+                    }
+                    else
+                        seguido = false;
+
+                    diaPos++;
+                }
+                if(diasChecked.length == 1){ //ultima iteración
+                    horario += imprimirHorario(diasMismo.length, diasMismo, desde, hasta, seguido) + "\r\n";
+
+                    desde.splice(0, 1);
+                    hasta.splice(0, 1);
+                    diasChecked.shift() //Elimina el primer elemento
+                }
+                let text = document.getElementById("eleccionHorario").textContent = horario;
+            }
+        </script>
     </body>
 </html>

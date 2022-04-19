@@ -21,12 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
-import es.ucm.fdi.iw.model.Comentario;
 import es.ucm.fdi.iw.model.Extra;
-import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
@@ -58,6 +54,15 @@ public class RestauranteController {
     @GetMapping("/{id}/addRestaurante")
     public String formularioRegistro(Model model, @RequestParam long id){
         model.addAttribute("restaurante", new Restaurante());
+        List<String> horarioSelect = new ArrayList<>();
+        for(int i = 0; i < 24; i++){
+            for(int j = 0; j < 60; j += 30){
+                String hora = String.format("%02d", i);
+                String min = String.format("%02d", j);
+                horarioSelect.add(hora + ":" + min);
+            }
+        }
+        model.addAttribute("horarioSelect", horarioSelect);
         return "addRestaurante";
     }
 
