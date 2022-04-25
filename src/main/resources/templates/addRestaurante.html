@@ -160,7 +160,7 @@
                             </div>
                             <div>
                                 <label>Tu elección</label>
-                                <p style="white-space: pre;" id="eleccionHorario" class="form-control" th:field="*{horario}" required></p>
+                                <input name="horario" readonly="readonly" type="text" style="white-space: pre;" id="eleccionHorario" class="form-control border-0" th:field="*{horario}"></p>
                             </div>
                         </div>
                         <div class="col mb-2">
@@ -244,7 +244,7 @@
                     hasta.splice(0, 1);
                     diasChecked.shift() //Elimina el primer elemento
                 }
-                let text = document.getElementById("eleccionHorario").textContent = horario;
+                let text = document.getElementById("eleccionHorario").value = horario;
             }
         </script>
     </body>
