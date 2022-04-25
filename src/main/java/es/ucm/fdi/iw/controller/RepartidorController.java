@@ -15,13 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import es.ucm.fdi.iw.dto.PedidoDto;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Repartidor;
-import es.ucm.fdi.iw.model.User;
+
 
 /**
  *  Gestión de usuarios de tipo repartidor.
@@ -44,9 +43,10 @@ public class RepartidorController {
     @GetMapping("/{id}/listaPedidos")
     public String listaPedidos(Model model,HttpSession session, @PathVariable long id) {
 		Repartidor u =(Repartidor)session.getAttribute("u");
-		
+		u = entityManager.find(Repartidor.class,u.getId());
+
 		if(u.getPedido() != null){ //Si el repartidor ya tiene asignado un pedido
-			return "repartidor";
+			return "chatRepartidor";
 		}
 		else{ //Si no tiene asignado ningún pedido
 			String query = "SELECT X FROM Pedido X WHERE X.repartidor = null";
@@ -79,7 +79,7 @@ public class RepartidorController {
 			entityManager.flush();
 
 
-			return "repartidor";
+			return "chatRepartidor";
 		}
 	}
 
