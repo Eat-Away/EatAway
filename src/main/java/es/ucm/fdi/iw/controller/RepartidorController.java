@@ -36,7 +36,7 @@ public class RepartidorController {
 	//private static final Logger log = LogManager.getLogger(RepartidorController.class);
 
     @GetMapping("/{id}")
-    public String index(Model model) {
+    public String index(Model model,HttpSession session, @PathVariable long id) {
         return "repartidor";
     }
 
