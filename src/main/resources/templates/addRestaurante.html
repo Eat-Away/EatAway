@@ -10,7 +10,7 @@
         <main class="flex-shrink-0">
             <div class="container w-50">
                 <h2>Añadir un restaurante nuevo</h2>
-                <form th:action="@{/restaurante/addRestaurante}" th:object="${restaurante}" method="post">
+                <form th:action="@{/restaurante/addRestaurante}" th:object="${restaurante}" method="post" enctype="multipart/form-data">
                     <div class="row row-cols-1 justify-content-center">
                         <div class="col mb-2">
                             <label for="nombre" class="form-label">Nombre del Restaurante:</label>
@@ -25,10 +25,10 @@
                             <textarea class="form-control" id="descripcion" th:field="*{descripcion}" required></textarea>
                         </div>
                         <div class="col mb-2">
-                            <!--
-                                <label for="horario" class="form-label">Horario de apertura</label>
-                                <input type="text" class="form-control" id="horario" th:field="*{horario}" required>
-                            -->
+                            <label for="logoRestaurante" class="form-label">Logotipo del restaurante:</label>
+                            <input type="file" id="foto" name="foto" th:field="*{foto}" class="form-control" required>
+                        </div>
+                        <div class="col mb-2">
                             <label for="horario">Horario de apertura</label>
                             <div id="horario" onchange="updateHorario()">
                                 <div class="row align-items-center mb-2">
