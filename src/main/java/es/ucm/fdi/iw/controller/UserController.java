@@ -193,11 +193,11 @@ public class UserController {
         return os -> FileCopyUtils.copy(in, os);
     }
 
-	@PostMapping("{id}/conf")
+	@PostMapping("/{id}/conf")
 	@ResponseBody
 	@Transactional
-	public String setConf(@RequestParam MultipartFile photo, @RequestParam String firstName, 
-	@RequestParam String lastName, @RequestParam String direction, @PathVariable long id, 
+	public String setConf(@RequestParam MultipartFile photo, /* @RequestParam String firstName, 
+	@RequestParam String lastName, @RequestParam String direction, */ @PathVariable long id, 
 	HttpServletResponse response, HttpSession session, Model model) throws IOException{
 
 		User target = entityManager.find(User.class, id);
@@ -229,7 +229,7 @@ public class UserController {
 			//log.info("failed to upload photo: emtpy file?");
 		//}
 
-		if(!firstName.isBlank()){
+		/* if(!firstName.isBlank()){
 			log.info("Updating first name for user {}", id);
 			target.setFirstName(firstName);
 		}
@@ -243,7 +243,7 @@ public class UserController {
 		}
 		entityManager.persist(target);
 		entityManager.flush();
-
+ */
 		return "{\"status\":\"configuration uploaded correctly\"}";
 	}
 
