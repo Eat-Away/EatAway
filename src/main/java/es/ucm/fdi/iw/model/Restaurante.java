@@ -4,6 +4,8 @@ import lombok.Data;
 import javax.persistence.*;
 
 import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,6 @@ public class Restaurante{
     private String horario;
     private String direccion;
     private double valoracion;
-    
-    @Lob
-    @Nullable
-    private byte[] foto;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="Restaurante_id")

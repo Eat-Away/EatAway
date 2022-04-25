@@ -1,5 +1,9 @@
 package es.ucm.fdi.iw.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,15 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.servlet.http.HttpSession;
 
+import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
 import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Plato;
@@ -29,9 +36,26 @@ import es.ucm.fdi.iw.model.User;
 @Controller
 @RequestMapping("restaurante")
 public class RestauranteController {
+    
     @Autowired
     private EntityManager entityManager;
-	private static final Logger log = LogManager.getLogger(AdminController.class);
+	
+    private static final Logger log = LogManager.getLogger(AdminController.class);
+	
+    @Autowired
+    private LocalData localData;
+
+    @GetMapping("/rimg/{id}")
+    public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
+        File f = localData.getFile("restaurante/"+id, ""+id+"Logo");
+        return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+    }
+
+    @GetMapping("/rimg/{idR}/plato/{id}")
+    public StreamingResponseBody getFotoPlato(@PathVariable long idR, @PathVariable long id) throws IOException {
+        File f = localData.getFile("restaurante/"+idR+"/plato", ""+id);
+        return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+    }
 
 	@GetMapping("{id}")
     public String perfilRestaurante(Model model, HttpSession session, @PathVariable long id){

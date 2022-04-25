@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <th:block th:replace="fragments/head :: header" />
+        <title>EatAway: Chat Repartidor</title>
+    </head>
+    <body class="d-flex flex-column h-100">
+        <header th:replace="fragments/nav.html :: nav"></header>
+        <div class="col">
+          <div class="container">
+            <div class="row">
+              <div style="border: 1px solid; border-color: black; height: 300px;">        
+              </div>
+            </div>
+            <div class="row">
+              <div style="display:flex; align-items:initial; margin-top: 10px;">
+                <input type="text" style="width : 270px;">
+                <button type="button" class="btn btn-success">Enviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <th:block th:replace="fragments/footer.html :: footer" />
+    </body>
+</html>
+<script th:src="@{/js/stomp.js}" src="js/stomp.js" type="text/javascript"></script>
