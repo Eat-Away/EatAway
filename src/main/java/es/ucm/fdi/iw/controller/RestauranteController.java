@@ -46,6 +46,18 @@ public class RestauranteController {
     @Autowired
     private LocalData localData;
 
+    @GetMapping("/rimg/{id}")
+    public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
+        File f = localData.getFile("restaurante/"+id, ""+id+"Logo");
+        return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+    }
+
+    @GetMapping("/rimg/{idR}/plato/{id}")
+    public StreamingResponseBody getFotoPlato(@PathVariable long idR, @PathVariable long id) throws IOException {
+        File f = localData.getFile("restaurante/"+idR+"/plato", ""+id);
+        return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+    }
+
 	@GetMapping("{id}")
     public String perfilRestaurante(Model model, HttpSession session, @PathVariable long id){
         User u =(User)session.getAttribute("u");

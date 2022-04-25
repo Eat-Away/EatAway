@@ -28,7 +28,7 @@
             <h3 th:text="${x.nombre}"></h3>
             <div class="row align-items-center">
                 <div class="col-4">
-                    <img th:src="@{/img/}+${x.nombre}+@{.jpg}" width="300px" height="300px" alt="Logo del restaurante">
+                    <img th:src="@{/rimg/{id}(id=${x.id})}" width="300px" height="300px" alt="Logo del restaurante">
                 </div>
                 <div class="col">
                     <div class="container">
@@ -90,7 +90,7 @@
                             <tbody>
                                 <tr th:each="p: ${x.platos}">
                                     <td th:text="${p.nombre}"></td>
-                                    <td><img th:src="@{/img/}+${p.nombre}+@{.jpg}" width="100px" height="100px" alt="Foto del plato"></td>
+                                    <td><img th:src="@{/rimg/{idR}/plato/{id}(idR=${x.id}, id=${p.id})}" width="100px" height="100px" alt="Foto del plato"></td>
                                     <td th:text="${p.descripcion}"></td>
                                     <td th:text="${p.ingredientes}"></td>
                                     <td th:text="|${p.precio}€|"></td>

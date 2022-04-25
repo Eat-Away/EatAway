@@ -43,7 +43,7 @@ public class RootController {
 
     @GetMapping("/rimg/{id}")
     public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
-        File f = localData.getFile("restaurante", ""+id+"Logo");
+        File f = localData.getFile("restaurante/"+id, ""+id+"Logo");
         return os -> FileCopyUtils.copy(new FileInputStream(f), os);
     }
 
