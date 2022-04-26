@@ -47,6 +47,20 @@ public class RestauranteController {
     @Autowired
     private LocalData localData;
 
+    
+    private boolean uploadPhoto(String path, String name, MultipartFile src){
+        File f = localData.getFile(path, name);
+        try (BufferedOutputStream stream =
+                new BufferedOutputStream(new FileOutputStream(f))) {
+            byte[] bytes = src.getBytes();
+            stream.write(bytes);
+        } catch (Exception e) {
+            log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
+            return false;
+        }
+        return true;
+    }
+
     @GetMapping("/rimg/{id}")
     public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
         File f = localData.getFile("restaurante/"+id, ""+id+"Logo");
@@ -91,7 +105,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/addRestaurante")
-    public String procesaFormulario(@ModelAttribute Restaurante restaurante, HttpSession session, Model model, @RequestParam("photo") MultipartFile photo){
+    public String procesaFormulario(@ModelAttribute Restaurante restaurante, HttpSession session, Model model, @RequestParam("photo") MultipartFile photo, @RequestParam("carousel") MultipartFile[] carouselPhotos){
         log.traceEntry("Ha entrado al procesado de formulario {}", restaurante);
         User u =(User)session.getAttribute("u");
         restaurante.setPropietario(u);
@@ -99,20 +113,34 @@ public class RestauranteController {
         entityManager.persist(restaurante);
         entityManager.flush();
         //Segmento encargado de la subida de imagenes
-        log.info("Updating photo for restaurant {}", u.getId());
-		File f = localData.getFile("restaurante/"+restaurante.getId(), ""+restaurante.getId()+"Logo");
-		if (photo.isEmpty()) {
-			log.info("failed to upload photo: emtpy file?");
-		} else {
-			try (BufferedOutputStream stream =
-					new BufferedOutputStream(new FileOutputStream(f))) {
-				byte[] bytes = photo.getBytes();
-				stream.write(bytes);
-			} catch (Exception e) {
-				log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
-			}
-			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
-		}
+        //Subida del logo
+        if(!photo.isEmpty()){
+            log.info("Updating photo for restaurant {}", u.getId());
+            if(uploadPhoto("restaurante/"+restaurante.getId(), restaurante.getId()+"Logo", photo)){
+                log.info("Successfully uploaded photo!");
+            }else{
+                log.warn("Error uploading photo");
+            }
+        }else{
+            log.info("Not photo selected to upload");
+        }
+        //Subida de fotos del carrusel
+        if(carouselPhotos.length != 0){
+            int arrayLength = carouselPhotos.length;
+            if(arrayLength > 2){//Si se suben mas de dos ficheros se cargan solo los dos primeros del array
+                arrayLength = 2;
+            }
+            for(int i=0;i<arrayLength;i++){
+                int n = i + 1;
+                if(uploadPhoto("restaurante/"+restaurante.getId(), restaurante.getId()+"Carousel"+n, carouselPhotos[i])){
+                    log.info("Successfully uploaded photo!");
+                }else{
+                    log.warn("Error uploading photo");
+                }
+            }
+        }else{
+            log.info("No carousel photos selected to upload");
+        }
         //Si todo ha ido bien dara el mensaje de exito
         model.addAttribute("message", "Se ha creado con éxito el restaurante nuevo");
         return perfilRestaurante(model, session, u.getId());
@@ -142,7 +170,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/editRestaurante")
-    public String procesarEditarRestaurante(@ModelAttribute Restaurante restaurante, @RequestParam MultipartFile photo, HttpSession session, Model model){
+    public String procesarEditarRestaurante(@ModelAttribute Restaurante restaurante, @RequestParam MultipartFile photo,@RequestParam("carousel") MultipartFile[] carouselPhotos, HttpSession session, Model model){
         User u = (User) session.getAttribute("u");
         Restaurante r = entityManager.find(Restaurante.class, restaurante.getId());
         restaurante.setPropietario(u);
@@ -155,16 +183,28 @@ public class RestauranteController {
         //Subida de foto modificada para admitir subida vacia (No se ha cambiado la foto)
 		if (!photo.isEmpty()) {
             log.info("Updating photo for restaurant {}", u.getId());
-            File f = localData.getFile("restaurante/"+restaurante.getId(), ""+restaurante.getId()+"Logo");
-			try (BufferedOutputStream stream =
-					new BufferedOutputStream(new FileOutputStream(f))) {
-				byte[] bytes = photo.getBytes();
-				stream.write(bytes);
-			} catch (Exception e) {
-				log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
-			}
-			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
+            if(uploadPhoto("restaurante/"+restaurante.getId(), restaurante.getId()+"Logo", photo)){
+                log.info("Successfully uploaded photo!");
+            }else{
+				log.warn("Error uploading photo");
+            }
 		}
+        if(carouselPhotos.length != 0){
+            int arrayLength = carouselPhotos.length;
+            if(arrayLength > 2){//Si se suben mas de dos ficheros se cargan solo los dos primeros del array
+                arrayLength = 2;
+            }
+            for(int i=0;i<arrayLength;i++){
+                int n = i + 1;
+                if(uploadPhoto("restaurante/"+restaurante.getId(), restaurante.getId()+"Carousel"+n, carouselPhotos[i])){
+                    log.info("Successfully uploaded photo!");
+                }else{
+                    log.warn("Error uploading photo");
+                }
+            }
+        }else{
+            log.info("No carousel photos selected to upload");
+        }
         model.addAttribute("message", "Se ha editado el restaurante "+restaurante.getNombre() + " exitosamente");
         return perfilRestaurante(model, session, u.getId());
     }
@@ -258,20 +298,16 @@ public class RestauranteController {
         r.getPlatos().add(plato);
 
 
-        log.info("Updating photo for dish {}", u.getId());
-		File f = localData.getFile("restaurante/"+plato.getRestaurante().getId()+"/plato", ""+plato.getId());
-		if (photo.isEmpty()) {
-			log.info("failed to upload photo: emtpy file?");
-		} else {
-			try (BufferedOutputStream stream =
-					new BufferedOutputStream(new FileOutputStream(f))) {
-				byte[] bytes = photo.getBytes();
-				stream.write(bytes);
-			} catch (Exception e) {
-				log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
-			}
-			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
-		}
+        if(!photo.isEmpty()){
+            log.info("Updating photo for dish {}", u.getId());
+            if(uploadPhoto("restaurante/"+plato.getRestaurante().getId()+"/plato", ""+plato.getId(), photo)){
+                log.info("Successfully uploaded photo!");
+            }else{
+                log.warn("Error uploading photo");
+            }
+        }else{
+            log.info("Not photo selected to upload");
+        }
 
         model.addAttribute("message", "Se ha añadido el plato nuevo en "+r.getNombre());
         return perfilRestaurante(model, session, u.getId());
@@ -313,16 +349,12 @@ public class RestauranteController {
         
         //Subida de foto modificada para admitir subida vacia (No se ha cambiado la foto)
 		if (!photo.isEmpty()) {
-            log.info("Updating photo for restaurant {}", u.getId());
-            File f = localData.getFile("restaurante/"+plato.getRestaurante().getId()+"/plato", ""+plato.getId());
-			try (BufferedOutputStream stream =
-					new BufferedOutputStream(new FileOutputStream(f))) {
-				byte[] bytes = photo.getBytes();
-				stream.write(bytes);
-			} catch (Exception e) {
-				log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
-			}
-			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
+            log.info("Updating photo for dish {}", u.getId());
+            if(uploadPhoto("restaurante/"+plato.getRestaurante().getId()+"/plato", ""+plato.getId(), photo)){
+                log.info("Successfully uploaded photo!");
+            }else{
+                log.warn("Error uploading photo");
+            }
 		}
 
         model.addAttribute("message", "Se ha actualizado el plato " + p.getNombre() + " del restaurante " + plato.getRestaurante().getNombre() + " exitosamente");

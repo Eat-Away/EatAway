@@ -25,8 +25,12 @@
                             <textarea class="form-control" id="descripcion" th:field="*{descripcion}" required></textarea>
                         </div>
                         <div class="col mb-2">
-                            <label for="logoRestaurante" class="form-label">Logotipo del restaurante:</label>
+                            <label for="photo" class="form-label">Logotipo del restaurante:</label>
                             <input type="file" id="photo" name="photo" class="form-control" required>
+                        </div>
+                        <div class="col mb-2">
+                            <label for="formFileMultiple" class="form-label">Fotos de carrusel:</label>
+                            <input type="file" id="carousel" name="carousel" class="form-control" required multiple>
                         </div>
                         <div class="col mb-2">
                             <label for="horario">Horario de apertura</label>
