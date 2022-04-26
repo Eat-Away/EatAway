@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +67,6 @@ public class RestauranteController {
         if (u.getId() != r.getPropietario().getId()) {
             return "index";
         }
-
-        //model.addAttribute("restaurante", r);
         model.addAttribute("availableRestaurants", r.getPropietario().getRestaurantes());
         model.addAttribute("propietario", r.getPropietario());
         return "perfilRestaurante";
@@ -101,6 +98,7 @@ public class RestauranteController {
         restaurante.setValoracion(0.0);
         entityManager.persist(restaurante);
         entityManager.flush();
+        //Segmento encargado de la subida de imagenes
         log.info("Updating photo for restaurant {}", u.getId());
 		File f = localData.getFile("restaurante/"+restaurante.getId(), ""+restaurante.getId()+"Logo");
 		if (photo.isEmpty()) {
@@ -115,6 +113,7 @@ public class RestauranteController {
 			}
 			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
 		}
+        //Si todo ha ido bien dara el mensaje de exito
         model.addAttribute("message", "Se ha creado con éxito el restaurante nuevo");
         return perfilRestaurante(model, session, u.getId());
     }
@@ -143,7 +142,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/editRestaurante")
-    public String procesarEditarRestaurante(@ModelAttribute Restaurante restaurante, HttpSession session, Model model){
+    public String procesarEditarRestaurante(@ModelAttribute Restaurante restaurante, @RequestParam MultipartFile photo, HttpSession session, Model model){
         User u = (User) session.getAttribute("u");
         Restaurante r = entityManager.find(Restaurante.class, restaurante.getId());
         restaurante.setPropietario(u);
@@ -153,6 +152,19 @@ public class RestauranteController {
         restaurante.setValoracion(r.getValoracion());
         entityManager.merge(restaurante);
         entityManager.flush();
+        //Subida de foto modificada para admitir subida vacia (No se ha cambiado la foto)
+		if (!photo.isEmpty()) {
+            log.info("Updating photo for restaurant {}", u.getId());
+            File f = localData.getFile("restaurante/"+restaurante.getId(), ""+restaurante.getId()+"Logo");
+			try (BufferedOutputStream stream =
+					new BufferedOutputStream(new FileOutputStream(f))) {
+				byte[] bytes = photo.getBytes();
+				stream.write(bytes);
+			} catch (Exception e) {
+				log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
+			}
+			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
+		}
         model.addAttribute("message", "Se ha editado el restaurante "+restaurante.getNombre() + " exitosamente");
         return perfilRestaurante(model, session, u.getId());
     }
@@ -232,7 +244,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/addPlato")
-    public String procesaAltaPlato(@RequestParam long idRestaurante, @ModelAttribute Plato plato, HttpSession session, Model model){
+    public String procesaAltaPlato(@RequestParam long idRestaurante, @RequestParam MultipartFile photo, @ModelAttribute Plato plato, HttpSession session, Model model){
         User u = (User)session.getAttribute("u"); //Obtiene el usuario que agrega el plato para al procesarse vuelva al perfilRestaurante
         u = entityManager.find(User.class, u.getId());
         Restaurante r = entityManager.find(Restaurante.class, idRestaurante);
@@ -244,6 +256,22 @@ public class RestauranteController {
         entityManager.persist(plato);
         
         r.getPlatos().add(plato);
+
+
+        log.info("Updating photo for dish {}", u.getId());
+		File f = localData.getFile("restaurante/"+plato.getRestaurante().getId()+"/plato", ""+plato.getId());
+		if (photo.isEmpty()) {
+			log.info("failed to upload photo: emtpy file?");
+		} else {
+			try (BufferedOutputStream stream =
+					new BufferedOutputStream(new FileOutputStream(f))) {
+				byte[] bytes = photo.getBytes();
+				stream.write(bytes);
+			} catch (Exception e) {
+				log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
+			}
+			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
+		}
 
         model.addAttribute("message", "Se ha añadido el plato nuevo en "+r.getNombre());
         return perfilRestaurante(model, session, u.getId());
@@ -273,7 +301,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/editPlato")
-    public String procesarEditarPlato(@ModelAttribute Plato plato, HttpSession session, Model model){
+    public String procesarEditarPlato(@ModelAttribute Plato plato, @RequestParam MultipartFile photo, HttpSession session, Model model){
         User u = (User) session.getAttribute("u");
         Plato p = entityManager.find(Plato.class, plato.getId());
         plato.setComentarios(p.getComentarios());
@@ -282,6 +310,21 @@ public class RestauranteController {
         plato.setRestaurante(p.getRestaurante());
         entityManager.merge(plato);
         entityManager.flush();
+        
+        //Subida de foto modificada para admitir subida vacia (No se ha cambiado la foto)
+		if (!photo.isEmpty()) {
+            log.info("Updating photo for restaurant {}", u.getId());
+            File f = localData.getFile("restaurante/"+plato.getRestaurante().getId()+"/plato", ""+plato.getId());
+			try (BufferedOutputStream stream =
+					new BufferedOutputStream(new FileOutputStream(f))) {
+				byte[] bytes = photo.getBytes();
+				stream.write(bytes);
+			} catch (Exception e) {
+				log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
+			}
+			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
+		}
+
         model.addAttribute("message", "Se ha actualizado el plato " + p.getNombre() + " del restaurante " + plato.getRestaurante().getNombre() + " exitosamente");
         return perfilRestaurante(model, session, u.getId());
     }

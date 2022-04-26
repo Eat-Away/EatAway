@@ -8,7 +8,7 @@
         <header th:replace="fragments/nav.html :: nav"></header>
         <div class="container">
             <h1 th:text="|Editar el restaurante ${restaurante.nombre}|"></h1>
-            <form action="#" th:action="@{/restaurante/editRestaurante}" th:object="${restaurante}" method="post">
+            <form action="#" th:action="@{/restaurante/editRestaurante}" th:object="${restaurante}" method="post" enctype="multipart/form-data">
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre del Restaurante:</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" th:value="${restaurante.nombre}" required>
@@ -24,6 +24,10 @@
                 <div class="container">
                     <label for="direccion" class="form-label">Dirección del Restaurante:</label>
                     <input type="text" class="form-control" id="direccion" name="direccion" th:value="${restaurante.direccion}" required>
+                </div>
+                <div class="container">
+                    <label for="logoRestaurante" class="form-label">Logotipo del restaurante:</label>
+                    <input type="file" id="photo" name="photo" class="form-control">
                 </div>
                 <div class="container">
                     <input type="hidden" id="id" name="id" th:value="${restaurante.id}">

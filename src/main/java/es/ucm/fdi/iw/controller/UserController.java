@@ -149,7 +149,7 @@ public class UserController {
 		
 		if (edited.getPassword() != null) {
             if ( ! edited.getPassword().equals(pass2)) {
-                // FIXME: complain
+                throw new NoEsTuPerfilException();
             } else {
                 // save encoded version of password
                 target.setPassword(encodePassword(edited.getPassword()));

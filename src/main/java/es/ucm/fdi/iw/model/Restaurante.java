@@ -2,11 +2,6 @@ package es.ucm.fdi.iw.model;
 
 import lombok.Data;
 import javax.persistence.*;
-
-import org.springframework.lang.Nullable;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
