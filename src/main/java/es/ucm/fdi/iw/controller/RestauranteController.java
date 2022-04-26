@@ -1,7 +1,9 @@
 package es.ucm.fdi.iw.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -91,13 +94,27 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/addRestaurante")
-    public String procesaFormulario(@ModelAttribute Restaurante restaurante, HttpSession session, Model model){
+    public String procesaFormulario(@ModelAttribute Restaurante restaurante, HttpSession session, Model model, @RequestParam("photo") MultipartFile photo){
         log.traceEntry("Ha entrado al procesado de formulario {}", restaurante);
         User u =(User)session.getAttribute("u");
         restaurante.setPropietario(u);
         restaurante.setValoracion(0.0);
         entityManager.persist(restaurante);
         entityManager.flush();
+        log.info("Updating photo for restaurant {}", u.getId());
+		File f = localData.getFile("restaurante/"+restaurante.getId(), ""+restaurante.getId()+"Logo");
+		if (photo.isEmpty()) {
+			log.info("failed to upload photo: emtpy file?");
+		} else {
+			try (BufferedOutputStream stream =
+					new BufferedOutputStream(new FileOutputStream(f))) {
+				byte[] bytes = photo.getBytes();
+				stream.write(bytes);
+			} catch (Exception e) {
+				log.warn("Error uploading " + f.getAbsolutePath() + " ", e);
+			}
+			log.info("Successfully uploaded photo into {}!", f.getAbsolutePath());
+		}
         model.addAttribute("message", "Se ha creado con éxito el restaurante nuevo");
         return perfilRestaurante(model, session, u.getId());
     }

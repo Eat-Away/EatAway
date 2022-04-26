@@ -11,7 +11,10 @@
 
     <main class="flex-shrink-0">
         <div class="container">
-            <h1 class="mt-5">Administración</h1>
+            <div class="flex-grow-1 ms-3">
+            <h1>Pagina principal Admin: <span th:text="${user.username}"></span></h1>
+            <h3 th:text="|Nombre: ${user.firstName}|"></h3>
+            <h3 th:text="|Apellidos: ${user.lastName}|"></h3>
         </div>
     </main>
 

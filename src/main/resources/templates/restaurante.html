@@ -17,10 +17,10 @@
                 <div id="restaurantImages" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner" th:each = "x : ${restaurante}">
                         <div class="carousel-item active">
-                            <img th:src="@{/img/}+${x.nombre}+@{Logo}+@{.jpg}" class="d-block w-100" alt="First slide" width="738" height="658">
+                            <img th:src="@{/rimg/{idR}/carousel{n}(idR=${x.id}, n=@{1})}" class="d-block w-100" alt="First slide" width="738" height="658">
                         </div>
                         <div class="carousel-item">
-                            <img th:src="@{/img/}+${x.nombre}+@{Logo2}+@{.jpg}" class="d-block w-100" alt="Second slide" width="738" height="658">
+                            <img th:src="@{/rimg/{idR}/carousel{n}(idR=${x.id}, n=@{2})}" class="d-block w-100" alt="Second slide" width="738" height="658">
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target ="#restaurantImages" data-bs-slide="prev">
@@ -43,7 +43,7 @@
                                 <!-- <tr> -->
                                     <div type="row ">
                                         <div class="col">
-                                            <img th:src="@{/img/}+${x.nombre}+@{.jpg}" class="card-img-top" width="383" height="380">
+                                            <img th:src="@{/rimg/{idR}/plato/{id}(idR=${restaurante.id}, id=${x.id})}" class="card-img-top" width="383" height="380">
                                         </div> 
                                         <div class="col">
                                             <h4 class="font-italic" th:text="${x.nombre}">Nombre del plato</h4>

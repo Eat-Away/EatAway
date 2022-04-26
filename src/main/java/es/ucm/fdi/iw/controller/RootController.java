@@ -47,6 +47,19 @@ public class RootController {
         return os -> FileCopyUtils.copy(new FileInputStream(f), os);
     }
 
+    @GetMapping("/rimg/{idR}/plato/{id}")
+    public StreamingResponseBody getFotoPlato(@PathVariable long idR, @PathVariable long id) throws IOException {
+        File f = localData.getFile("restaurante/"+idR+"/plato", ""+id);
+        return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+    }
+
+    @GetMapping("/rimg/{id}/carousel{n}")
+    public StreamingResponseBody getFotoCarousel(@PathVariable long id, @PathVariable long n) throws IOException {
+        File f = localData.getFile("restaurante/"+id, ""+id+"Carousel"+n);
+        return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+    }
+
+
     @ResponseStatus(
 		value=HttpStatus.FORBIDDEN, 
 		reason="Alto ahí, no tienes permiso para hacer esto")  // 403
