@@ -1,12 +1,15 @@
 package es.ucm.fdi.iw.controller;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.EntityManager;
 
@@ -46,8 +49,20 @@ public class RestauranteController {
 	
     @Autowired
     private LocalData localData;
-
     
+    @GetMapping("{id}")
+    public String perfilRestaurante(Model model, HttpSession session, @PathVariable long id){
+        User u =(User)session.getAttribute("u");
+        Restaurante r = entityManager.find(Restaurante.class, id);
+
+        if (u.getId() != r.getPropietario().getId()) {
+            return "index";
+        }
+        model.addAttribute("availableRestaurants", r.getPropietario().getRestaurantes());
+        model.addAttribute("propietario", r.getPropietario());
+        return "perfilRestaurante";
+    }
+
     private boolean uploadPhoto(String path, String name, MultipartFile src){
         File f = localData.getFile(path, name);
         try (BufferedOutputStream stream =
@@ -60,30 +75,39 @@ public class RestauranteController {
         }
         return true;
     }
-
+    
+    /**
+     * Returns the default profile pic
+     * 
+     * @return
+     */
+    private static InputStream defaultPic() {
+	    return new BufferedInputStream(Objects.requireNonNull(
+            RestauranteController.class.getClassLoader().getResourceAsStream(
+                "static/img/default-pic.jpg")));
+    }
+    
     @GetMapping("/rimg/{id}")
     public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
         File f = localData.getFile("restaurante/"+id, ""+id+"Logo");
-        return os -> FileCopyUtils.copy(new FileInputStream(f), os);
-    }
+        
+        InputStream in = new BufferedInputStream(f.exists() ?
+        new FileInputStream(f) : RestauranteController.defaultPic());
+        //return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+        return os -> FileCopyUtils.copy(in, os);
+    }	
 
     @GetMapping("/rimg/{idR}/plato/{id}")
     public StreamingResponseBody getFotoPlato(@PathVariable long idR, @PathVariable long id) throws IOException {
+        //File f = localData.getFile("restaurante/"+idR+"/plato", ""+id);
+        //return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+
         File f = localData.getFile("restaurante/"+idR+"/plato", ""+id);
-        return os -> FileCopyUtils.copy(new FileInputStream(f), os);
-    }
-
-	@GetMapping("{id}")
-    public String perfilRestaurante(Model model, HttpSession session, @PathVariable long id){
-        User u =(User)session.getAttribute("u");
-        Restaurante r = entityManager.find(Restaurante.class, id);
-
-        if (u.getId() != r.getPropietario().getId()) {
-            return "index";
-        }
-        model.addAttribute("availableRestaurants", r.getPropietario().getRestaurantes());
-        model.addAttribute("propietario", r.getPropietario());
-        return "perfilRestaurante";
+        
+        InputStream in = new BufferedInputStream(f.exists() ?
+        new FileInputStream(f) : RestauranteController.defaultPic());
+        //return os -> FileCopyUtils.copy(new FileInputStream(f), os);
+        return os -> FileCopyUtils.copy(in, os);
     }
 
     //GESTION DE RESTAURANTES

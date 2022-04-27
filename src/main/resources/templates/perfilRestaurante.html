@@ -27,10 +27,10 @@
         <div class="container mb-5 restaurant" th:each ="x: ${availableRestaurants}" th:id="${x.nombre}+'Rest'">
             <h3 th:text="${x.nombre}"></h3>
             <div class="row align-items-center">
-                <div class="col-4">
-                    <img th:src="@{/rimg/{id}(id=${x.id})}" width="300px" height="300px" alt="Logo del restaurante">
+                <div class="col-6">
+                    <img th:src="@{/restaurante/rimg/{id}(id=${x.id})}" width="300px" height="300px" alt="Logo del restaurante">
                 </div>
-                <div class="col">
+                <div class="col-6">
                     <div class="container">
                         <h4>Configuración del restaurante</h4>
                         <div class="row align-items-start">
@@ -148,6 +148,34 @@
         
         <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
         <script>
+/* 
+            function updateImage(logoDivId){
+                let logoDiv = document.getElementById(logoDivId).parentElement;
+                let restaurantId = logoDivId.replaceAll("Logo", "");
+                
+                let fileSelector = document.createElement('input');
+                fileSelector.setAttribute('type', 'file');
+                fileSelector.setAttribute('hidden', 'true');
+
+                logoDiv.appendChild(fileSelector);
+
+                fileSelector.click();
+    
+                fileSelector.onchange = e =>{
+                    let img = document.getElementById(logoDivId + "Edit");
+                    console.log(img.src);
+                    readImageFileData(fileSelector.files[0], img);
+
+                    let url = config.rootUrl + "/restaurante/rimg/" + restaurantId;
+                    console.log(img.src);
+                    postImage(img, url, "photo").then(() => {
+                        let cacheBuster = "?" + new Date().getTime();
+                        img.src = url + cacheBuster;
+                    });
+                }
+            }
+
+ */
             //Muestra el datalist al pinchar en el botón de modificar restaurante
             document.querySelector("#modifRestButton").onclick = e => {
                 e.preventDefault();

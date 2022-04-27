@@ -98,11 +98,9 @@ function go(url, method, data = {}, headers = false) {
             const r = response;
             console.log("Response.ok = ", r.ok);
             if (r.ok) {
-                //console.log("Promise resolve");
                 return r.json().then(json => Promise.resolve(json));
             } 
             else {
-                //console.log("Promise reject");
                 return r.text().then(text => Promise.reject({
                     url,
                     data: JSON.stringify(data),
@@ -111,7 +109,6 @@ function go(url, method, data = {}, headers = false) {
                 }));
             }
         });
-        //.catch(error => console.log("Error ", error.message));
 }
 
 /**
@@ -191,7 +188,6 @@ function go(url, method, data = {}, headers = false) {
         });
     }
     let imageBlob = toBlob(img.src);
-    //return imageBlob;
     let fd = new FormData();
     fd.append(name, imageBlob, filename);
     return go(endpoint, "POST", fd, {});
