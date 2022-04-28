@@ -7,6 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -172,7 +176,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/delRestaurante")
-    public String borraRestaurante(@RequestParam long id, HttpSession session, Model model){
+    public String borraRestaurante(@RequestParam long id, HttpSession session, Model model) throws Exception{
         User u = (User)session.getAttribute("u");
         u = entityManager.find(User.class, u.getId());
         Restaurante rest = entityManager.find(Restaurante.class, id);
@@ -181,6 +185,18 @@ public class RestauranteController {
         }
         entityManager.remove(rest);
         entityManager.flush();
+        //Elimina el fichero asociado al plato
+        File f = localData.getFolder("restaurante/"+rest.getId());
+        try{
+            if(FileSystemUtils.deleteRecursively(f)){
+                log.info("Se ha borrado la multimedia del restaurante "+rest.getId());
+            }else{
+                log.warn("Error eliminando la multimedia del restaurante. Ruta: " + f.getAbsolutePath());
+            }
+        }catch(Exception ex){
+            log.error("Excepcion eliminando la multimedia del restaurante. Ruta: " + f.getAbsolutePath());
+            throw ex;
+        }
         model.addAttribute("message", "Se ha borrado el restaurante "+ rest.getNombre() + " exitosamente!");
         return perfilRestaurante(model, session, u.getId());
     }
@@ -339,7 +355,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/delPlato")
-    public String procesarBorradoPlato(@RequestParam long idPlato, Model model, HttpSession session){
+    public String procesarBorradoPlato(@RequestParam long idPlato, Model model, HttpSession session) throws IOException{
         User u = (User)session.getAttribute("u");
         u = entityManager.find(User.class, u.getId());
         Plato p = entityManager.find(Plato.class, idPlato);
@@ -348,6 +364,15 @@ public class RestauranteController {
         }
         entityManager.remove(p);
         entityManager.flush();
+        //Elimina el fichero asociado al plato
+        File f = localData.getFile("restaurante/"+p.getRestaurante().getId()+"/plato/", ""+p.getId());
+        try{
+            Files.delete(f.toPath());
+            log.info("Se ha borrado la imagen del plato"+p.getId());
+        }catch(IOException ex){
+            log.warn("Error eliminando la imagen del plato. Ruta: " + f.getAbsolutePath());
+            throw ex;
+        }
         model.addAttribute("message", "Se ha borrado el plato " + p.getNombre() + " exitosamente");
         return perfilRestaurante(model, session, u.getId());
     }
