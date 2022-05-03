@@ -22,3 +22,11 @@ document.querySelectorAll(".delPlato").forEach(b => {
         }
     })
 })
+//Controla la actualizacion de estado de pedidos
+document.querySelectorAll(".updatePedido").forEach(b => {
+    b.addEventListener("click", updatePedido => {
+       if(confirm("Deseas actualizar el estado del pedido "+updatePedido.target.dataset.idpedido+" al estado "+updatePedido.target.dataset.nuevoestado+"?") == true){
+           document.getElementById("updatePedido?id="+updatePedido.target.dataset.idpedido).submit();
+        }
+    })
+})

@@ -42,6 +42,7 @@ import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
+import es.ucm.fdi.iw.model.Pedido.Estado;
 
 @Controller
 @RequestMapping("restaurante")
@@ -75,7 +76,7 @@ public class RestauranteController {
         if(u.getId() != r.getPropietario().getId()){
             return "index";
         }
-        String query = "SELECT X FROM Pedido X WHERE (X.estado = 1 OR X.estado = 2) AND X.restaurante.id ="+r.getId();
+        String query = "SELECT X FROM Pedido X WHERE (X.estado = 1 OR X.estado = 2 OR X.estado = 3) AND X.restaurante.id ="+r.getId();
         List<Pedido> p = (List<Pedido>) entityManager.createQuery(query, Pedido.class).getResultList();
         model.addAttribute("restaurante", r);
         model.addAttribute("pedidos", p);
@@ -423,5 +424,25 @@ public class RestauranteController {
 
         model.addAttribute("message", "Se ha actualizado el plato " + p.getNombre() + " del restaurante " + plato.getRestaurante().getNombre() + " exitosamente");
         return adminRestaurante(model, session, plato.getRestaurante().getId());
+    }
+
+
+    @Transactional
+    @PostMapping("/updatePedido")
+    public String updatePedido(@RequestParam("id") long idR, @RequestParam("idPed") long id, @RequestParam("sigEstado") Estado estado, Model model, HttpSession session){
+        User u = (User) session.getAttribute("u");
+        Restaurante r = entityManager.find(Restaurante.class, idR);
+        if(u.getId() != r.getPropietario().getId()){
+            throw new PermisoDenegadoException();
+        }
+        Pedido p = entityManager.find(Pedido.class, id);
+        p.setCliente(p.getCliente());
+        p.setContenidoPedido(p.getContenidoPedido());
+        p.setRestaurante(p.getRestaurante());
+        p.setEstado(estado);
+        entityManager.merge(p);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha actualizado el estado del pedido " + p.getId() + " a " + p.getEstado());
+        return adminRestaurante(model, session, r.getId());
     }
 }

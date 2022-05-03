@@ -160,8 +160,23 @@
                                 </div>
                             </td>
                             <th:block th:switch="${ped.estado}">
-                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}"><button class="btn btn-outline-success">Preparando</button></td>
-                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PREPARANDO}"><button class="btn btn-outline-success">Listo para Recoger</button></td>
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}">
+                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="PREPARANDO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=PREPARANDO">Preparando</button>
+                                    </form>
+                                </td>
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PREPARANDO}">
+                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="LISTORECOGIDA" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=LISTORECOGIDA">Listo para Recoger</button>
+                                    </form>
+                                </td>
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).LISTORECOGIDA}">Esperando al repartidor...</td>
                             </th:block>
                             
                         </tr>
