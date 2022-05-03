@@ -17,6 +17,7 @@ import lombok.Data;
 public class Pedido {
 
     public enum Estado{
+        NO_CONFIRMADO, //
         PENDIENTE,
         PREPARANDO,
         LISTORECOGIDA,

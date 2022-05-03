@@ -11,6 +11,9 @@ VALUES (3, 'REPARTIDOR', TRUE, 'REPARTIDOR,USER', 'repartidor',
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, first_name, last_name, password)
 VALUES (4, 'RESTAURANTE', TRUE, 'RESTAURANTE,USER', 'restaurante', 'Juan', 'Cuesta',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
+INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password)
+VALUES (5, 'REPARTIDOR', TRUE, 'REPARTIDOR,USER', 'repartidor2',
+    '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
 -- TABLA RESTAURANTE
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
 VALUES (1,'Vips', 'Calle Falsa, 123', '24/7', 'Te queremos en Vips.  El sitio perfecto para planes con amigos, comidas familiares o para pasar un rato disfrutando de tus platos favoritos.', 4.0, 4);

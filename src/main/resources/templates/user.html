@@ -136,7 +136,7 @@
             let lastName = document.querySelector("#lastNameConf");
             let direction = document.querySelector("#dirConf");
 
-            let fd = new FormData();
+            /* let fd = new FormData();
 
             if(file.files.length != 0){
                 let imageBlob = postImage(img, url, "photo", file).then(() => {
@@ -162,7 +162,11 @@
                 document.querySelector("[data-reveal-id='direction']").innerHTML = direction.value;
                 fd.append("direction", direction);
             }
-            go(url, "POST", fd, {});
+            go(url, "POST", fd, {}); */
+            postImage(img, url, "photo").then(() => {
+                let cacheBuster = "?" + new Date().getTime();
+                document.querySelector("a.nav-link>img.iwthumb").src = url + cacheBuster;
+            });
         };
     </script>
 </body>

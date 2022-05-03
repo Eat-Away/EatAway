@@ -40,12 +40,12 @@
             <tbody>
               <tr th:each="x : ${pedidos}">
                 <th scope="row" th:text=${x.id}></th>
-                <td th:text=${x.firstName}></td>
-                <td th:text=${x.nombre}></td>
+                <td th:text=${x.cliente.firstName}></td>
+                <td th:text=${x.restaurante.nombre}></td>
                 <!-- dir es entrgea, y nombre y direccion la del restaurante -->
                 <td><button type="button" th:attr="data-lat=${x.lat},data-lng=${x.lng},data-id=${x.id},data-dir= ${x.dirEntrega},
-                  data-nombre=${x.nombre},data-direccion=${x.direccion},
-                  data-nom=${x.firstName}, data-apellido=${x.lastName}" class="btn info btn-success">Info</button></td>
+                  data-nombre=${x.restaurante.nombre},data-direccion=${x.restaurante.direccion},
+                  data-nom=${x.cliente.firstName}, data-apellido=${x.cliente.lastName}" class="btn info btn-success">Info</button></td>
                 <td>
                   <form th:action="@{/repartidor/} + ${idRepartidor}+ @{/getPedido/} + ${x.id}" method="post">
                     <button type="submit" class="btn btn-success">Recoger</button></td>
@@ -60,21 +60,6 @@
           <div id="map"> </div>
           <p id="datos"></p>
         </div>
-        <!-- Chat Cliente-->
-        <!--<div class="col">
-          <div class="container">
-            <div class="row">
-              <div style="border: 1px solid; border-color: black; height: 300px;">        
-              </div>
-            </div>
-            <div class="row">
-              <div style="display:flex; align-items:initial; margin-top: 10px;">
-                <input type="text" style="width : 270px;">
-                <button type="button" class="btn btn-success">Enviar</button>
-              </div>
-            </div>
-          </div>
-        </div>-->
       </div>
     </div>
   </main>

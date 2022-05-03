@@ -94,8 +94,7 @@ En *finRegistro.html* la base de datos también está siendo usada para poder sa
 [comment]: <> (Habría que ir poniendo aquí que cosas fallan)
 * Vista de Administración está en blanco
 * Implementar funcionalidad en el carrito
-* Cambiar la ruta de donde se cargan las imágenes que sean contenido de usuarios
-* Implementar poder subir imágenes
+* Al editar el restaurante sin cargar fotos para el carrusel de fotos de su vista individual, se queda sin cargar la primera imagen del carrusel
 * Poder listar los extras de cada plato en su vista
 * Poder añadir platos con extras (si se piden) al carrito
 * Procesar pedidos

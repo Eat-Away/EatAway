@@ -1,7 +1,9 @@
 package es.ucm.fdi.iw.controller;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Message;
+import es.ucm.fdi.iw.model.Repartidor;
 import es.ucm.fdi.iw.model.Transferable;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
@@ -10,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -149,7 +153,7 @@ public class UserController {
 		
 		if (edited.getPassword() != null) {
             if ( ! edited.getPassword().equals(pass2)) {
-                // FIXME: complain
+                throw new NoEsTuPerfilException();
             } else {
                 // save encoded version of password
                 target.setPassword(encodePassword(edited.getPassword()));
@@ -193,11 +197,11 @@ public class UserController {
         return os -> FileCopyUtils.copy(in, os);
     }
 
-	@PostMapping("{id}/conf")
+	@PostMapping("/{id}/conf")
 	@ResponseBody
 	@Transactional
-	public String setConf(@RequestParam MultipartFile photo, @RequestParam String firstName, 
-	@RequestParam String lastName, @RequestParam String direction, @PathVariable long id, 
+	public String setConf(@RequestParam MultipartFile photo, /* @RequestParam String firstName, 
+	@RequestParam String lastName, @RequestParam String direction, */ @PathVariable long id, 
 	HttpServletResponse response, HttpSession session, Model model) throws IOException{
 
 		User target = entityManager.find(User.class, id);
@@ -229,7 +233,7 @@ public class UserController {
 			//log.info("failed to upload photo: emtpy file?");
 		//}
 
-		if(!firstName.isBlank()){
+		/* if(!firstName.isBlank()){
 			log.info("Updating first name for user {}", id);
 			target.setFirstName(firstName);
 		}
@@ -243,7 +247,7 @@ public class UserController {
 		}
 		entityManager.persist(target);
 		entityManager.flush();
-
+ */
 		return "{\"status\":\"configuration uploaded correctly\"}";
 	}
 
@@ -377,4 +381,5 @@ public class UserController {
     public String pedidoCliente(Model model) {
         return "pedidoCliente";
     }
+
 }
