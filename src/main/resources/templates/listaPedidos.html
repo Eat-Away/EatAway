@@ -41,16 +41,12 @@
             <tbody>
               <tr th:each="x : ${pedidos}">
                 <th scope="row" th:text=${x.id}></th>
-<<<<<<< Updated upstream
                 <td th:text=${x.cliente.firstName}></td>
                 <td th:text=${x.restaurante.nombre}></td>
-=======
-                <td th:text=${x.firstName}></td>
+                <!-- <td th:text=${x.firstName}></td>
                 <td th:text=${x.nombre}></td>
-<!--                 <td th:id="${x.nombre}+'countdown'"></td>
- -->                <td class="countdown"></td>
-                
->>>>>>> Stashed changes
+                 <td th:id="${x.nombre}+'countdown'"></td>
+                  <td class="countdown"></td> --> 
                 <!-- dir es entrgea, y nombre y direccion la del restaurante -->
                 <td><button type="button" th:attr="data-lat=${x.lat},data-lng=${x.lng},data-id=${x.id},data-dir= ${x.dirEntrega},
                   data-nombre=${x.restaurante.nombre},data-direccion=${x.restaurante.direccion},
@@ -70,8 +66,6 @@
           <div id="map"> </div>
           <p id="datos"></p>
         </div>
-<<<<<<< Updated upstream
-=======
 
 
 
@@ -90,7 +84,6 @@
             </div>
           </div>
         </div>-->
->>>>>>> Stashed changes
       </div>
     </div>
   </main>
@@ -101,13 +94,13 @@
     async defer></script>
   <script src="/js/listaPedidos.js"></script>
 
-  <script> 
+  <!-- <script> 
     document.addEventListener("DOMContentLoaded", () => {
       let text = setInterval(updateCountdown, MILLISECONDS_OF_A_SECOND);
       document.querySelector(".countdown").innerHTML = text;
     });
   </script>
-
+ -->
 
 </body>
 
