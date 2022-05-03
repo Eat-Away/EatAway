@@ -6,9 +6,6 @@
     </head>
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
-        <div class="container" th:if="${message != null}">
-            <div class="alert alert-success" role="alert" th:text="${message}"></div>
-        </div>
         <div class="container mt-4">
             <div class="row mb-3">
                 <div class="col-5 mb-5">
@@ -24,124 +21,32 @@
                 </div>
             </div>
         </div>
-        <div class="container mb-5 restaurant" th:each ="x: ${availableRestaurants}" th:id="${x.nombre}+'Rest'">
-            <h3 th:text="${x.nombre}"></h3>
-            <div class="row align-items-center">
-                <div class="col-6">
-                    <img th:src="@{/restaurante/rimg/{id}(id=${x.id})}" width="300px" height="300px" alt="Logo del restaurante">
-                </div>
-                <div class="col-6">
-                    <div class="container">
-                        <h4>Configuración del restaurante</h4>
-                        <div class="row align-items-start">
-                            <div class="col">
-                                <a th:href="@{'/restaurante/'+${id}+ '/addPlato?id='}+${x.id}" class="text-decoration-none btn btn-outline-success">
-                                    Añadir plato
-                                </a>
-                            </div>
-                            <div class="col">
-                                <form th:action="@{/restaurante/delRestaurante}" method="post" name="delRestaurante" th:id="@{delRestaurante?id=}+${x.id}">
-                                    <input type="hidden" th:value="${x.id}" id="id" name="id">
-                                    <button type="button" class="btn btn-outline-danger delRest" th:attr="data-idrestaurante=${x.id}, data-nombrerestaurante=${x.nombre}">Eliminar Restaurante</button>
-                                </form>
-                            </div>
-                            <div class="col">
-                                <a th:href="@{'/restaurante/'+${id}+'/editRestaurante?id='}+${x.id}">
-                                    <button type="button" class="btn btn-outline-warning">Editar restaurante</button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container mt-4">
-                <div class="row align-items-start">
-                    <div class="col-4">
-                        <h5 th:text="'Valoración media: ' + ${x.valoracion}"></h5>
-                        <h5 th:text="|Horario de atención: ${x.horario}|"></h5>
-                    </div>
-                    
-                    <div class="col-4">
-                        <h5>Últimas valoraciones</h5>
-                        <p th:if="${#lists.isEmpty(x.comentarios)}">No hay comentarios recientes</p>
-                        <ol th:each="comentario,comStat: ${x.comentarios}" th:unless="${comStat.index > 5}">
-                            <li th:text="|De ${comentario.autor.username}  para el plato  ${comentario.plato.nombre}: ${comentario.texto}|"></li>
-                        </ol>
-                    </div>
-                    <div class="col-4">
-                        <h5>Últimos pedidos realizados</h5>
-                        <p th:if="${#lists.isEmpty(x.pedidos)}">No hay pedidos recientes</p>
-                        <ol th:each="pedido,pedStat: ${x.pedidos}" th:unless="${pedStat.index > 5}">
-                            <li th:text="|Para ${pedido.cliente.username} en ${pedido.dirEntrega} por ${pedido.precioServicio}€|"></li>
-                        </ol>
-                    </div>
-                    <div class="col">
-                        <p th:if="${#lists.isEmpty(x.platos)}">Este restaurante no tiene platos</p>
-                        <table class="table" th:if="${!(#lists.isEmpty(x.platos))}">
-                            <thead>
-                                <th scope="col">Nombre del Plato</th>
-                                <th scope="col">Foto del Plato</th>
-                                <th scope="col">Descripción</th>
-                                <th scope="col">Ingredientes</th>
-                                <th scope="col">Precio</th>
-                                <th scope="col">Acciones disponibles</th>
-                                <th scope="col">Extras</th>
-                            </thead>
-                            <tbody>
-                                <tr th:each="p: ${x.platos}">
-                                    <td th:text="${p.nombre}"></td>
-                                    <td><img th:src="@{/rimg/{idR}/plato/{id}(idR=${x.id}, id=${p.id})}" width="100px" height="100px" alt="Foto del plato"></td>
-                                    <td th:text="${p.descripcion}"></td>
-                                    <td th:text="${p.ingredientes}"></td>
-                                    <td th:text="|${p.precio}€|"></td>
-                                    <td>
-                                        <div class="container">
-                                            <div class="row align-items-start">
-                                                <div class="col">
-                                                    <a th:href="@{'/restaurante/'+${id}+ '/addExtra?id='}+${p.id}" class="text-decoration-none btn btn-outline-success">
-                                                        Añadir extras
-                                                    </a>
-                                                </div>
-                                                <div class="col">
-                                                    <a th:href="@{'/restaurante/'+${id}+ '/editPlato?id='}+${p.id}">
-                                                        <button type="button" class="btn btn-outline-warning">Editar</button>
-                                                    </a>
-                                                </div>
-                                                <div class="col">
-                                                    <form th:action="@{/restaurante/delPlato}" method="post" name="delPlato" th:id="@{delPlato?id=}+${p.id}">
-                                                        <input type="hidden" th:value="${p.id}" id="idPlato" name="idPlato">
-                                                        <button type="button" class="btn btn-outline-danger delPlato" th:attr="data-idplato=${p.id}, data-nombreplato=${p.nombre}">Eliminar</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p th:if="${#lists.isEmpty(p.extras)}">Este plato no tiene extras</p>
-                                        <div class="container">
-                                            <ul class="list-group">
-                                                <li class="list-group-item" th:each="e: ${p.extras}">
-                                                    <p th:text="|${e.nombre}: ${e.precio}€|"></p>
-                                                    <div class="col">
-                                                        <a th:href="@{'/restaurante/'+${id}+ '/editExtra?id='}+${e.id}">
-                                                            <button type="button" class="btn btn-outline-warning">Editar</button>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col">
-                                                        <form th:action="@{/restaurante/delExtra}" method="post" name="delExtra" th:id="@{delExtra?id=}+${e.id}">
-                                                            <input type="hidden" th:value="${e.id}" id="idExtra" name="idExtra">
-                                                            <button type="button" class="btn btn-outline-danger delExtra" th:attr="data-idextra=${e.id}, data-nombreextra=${e.nombre}">Eliminar</button>
-                                                        </form>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <div class="container mb-5 restaurant">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <th scope="col">Nombre del Restaurante</th>
+                        <th scope="col">Logo del Restaurante</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Dirección</th>
+                        <th scope="col">Horario</th>
+                        <th scope="col">Valoración media</th>
+                        <th scope="col">Acciones disponibles</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each ="x: ${availableRestaurants}">
+                            <td th:text="${x.nombre}"></td>
+                            <td><img th:src="@{/restaurante/rimg/{id}(id=${x.id})}" width="100px" height="100px" alt="Foto del Restaurante"></td>
+                            <td th:text="${x.descripcion}"></td>
+                            <td th:text="${x.direccion}"></td>
+                            <td th:text="${x.horario}"></td>
+                            <td th:text="${x.valoracion}"></td>
+                            <td>
+                                <a th:href="@{'/restaurante/'+${id}+ '/adminRestaurante?id='}+${x.id}" class="text-decoration-none btn btn-outline-warning">Administrar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <th:block th:replace="fragments/footer.html :: footer" />
