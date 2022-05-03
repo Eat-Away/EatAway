@@ -67,6 +67,17 @@ public class RestauranteController {
         return "perfilRestaurante";
     }
 
+    @GetMapping("/{id}/adminRestaurante")
+    public String adminRestaurante(Model model, HttpSession session, @RequestParam("id") long id){
+        User u = (User) session.getAttribute("u");
+        Restaurante r = entityManager.find(Restaurante.class, id);
+        if(u.getId() != r.getPropietario().getId()){
+            return "index";
+        }
+        model.addAttribute("restaurante", r);
+        return "adminRestaurante";
+    }
+
     private boolean uploadPhoto(String path, String name, MultipartFile src){
         File f = localData.getFile(path, name);
         try (BufferedOutputStream stream =
@@ -246,7 +257,7 @@ public class RestauranteController {
             log.info("No carousel photos selected to upload");
         }
         model.addAttribute("message", "Se ha editado el restaurante "+restaurante.getNombre() + " exitosamente");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, restaurante.getId());
     }
 
     //GESTION DE EXTRAS
@@ -262,7 +273,7 @@ public class RestauranteController {
     @Transactional
     @PostMapping("/addExtra")
     public String procesaAltaExtra(@RequestParam long idPlato, @ModelAttribute Extra extra, HttpSession session, Model model){
-         //Obtiene el usuario que agrega el plato para al procesarse vuelva al perfilRestaurante
+         //Obtiene el usuario que agrega el plato para al procesarse vuelva al adminRestaurante
         User u = (User)session.getAttribute("u");
         u = entityManager.find(User.class, u.getId());
         Plato p = entityManager.find(Plato.class, idPlato);
@@ -273,7 +284,7 @@ public class RestauranteController {
         entityManager.persist(extra);
         p.getExtras().add(extra);
         model.addAttribute("message", "Se ha añadido el extra nuevo en el plato "+p.getNombre()+" para el restaurante "+p.getRestaurante().getNombre());
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, p.getRestaurante().getId());
     }
 
     @Transactional
@@ -288,7 +299,7 @@ public class RestauranteController {
         entityManager.remove(ex);
         entityManager.flush();
         model.addAttribute("message", "Se ha borrado el extra " + ex.getNombre() + " del plato " + ex.getPlato().getNombre() + " exitosamente");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, ex.getPlato().getRestaurante().getId());
     }
 
     @GetMapping("/{id}/editExtra")
@@ -309,7 +320,7 @@ public class RestauranteController {
         entityManager.merge(extra);
         entityManager.flush();
         model.addAttribute("message", "Se ha actualizado el extra " + ex.getNombre() + " del plato " + ex.getPlato().getNombre() + " de " + ex.getPlato().getRestaurante().getNombre() + " exitosamente!");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, ex.getPlato().getRestaurante().getId());
     }
 
     //GESTION DE PLATOS
@@ -350,7 +361,7 @@ public class RestauranteController {
         }
 
         model.addAttribute("message", "Se ha añadido el plato nuevo en "+r.getNombre());
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, r.getId());
     }
 
     @Transactional
@@ -374,7 +385,7 @@ public class RestauranteController {
             throw ex;
         }
         model.addAttribute("message", "Se ha borrado el plato " + p.getNombre() + " exitosamente");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, p.getRestaurante().getId());
     }
 
     @GetMapping("/{id}/editPlato")
@@ -407,6 +418,6 @@ public class RestauranteController {
 		}
 
         model.addAttribute("message", "Se ha actualizado el plato " + p.getNombre() + " del restaurante " + plato.getRestaurante().getNombre() + " exitosamente");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, plato.getRestaurante().getId());
     }
 }
