@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <th:block th:replace="fragments/head :: header" />
+        <title th:text="|EatAway - Administracion ${restaurante.nombre}|"></title>
+    </head>
+    <body class="d-flex flex-column h-100">
+        <header th:replace="fragments/nav.html :: nav"></header>
+        <div class="container" th:if="${message != null}">
+            <div class="alert alert-success" role="alert" th:text="${message}"></div>
+        </div>
+        <div class="container mb-5 restaurant">
+            <h3 th:text="${restaurante.nombre}"></h3>
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <img th:src="@{/restaurante/rimg/{id}(id=${restaurante.id})}" width="300px" height="300px" alt="Logo del restaurante">
+                </div>
+                <div class="col-6">
+                    <div class="container">
+                        <h4>Configuración del restaurante</h4>
+                        <div class="row align-items-start">
+                            <div class="col">
+                                <a th:href="@{'/restaurante/'+${id}+ '/addPlato?id='}+${restaurante.id}" class="text-decoration-none btn btn-outline-success">
+                                    Añadir plato
+                                </a>
+                            </div>
+                            <div class="col">
+                                <form th:action="@{/restaurante/delRestaurante}" method="post" name="delRestaurante" th:id="@{delRestaurante?id=}+${restaurante.id}">
+                                    <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                    <button type="button" class="btn btn-outline-danger delRest" th:attr="data-idrestaurante=${restaurante.id}, data-nombrerestaurante=${restaurante.nombre}">Eliminar Restaurante</button>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <a th:href="@{'/restaurante/'+${id}+'/editRestaurante?id='}+${restaurante.id}">
+                                    <button type="button" class="btn btn-outline-warning">Editar restaurante</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-4">
+                <div class="row align-items-start">
+                    <div class="col-4">
+                        <h5 th:text="'Valoración media: ' + ${restaurante.valoracion}"></h5>
+                        <h5 th:text="|Horario de atención: ${restaurante.horario}|"></h5>
+                    </div>
+                    
+                    <div class="col-4">
+                        <h5>Últimas valoraciones</h5>
+                        <p th:if="${#lists.isEmpty(restaurante.comentarios)}">No hay comentarios recientes</p>
+                        <ol th:each="comentario,comStat: ${restaurante.comentarios}" th:unless="${comStat.index > 5}">
+                            <li th:text="|De ${comentario.autor.username}  para el plato  ${comentario.plato.nombre}: ${comentario.texto}|"></li>
+                        </ol>
+                    </div>
+                    <div class="col-4">
+                        <h5>Últimos pedidos realizados</h5>
+                        <p th:if="${#lists.isEmpty(restaurante.pedidos)}">No hay pedidos recientes</p>
+                        <ol th:each="pedido,pedStat: ${restaurante.pedidos}" th:unless="${pedStat.index > 5}">
+                            <li th:text="|Para ${pedido.cliente.username} en ${pedido.dirEntrega} por ${pedido.precioServicio}€|"></li>
+                        </ol>
+                    </div>
+                    <div class="col">
+                        <p th:if="${#lists.isEmpty(restaurante.platos)}">Este restaurante no tiene platos</p>
+                        <table class="table" th:if="${!(#lists.isEmpty(restaurante.platos))}">
+                            <thead>
+                                <th scope="col">Nombre del Plato</th>
+                                <th scope="col">Foto del Plato</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Ingredientes</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Acciones disponibles</th>
+                                <th scope="col">Extras</th>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p: ${restaurante.platos}">
+                                    <td th:text="${p.nombre}"></td>
+                                    <td><img th:src="@{/rimg/{idR}/plato/{id}(idR=${restaurante.id}, id=${p.id})}" width="100px" height="100px" alt="Foto del plato"></td>
+                                    <td th:text="${p.descripcion}"></td>
+                                    <td th:text="${p.ingredientes}"></td>
+                                    <td th:text="|${p.precio}€|"></td>
+                                    <td>
+                                        <div class="container">
+                                            <div class="row align-items-start">
+                                                <div class="col">
+                                                    <a th:href="@{'/restaurante/'+${id}+ '/addExtra?id='}+${p.id}" class="text-decoration-none btn btn-outline-success">
+                                                        Añadir extras
+                                                    </a>
+                                                </div>
+                                                <div class="col">
+                                                    <a th:href="@{'/restaurante/'+${id}+ '/editPlato?id='}+${p.id}">
+                                                        <button type="button" class="btn btn-outline-warning">Editar</button>
+                                                    </a>
+                                                </div>
+                                                <div class="col">
+                                                    <form th:action="@{/restaurante/delPlato}" method="post" name="delPlato" th:id="@{delPlato?id=}+${p.id}">
+                                                        <input type="hidden" th:value="${p.id}" id="idPlato" name="idPlato">
+                                                        <button type="button" class="btn btn-outline-danger delPlato" th:attr="data-idplato=${p.id}, data-nombreplato=${p.nombre}">Eliminar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p th:if="${#lists.isEmpty(p.extras)}">Este plato no tiene extras</p>
+                                        <div class="container">
+                                            <ul class="list-group">
+                                                <li class="list-group-item" th:each="e: ${p.extras}">
+                                                    <p th:text="|${e.nombre}: ${e.precio}€|"></p>
+                                                    <div class="col">
+                                                        <a th:href="@{'/restaurante/'+${id}+ '/editExtra?id='}+${e.id}">
+                                                            <button type="button" class="btn btn-outline-warning">Editar</button>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col">
+                                                        <form th:action="@{/restaurante/delExtra}" method="post" name="delExtra" th:id="@{delExtra?id=}+${e.id}">
+                                                            <input type="hidden" th:value="${e.id}" id="idExtra" name="idExtra">
+                                                            <button type="button" class="btn btn-outline-danger delExtra" th:attr="data-idextra=${e.id}, data-nombreextra=${e.nombre}">Eliminar</button>
+                                                        </form>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <h2 class="text-center" th:text="|Pedidos para ${restaurante.nombre}|"></h2>
+                <p th:if="${#lists.isEmpty(pedidos)}">Este restaurante no tiene pedidos pendientes</p>
+                <table class="table" th:if="${!(#lists.isEmpty(pedidos))}">
+                    <thead>
+                        <th scope="col">ID</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Nombre del Cliente</th>
+                        <th scope="col">Dirección de Entrega</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Productos</th>
+                        <th scope="col">Cambiar estado a</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ped: ${pedidos}">
+                            <th th:text="${ped.id}" scope="row"></th>
+                            <th th:text="${ped.estado}" scope="row" class="text-info"></th>
+                            <td th:text="|${ped.cliente.firstName} ${ped.cliente.lastName}|"></td>
+                            <td th:text="${ped.dirEntrega}"></td>
+                            <td th:text="${ped.fechaPedido}"></td>
+                            <td th:text="${ped.precioServicio}"></td>
+                            <td>
+                                <div class="container">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" th:each="pr: ${ped.contenidoPedido}">
+                                            <p th:text="|${pr.plato.nombre} (x${pr.cantidad})|"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <th:block th:switch="${ped.estado}">
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}">
+                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="PREPARANDO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=PREPARANDO">Preparando</button>
+                                    </form>
+                                </td>
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PREPARANDO}">
+                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="LISTORECOGIDA" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=LISTORECOGIDA">Listo para Recoger</button>
+                                    </form>
+                                </td>
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).LISTORECOGIDA}">Esperando al repartidor...</td>
+                            </th:block>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <th:block th:replace="fragments/footer.html :: footer" />
+        
+        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
+        <script>
+/* 
+            function updateImage(logoDivId){
+                let logoDiv = document.getElementById(logoDivId).parentElement;
+                let restaurantId = logoDivId.replaceAll("Logo", "");
+                
+                let fileSelector = document.createElement('input');
+                fileSelector.setAttribute('type', 'file');
+                fileSelector.setAttribute('hidden', 'true');
+
+                logoDiv.appendChild(fileSelector);
+
+                fileSelector.click();
+    
+                fileSelector.onchange = e =>{
+                    let img = document.getElementById(logoDivId + "Edit");
+                    console.log(img.src);
+                    readImageFileData(fileSelector.files[0], img);
+
+                    let url = config.rootUrl + "/restaurante/rimg/" + restaurantId;
+                    console.log(img.src);
+                    postImage(img, url, "photo").then(() => {
+                        let cacheBuster = "?" + new Date().getTime();
+                        img.src = url + cacheBuster;
+                    });
+                }
+            }
+
+ */
+            //Muestra el datalist al pinchar en el botón de modificar restaurante
+            document.querySelector("#modifRestButton").onclick = e => {
+                e.preventDefault();
+                let options = document.querySelector("#restaurantOptions");
+                if(options.hasAttribute("hidden")){
+                    options.removeAttribute("hidden");
+                }
+                else{
+                    options.setAttribute("hidden", true);
+                }
+            }
+            //Muestra el restaurante seleccionado en el datalist
+            document.querySelector("#buscarRestBtn").onclick = e => {
+                e.preventDefault();
+                let restName =  document.querySelector("#restSelInput").value;
+                let restaurants = document.getElementsByClassName("restaurant");
+                for(var i = 0; i < restaurants.length; i++){
+                    if(!restaurants[i].hasAttribute("hidden")){
+                        restaurants[i].setAttribute("hidden", true);
+                        break; //solo hay un restaurante con hidden a falso
+                    }
+                }
+                let restaurant = document.getElementById(restName + 'Rest');
+                restaurant.removeAttribute("hidden");
+            }
+        </script>
+    </body>
+</html>

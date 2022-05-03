@@ -7,6 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +38,11 @@ import javax.servlet.http.HttpSession;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
 import es.ucm.fdi.iw.model.Extra;
+import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
+import es.ucm.fdi.iw.model.Pedido.Estado;
 
 @Controller
 @RequestMapping("restaurante")
@@ -61,6 +67,20 @@ public class RestauranteController {
         model.addAttribute("availableRestaurants", r.getPropietario().getRestaurantes());
         model.addAttribute("propietario", r.getPropietario());
         return "perfilRestaurante";
+    }
+
+    @GetMapping("/{id}/adminRestaurante")
+    public String adminRestaurante(Model model, HttpSession session, @RequestParam("id") long id){
+        User u = (User) session.getAttribute("u");
+        Restaurante r = entityManager.find(Restaurante.class, id);
+        if(u.getId() != r.getPropietario().getId()){
+            return "index";
+        }
+        String query = "SELECT X FROM Pedido X WHERE (X.estado = 1 OR X.estado = 2 OR X.estado = 3) AND X.restaurante.id ="+r.getId();
+        List<Pedido> p = (List<Pedido>) entityManager.createQuery(query, Pedido.class).getResultList();
+        model.addAttribute("restaurante", r);
+        model.addAttribute("pedidos", p);
+        return "adminRestaurante";
     }
 
     private boolean uploadPhoto(String path, String name, MultipartFile src){
@@ -172,7 +192,7 @@ public class RestauranteController {
 
     @Transactional
     @PostMapping("/delRestaurante")
-    public String borraRestaurante(@RequestParam long id, HttpSession session, Model model){
+    public String borraRestaurante(@RequestParam long id, HttpSession session, Model model) throws Exception{
         User u = (User)session.getAttribute("u");
         u = entityManager.find(User.class, u.getId());
         Restaurante rest = entityManager.find(Restaurante.class, id);
@@ -181,6 +201,18 @@ public class RestauranteController {
         }
         entityManager.remove(rest);
         entityManager.flush();
+        //Elimina el fichero asociado al plato
+        File f = localData.getFolder("restaurante/"+rest.getId());
+        try{
+            if(FileSystemUtils.deleteRecursively(f)){
+                log.info("Se ha borrado la multimedia del restaurante "+rest.getId());
+            }else{
+                log.warn("Error eliminando la multimedia del restaurante. Ruta: " + f.getAbsolutePath());
+            }
+        }catch(Exception ex){
+            log.error("Excepcion eliminando la multimedia del restaurante. Ruta: " + f.getAbsolutePath());
+            throw ex;
+        }
         model.addAttribute("message", "Se ha borrado el restaurante "+ rest.getNombre() + " exitosamente!");
         return perfilRestaurante(model, session, u.getId());
     }
@@ -230,7 +262,7 @@ public class RestauranteController {
             log.info("No carousel photos selected to upload");
         }
         model.addAttribute("message", "Se ha editado el restaurante "+restaurante.getNombre() + " exitosamente");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, restaurante.getId());
     }
 
     //GESTION DE EXTRAS
@@ -246,7 +278,7 @@ public class RestauranteController {
     @Transactional
     @PostMapping("/addExtra")
     public String procesaAltaExtra(@RequestParam long idPlato, @ModelAttribute Extra extra, HttpSession session, Model model){
-         //Obtiene el usuario que agrega el plato para al procesarse vuelva al perfilRestaurante
+         //Obtiene el usuario que agrega el plato para al procesarse vuelva al adminRestaurante
         User u = (User)session.getAttribute("u");
         u = entityManager.find(User.class, u.getId());
         Plato p = entityManager.find(Plato.class, idPlato);
@@ -257,7 +289,7 @@ public class RestauranteController {
         entityManager.persist(extra);
         p.getExtras().add(extra);
         model.addAttribute("message", "Se ha añadido el extra nuevo en el plato "+p.getNombre()+" para el restaurante "+p.getRestaurante().getNombre());
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, p.getRestaurante().getId());
     }
 
     @Transactional
@@ -272,7 +304,7 @@ public class RestauranteController {
         entityManager.remove(ex);
         entityManager.flush();
         model.addAttribute("message", "Se ha borrado el extra " + ex.getNombre() + " del plato " + ex.getPlato().getNombre() + " exitosamente");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, ex.getPlato().getRestaurante().getId());
     }
 
     @GetMapping("/{id}/editExtra")
@@ -293,7 +325,7 @@ public class RestauranteController {
         entityManager.merge(extra);
         entityManager.flush();
         model.addAttribute("message", "Se ha actualizado el extra " + ex.getNombre() + " del plato " + ex.getPlato().getNombre() + " de " + ex.getPlato().getRestaurante().getNombre() + " exitosamente!");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, ex.getPlato().getRestaurante().getId());
     }
 
     //GESTION DE PLATOS
@@ -334,12 +366,12 @@ public class RestauranteController {
         }
 
         model.addAttribute("message", "Se ha añadido el plato nuevo en "+r.getNombre());
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, r.getId());
     }
 
     @Transactional
     @PostMapping("/delPlato")
-    public String procesarBorradoPlato(@RequestParam long idPlato, Model model, HttpSession session){
+    public String procesarBorradoPlato(@RequestParam long idPlato, Model model, HttpSession session) throws IOException{
         User u = (User)session.getAttribute("u");
         u = entityManager.find(User.class, u.getId());
         Plato p = entityManager.find(Plato.class, idPlato);
@@ -348,8 +380,17 @@ public class RestauranteController {
         }
         entityManager.remove(p);
         entityManager.flush();
+        //Elimina el fichero asociado al plato
+        File f = localData.getFile("restaurante/"+p.getRestaurante().getId()+"/plato/", ""+p.getId());
+        try{
+            Files.delete(f.toPath());
+            log.info("Se ha borrado la imagen del plato"+p.getId());
+        }catch(IOException ex){
+            log.warn("Error eliminando la imagen del plato. Ruta: " + f.getAbsolutePath());
+            throw ex;
+        }
         model.addAttribute("message", "Se ha borrado el plato " + p.getNombre() + " exitosamente");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, p.getRestaurante().getId());
     }
 
     @GetMapping("/{id}/editPlato")
@@ -382,6 +423,26 @@ public class RestauranteController {
 		}
 
         model.addAttribute("message", "Se ha actualizado el plato " + p.getNombre() + " del restaurante " + plato.getRestaurante().getNombre() + " exitosamente");
-        return perfilRestaurante(model, session, u.getId());
+        return adminRestaurante(model, session, plato.getRestaurante().getId());
+    }
+
+
+    @Transactional
+    @PostMapping("/updatePedido")
+    public String updatePedido(@RequestParam("id") long idR, @RequestParam("idPed") long id, @RequestParam("sigEstado") Estado estado, Model model, HttpSession session){
+        User u = (User) session.getAttribute("u");
+        Restaurante r = entityManager.find(Restaurante.class, idR);
+        if(u.getId() != r.getPropietario().getId()){
+            throw new PermisoDenegadoException();
+        }
+        Pedido p = entityManager.find(Pedido.class, id);
+        p.setCliente(p.getCliente());
+        p.setContenidoPedido(p.getContenidoPedido());
+        p.setRestaurante(p.getRestaurante());
+        p.setEstado(estado);
+        entityManager.merge(p);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha actualizado el estado del pedido " + p.getId() + " a " + p.getEstado());
+        return adminRestaurante(model, session, r.getId());
     }
 }

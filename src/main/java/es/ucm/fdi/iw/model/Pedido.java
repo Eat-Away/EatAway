@@ -17,12 +17,12 @@ import lombok.Data;
 public class Pedido {
 
     public enum Estado{
-        NO_CONFIRMADO,
-        PENDIENTE,
-        PREPARANDO,
-        LISTORECOGIDA,
-        REPARTO,
-        ENTREGADO
+        NO_CONFIRMADO,  // -> 0
+        PENDIENTE,      // -> 1
+        PREPARANDO,     // -> 2
+        LISTORECOGIDA,  // -> 3
+        REPARTO,        // -> 4
+        ENTREGADO       // -> 5
     }
     
     @Id

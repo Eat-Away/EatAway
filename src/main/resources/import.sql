@@ -11,6 +11,9 @@ VALUES (3, 'REPARTIDOR', TRUE, 'REPARTIDOR,USER', 'repartidor',
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, first_name, last_name, password)
 VALUES (4, 'RESTAURANTE', TRUE, 'RESTAURANTE,USER', 'restaurante', 'Juan', 'Cuesta',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
+INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password)
+VALUES (5, 'REPARTIDOR', TRUE, 'REPARTIDOR,USER', 'repartidor2',
+    '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
 -- TABLA RESTAURANTE
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
 VALUES (1,'Vips', 'Calle Falsa, 123', '24/7', 'Te queremos en Vips.  El sitio perfecto para planes con amigos, comidas familiares o para pasar un rato disfrutando de tus platos favoritos.', 4.0, 4);
@@ -109,9 +112,13 @@ INSERT INTO Comentario (id, texto, user_id, plato_id, restaurante_id)
 VALUES (1, 'Tiene buen sabor', 2, 1, 1);
 -- TABLA PEDIDO
 INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
-VALUES (1,'Calle Falsisima1, 345', 0, CURRENT_TIMESTAMP, 3.54, 1.56, 2, null, 1, 0.0, 40.420177, -3.703928);
+VALUES (1,'Calle Falsisima1, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 1, 0.0,40.420177,-3.703928);
 INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
-VALUES (2,'Calle Falsisima2, 345', 1, CURRENT_TIMESTAMP, 3.54, 1.56, 2, null, 2, 0.0, 0, 0);
+VALUES (2,'Calle Falsisima2, 345', 1, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 2, 0.0,0,0);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (3,'Calle Falsisima68, 419', 1, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 1, 0.0,40.420177,-3.703928);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (4,'Calle Falsisima69, 420', 2, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 1, 0.0,40.420177,-3.703928);
 
 --TABLA PLATOPEDIDO               
 INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
@@ -120,6 +127,10 @@ INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
 VALUES (2, 1, 1, 3);
 INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
 VALUES (3, 1, 2, 2);
+INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
+VALUES (4, 1, 3, 4);
+INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
+VALUES (5, 1, 4, 4);
 --TABLA CATEGORIAS
 INSERT INTO LABEL (id,nombre)
 VALUES(1, 'Desayuno');

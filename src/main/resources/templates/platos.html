@@ -14,7 +14,7 @@
             <h3 class="text-center" th:text="${plato.nombre}"></h3>
             <div class="card-group col-8">
                 <a class="card mx-1 rounded" href="#">
-                    <img src="/img/hamburguesa.jpg" class="card-img-top" alt="..." href="{/]" width="1000" height="400" >
+                    <img th:src="@{/rimg/{idR}/plato/{id}(idR=${plato.restaurante.id}, id=${plato.id})}" class="card-img-top" alt="..." href="{/]" width="1000" height="400" >
                 </a>
                 <h4 class="Ingredientes mt-3" th:text="${plato.descripcion}"></h4>
                 <h6 class="Ingredientes mt-3"  th:text="${plato.precio}"></h6>
