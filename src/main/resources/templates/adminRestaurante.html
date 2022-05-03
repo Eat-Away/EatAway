@@ -128,6 +128,46 @@
                     </div>
                 </div>
             </div>
+            <div class="container">
+                <h2 class="text-center" th:text="|Pedidos para ${restaurante.nombre}|"></h2>
+                <p th:if="${#lists.isEmpty(pedidos)}">Este restaurante no tiene pedidos pendientes</p>
+                <table class="table" th:if="${!(#lists.isEmpty(pedidos))}">
+                    <thead>
+                        <th scope="col">ID</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Nombre del Cliente</th>
+                        <th scope="col">Dirección de Entrega</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Productos</th>
+                        <th scope="col">Cambiar estado a</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ped: ${pedidos}">
+                            <th th:text="${ped.id}" scope="row"></th>
+                            <th th:text="${ped.estado}" scope="row" class="text-info"></th>
+                            <td th:text="|${ped.cliente.firstName} ${ped.cliente.lastName}|"></td>
+                            <td th:text="${ped.dirEntrega}"></td>
+                            <td th:text="${ped.fechaPedido}"></td>
+                            <td th:text="${ped.precioServicio}"></td>
+                            <td>
+                                <div class="container">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" th:each="pr: ${ped.contenidoPedido}">
+                                            <p th:text="|${pr.plato.nombre} (x${pr.cantidad})|"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <th:block th:switch="${ped.estado}">
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}"><button class="btn btn-outline-success">Preparando</button></td>
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PREPARANDO}"><button class="btn btn-outline-success">Listo para Recoger</button></td>
+                            </th:block>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         
         <th:block th:replace="fragments/footer.html :: footer" />

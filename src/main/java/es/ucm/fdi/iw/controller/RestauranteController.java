@@ -38,6 +38,7 @@ import javax.servlet.http.HttpSession;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
 import es.ucm.fdi.iw.model.Extra;
+import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
@@ -74,7 +75,10 @@ public class RestauranteController {
         if(u.getId() != r.getPropietario().getId()){
             return "index";
         }
+        String query = "SELECT X FROM Pedido X WHERE (X.estado = 1 OR X.estado = 2) AND X.restaurante.id ="+r.getId();
+        List<Pedido> p = (List<Pedido>) entityManager.createQuery(query, Pedido.class).getResultList();
         model.addAttribute("restaurante", r);
+        model.addAttribute("pedidos", p);
         return "adminRestaurante";
     }
 

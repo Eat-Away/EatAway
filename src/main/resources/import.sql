@@ -115,6 +115,10 @@ INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, preci
 VALUES (1,'Calle Falsisima1, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, null, 1, 0.0,40.420177,-3.703928);
 INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
 VALUES (2,'Calle Falsisima2, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, null, 2, 0.0,0,0);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (3,'Calle Falsisima68, 419', 1, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, null, 1, 0.0,40.420177,-3.703928);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (4,'Calle Falsisima69, 420', 2, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, null, 1, 0.0,40.420177,-3.703928);
 
 --TABLA PLATOPEDIDO               
 INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
@@ -123,6 +127,10 @@ INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
 VALUES (2, 1, 1, 3);
 INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
 VALUES (3, 1, 2, 2);
+INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
+VALUES (4, 1, 3, 4);
+INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
+VALUES (5, 1, 4, 4);
 --TABLA CATEGORIAS
 INSERT INTO LABEL (id,nombre)
 VALUES(1, 'Desayuno');
