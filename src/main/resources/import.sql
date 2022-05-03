@@ -50,6 +50,7 @@ INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion
 VALUES (18,'100 Montaditos', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
 INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion, propietario_id)
 VALUES (19,'Five Guys', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
+
 -- TABLA PLATOS
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
 VALUES (1, 'Carne de vacuno, queso estilo americano y cheddar fundidos, bacon crujiente, salsa BBQ ahumada, cebolla roja a la plancha, pepinillo y salsa baconesa en pan brioche tostado con dos sesamos. Junto de guarnicion a elegir y salsa baconesa.', 'Hamburguesa', 10.99, 1);
@@ -92,12 +93,11 @@ VALUES (19, 'Texas BBQ Crispy con salsa BBQ Texas, queso 100%, mozarrella, bacon
 
 
 
-
 -- TABLA EXTRA
-INSERT INTO Extra (id, nombre, precio, plato_id)
-VALUES (1, 'Bacon', 3.0, 1);
-INSERT INTO Extra (id, nombre, precio, plato_id)
-VALUES (2, 'Patatas fritas', 3.0, 1);
+INSERT INTO Extra (id, nombre, precio, plato_id, plato_pedido_id)
+VALUES (1, 'Bacon', 3.0, 1, 1);
+INSERT INTO Extra (id, nombre, precio, plato_id, plato_pedido_id)
+VALUES (2, 'Patatas fritas', 3.0, 1, 1);
 INSERT INTO Extra (id, nombre, precio, plato_id)
 VALUES (3, 'Cebolla', 1.0, 2);
 INSERT INTO Extra (id, nombre, precio, plato_id)
@@ -108,10 +108,10 @@ VALUES (5, 'Patatas cheedar', 1.0, 13);
 INSERT INTO Comentario (id, texto, user_id, plato_id, restaurante_id)
 VALUES (1, 'Tiene buen sabor', 2, 1, 1);
 -- TABLA PEDIDO
-INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
-VALUES (1,'Calle Falsisima1, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, null, 1, 0.0,40.420177,-3.703928);
-INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, propina, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
-VALUES (2,'Calle Falsisima2, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 1.20, 2, null, 2, 0.0,0,0);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (1,'Calle Falsisima1, 345', 0, CURRENT_TIMESTAMP, 3.54, 1.56, 2, null, 1, 0.0, 40.420177, -3.703928);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (2,'Calle Falsisima2, 345', 1, CURRENT_TIMESTAMP, 3.54, 1.56, 2, null, 2, 0.0, 0, 0);
 
 --TABLA PLATOPEDIDO               
 INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)

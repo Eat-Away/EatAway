@@ -92,11 +92,6 @@ public class RootController {
         return "login";
     }
 
-    @GetMapping("/carrito")
-    public String carrito(Model model) {
-        return "carrito";
-    }
-
 	@GetMapping("/")
     public String index(Model model) {
         String query = "SELECT x FROM Restaurante x"; 

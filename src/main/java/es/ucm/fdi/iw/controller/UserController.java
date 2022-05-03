@@ -1,9 +1,13 @@
 package es.ucm.fdi.iw.controller;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Message;
+import es.ucm.fdi.iw.model.Pedido;
+import es.ucm.fdi.iw.model.PlatoPedido;
 import es.ucm.fdi.iw.model.Transferable;
 import es.ucm.fdi.iw.model.User;
+import es.ucm.fdi.iw.model.Pedido.Estado;
 import es.ucm.fdi.iw.model.User.Role;
 
 import org.apache.logging.log4j.LogManager;
@@ -302,6 +306,48 @@ public class UserController {
 		return "{\"status\":\"photo uploaded correctly\"}";
     }*/
     
+	@GetMapping("{id}/carrito")
+    public String carrito(Model model, @PathVariable long id) {
+		User user = entityManager.find(User.class, id);
+        model.addAttribute("user", user);
+
+		List<Pedido> pedidos = user.getPedidos();
+		Pedido pedido = null;
+		for(int i = 0; i < pedidos.size(); i++){
+			if(pedidos.get(i).getEstado() == Estado.NO_CONFIRMADO){
+				pedido = pedidos.get(i);
+				break;
+			}
+		}
+		model.addAttribute("pedido", pedido);
+
+		if(pedido != null) { 
+			List<PlatoPedido> platos = pedido.getContenidoPedido(); 
+			Double precio = 0.0;
+			for(int i = 0; i < platos.size(); i++){
+				Double precio_aux = platos.get(i).getPlato().getPrecio();
+				List<Extra> extras = platos.get(i).getExtras();
+				for(int j = 0; j < extras.size(); j++){
+					precio += extras.get(j).getPrecio();
+				}
+				precio_aux *= platos.get(i).getCantidad();
+				precio += precio_aux;
+			}
+			model.addAttribute("precio", precio);
+
+			Double total = precio + pedido.getPrecioEntrega() + pedido.getPrecioServicio();
+		
+			model.addAttribute("total", total);
+		}
+
+        return "carrito";
+    }
+
+	@GetMapping("/{id}/pedidoCliente")
+    public String pedidoCliente(Model model) {
+        return "pedidoCliente";
+    }
+
     /**
      * Returns JSON with all received messages
      */
@@ -372,9 +418,4 @@ public class UserController {
 		messagingTemplate.convertAndSend("/user/"+u.getUsername()+"/queue/updates", json);
 		return "{\"result\": \"message sent.\"}";
 	}	
-	
-	@GetMapping("/{id}/pedidoCliente")
-    public String pedidoCliente(Model model) {
-        return "pedidoCliente";
-    }
 }

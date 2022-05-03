@@ -17,7 +17,7 @@ import lombok.Data;
 public class Pedido {
 
     public enum Estado{
-        NO_CONFIRMADO, //
+        NO_CONFIRMADO,
         PENDIENTE,
         PREPARANDO,
         LISTORECOGIDA,
@@ -30,9 +30,7 @@ public class Pedido {
     @SequenceGenerator(name = "gen", sequenceName = "gen")
     private long id;
     private String dirEntrega;
-    //private String infoPago;
     private Estado estado;
-    private double propina;
     private double precioEntrega;
     private double precioServicio;
     private LocalDateTime fechaPedido;

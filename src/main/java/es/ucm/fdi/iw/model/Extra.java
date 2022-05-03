@@ -17,4 +17,6 @@ public class Extra {
     private double precio;
     @ManyToOne
     private Plato plato;
+    @ManyToOne
+    private PlatoPedido platoPedido;
 }

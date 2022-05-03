@@ -1,5 +1,7 @@
 package es.ucm.fdi.iw.model;
 
+import java.util.List;
+
 import javax.persistence.*;
 import lombok.Data;
 
@@ -16,6 +18,10 @@ public class PlatoPedido {
     private int cantidad;
     @ManyToOne
     private Plato plato;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="plato_pedido_id")
+    private List<Extra> extras;
     @ManyToOne
     private Pedido pedido;
 }
