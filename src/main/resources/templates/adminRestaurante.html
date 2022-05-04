@@ -129,7 +129,7 @@
                 </div>
             </div>
             <div class="container">
-                <h2 class="text-center" th:text="|Pedidos para ${restaurante.nombre}|"></h2>
+                <h2 class="text-center" th:text="|Pedidos activos para ${restaurante.nombre}|"></h2>
                 <p th:if="${#lists.isEmpty(pedidos)}">Este restaurante no tiene pedidos pendientes</p>
                 <table class="table" th:if="${!(#lists.isEmpty(pedidos))}">
                     <thead>
@@ -145,7 +145,12 @@
                     <tbody>
                         <tr th:each="ped: ${pedidos}">
                             <th th:text="${ped.id}" scope="row"></th>
-                            <th th:text="${ped.estado}" scope="row" class="text-info"></th>
+                            <th:block th:switch="${ped.estado}">
+                                <th th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}" scope="col" class="text-secondary">Pendiente</th>
+                                <th th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PREPARANDO}" scope="col" class="text-primary">Preparando</th>
+                                <th th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).LISTORECOGIDA}" scope="col" class="text-info">Listo para Recoger</th>
+                                <th th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).REPARTO}" scope="col" class="text-success">En Reparto</th>
+                            </th:block>
                             <td th:text="|${ped.cliente.firstName} ${ped.cliente.lastName}|"></td>
                             <td th:text="${ped.dirEntrega}"></td>
                             <td th:text="${ped.fechaPedido}"></td>
@@ -165,7 +170,13 @@
                                         <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
                                         <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
                                         <input type="hidden" value="PREPARANDO" id="sigEstado" name="sigEstado">
-                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=PREPARANDO">Preparando</button>
+                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Preparando">Preparando</button>
+                                    </form>
+                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-danger updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Cancelado">Cancelar Pedido</button>
                                     </form>
                                 </td>
                                 <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PREPARANDO}">
@@ -173,10 +184,24 @@
                                         <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
                                         <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
                                         <input type="hidden" value="LISTORECOGIDA" id="sigEstado" name="sigEstado">
-                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=LISTORECOGIDA">Listo para Recoger</button>
+                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado='Listo para Recoger'">Listo para Recoger</button>
+                                    </form>
+                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-danger updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Cancelado">Cancelar Pedido</button>
                                     </form>
                                 </td>
-                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).LISTORECOGIDA}">Esperando al repartidor...</td>
+                                <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).LISTORECOGIDA}">
+                                    <p class="text-info">Esperando al repartidor...</p>
+                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-danger updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Cancelado">Cancelar Pedido</button>
+                                    </form>
+                                </td>
                             </th:block>
                             
                         </tr>
@@ -217,31 +242,6 @@
             }
 
  */
-            //Muestra el datalist al pinchar en el botón de modificar restaurante
-            document.querySelector("#modifRestButton").onclick = e => {
-                e.preventDefault();
-                let options = document.querySelector("#restaurantOptions");
-                if(options.hasAttribute("hidden")){
-                    options.removeAttribute("hidden");
-                }
-                else{
-                    options.setAttribute("hidden", true);
-                }
-            }
-            //Muestra el restaurante seleccionado en el datalist
-            document.querySelector("#buscarRestBtn").onclick = e => {
-                e.preventDefault();
-                let restName =  document.querySelector("#restSelInput").value;
-                let restaurants = document.getElementsByClassName("restaurant");
-                for(var i = 0; i < restaurants.length; i++){
-                    if(!restaurants[i].hasAttribute("hidden")){
-                        restaurants[i].setAttribute("hidden", true);
-                        break; //solo hay un restaurante con hidden a falso
-                    }
-                }
-                let restaurant = document.getElementById(restName + 'Rest');
-                restaurant.removeAttribute("hidden");
-            }
         </script>
     </body>
 </html>

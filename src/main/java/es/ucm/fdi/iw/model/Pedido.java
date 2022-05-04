@@ -22,7 +22,8 @@ public class Pedido {
         PREPARANDO,     // -> 2
         LISTORECOGIDA,  // -> 3
         REPARTO,        // -> 4
-        ENTREGADO       // -> 5
+        ENTREGADO,      // -> 5
+        CANCELADO       // -> 6
     }
     
     @Id

@@ -76,7 +76,7 @@ public class RestauranteController {
         if(u.getId() != r.getPropietario().getId()){
             return "index";
         }
-        String query = "SELECT X FROM Pedido X WHERE (X.estado = 1 OR X.estado = 2 OR X.estado = 3) AND X.restaurante.id ="+r.getId();
+        String query = "SELECT X FROM Pedido X WHERE X.estado >= 1 AND X.estado <= 4 AND X.restaurante.id ="+r.getId();
         List<Pedido> p = (List<Pedido>) entityManager.createQuery(query, Pedido.class).getResultList();
         model.addAttribute("restaurante", r);
         model.addAttribute("pedidos", p);

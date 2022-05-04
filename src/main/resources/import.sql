@@ -94,19 +94,6 @@ VALUES (18, 'Carbonara de crema, queso 100%, mozzarella, bacon y cebolla', 'Pizz
 INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
 VALUES (19, 'Texas BBQ Crispy con salsa BBQ Texas, queso 100%, mozarrella, bacon crispy, bacon, pollo a la parrilla, carne de vacuno, queso cheddar en el borde', 'Pizza', 3.99, 6);
 
-
-
--- TABLA EXTRA
-INSERT INTO Extra (id, nombre, precio, plato_id, plato_pedido_id)
-VALUES (1, 'Bacon', 3.0, 1, 1);
-INSERT INTO Extra (id, nombre, precio, plato_id, plato_pedido_id)
-VALUES (2, 'Patatas fritas', 3.0, 1, 1);
-INSERT INTO Extra (id, nombre, precio, plato_id)
-VALUES (3, 'Cebolla', 1.0, 2);
-INSERT INTO Extra (id, nombre, precio, plato_id)
-VALUES (4, 'Patatas fritas', 1.0, 13);
-INSERT INTO Extra (id, nombre, precio, plato_id)
-VALUES (5, 'Patatas cheedar', 1.0, 13);
 -- TABLA COMENTARIO
 INSERT INTO Comentario (id, texto, user_id, plato_id, restaurante_id)
 VALUES (1, 'Tiene buen sabor', 2, 1, 1);
@@ -131,6 +118,19 @@ INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
 VALUES (4, 1, 3, 4);
 INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)
 VALUES (5, 1, 4, 4);
+
+-- TABLA EXTRA
+INSERT INTO Extra (id, nombre, precio, plato_id, plato_pedido_id)
+VALUES (1, 'Bacon', 3.0, 1, 1);
+INSERT INTO Extra (id, nombre, precio, plato_id, plato_pedido_id)
+VALUES (2, 'Patatas fritas', 3.0, 1, 1);
+INSERT INTO Extra (id, nombre, precio, plato_id)
+VALUES (3, 'Cebolla', 1.0, 2);
+INSERT INTO Extra (id, nombre, precio, plato_id)
+VALUES (4, 'Patatas fritas', 1.0, 13);
+INSERT INTO Extra (id, nombre, precio, plato_id)
+VALUES (5, 'Patatas cheedar', 1.0, 13);
+
 --TABLA CATEGORIAS
 INSERT INTO LABEL (id,nombre)
 VALUES(1, 'Desayuno');
