@@ -34,6 +34,9 @@ import es.ucm.fdi.iw.model.Repartidor;
  */
 @Controller()
 @RequestMapping("repartidor")
+/**
+ * > This class is a controller that handles requests for the Repartidor entity
+ */
 public class RepartidorController {
     @Autowired
 	private EntityManager entityManager;
@@ -43,11 +46,28 @@ public class RepartidorController {
 
 	//private static final Logger log = LogManager.getLogger(RepartidorController.class);
 
+	/**
+	 * It returns the repartidor page.
+	 * 
+	 * @param model This is the model object that will be used to pass data to the view.
+	 * @param session The HttpSession object.
+	 * @param id The id of the user
+	 * @return Redirects to the repartidor page.
+	 */
     @GetMapping("/{id}")
     public String index(Model model,HttpSession session, @PathVariable long id) {
         return "repartidor";
     }
 	
+	/**
+	 * It returns a list of all the orders that don't have a delivery man assigned to them
+	 * 
+	 * @param model The model is a Map that is used to store the data that will be displayed on the view
+	 * page.
+	 * @param session The session object.
+	 * @param id The id of the repartidor
+	 * @return Returns the page with a list of Pedidos that are not assigned to any Repartidor.
+	 */
     @GetMapping("/{id}/listaPedidos")
     public String listaPedidos(Model model,HttpSession session, @PathVariable long id) {
 		Repartidor u =(Repartidor)session.getAttribute("u");
@@ -65,6 +85,17 @@ public class RepartidorController {
 			return "listaPedidos";
 		}
 	}
+
+	/**
+	 * It takes the id of the repartidor and the id of the pedido, and if the pedido is not taken, it takes
+	 * it and redirects to the chatRepartidor page
+	 * 
+	 * @param model The model object that is used to store data that will be used by the view.
+	 * @param id the id of the logged in user
+	 * @param idPedido the id of the order that the user wants to take
+	 * @param session the session object
+	 * @return Redirects to a chat with the client who ordered the order taken by the delivery man.
+	 */
 	@Transactional
     @PostMapping("/{id}/getPedido/{idPedido}")
     public String getPedido(Model model, @PathVariable long id,@PathVariable long idPedido,HttpSession session) {

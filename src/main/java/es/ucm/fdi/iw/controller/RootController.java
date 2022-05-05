@@ -41,30 +41,61 @@ public class RootController {
 
 	//private static final Logger log = LogManager.getLogger(RootController.class);
 
+    /**
+     * It gets the logo image of a restaurant
+     * 
+     * @param id the id of the restaurant
+     * @return The logo of the restaurant
+     */
     @GetMapping("/rimg/{id}")
     public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
         File f = localData.getFile("restaurante/"+id, ""+id+"Logo");
         return os -> FileCopyUtils.copy(new FileInputStream(f), os);
     }
 
+    /**
+     * It returns a photo of a dish
+     * 
+     * @param idR restaurant id
+     * @param id The id of the restaurant
+     * @return The image of the dish
+     */
     @GetMapping("/rimg/{idR}/plato/{id}")
     public StreamingResponseBody getFotoPlato(@PathVariable long idR, @PathVariable long id) throws IOException {
         File f = localData.getFile("restaurante/"+idR+"/plato", ""+id);
         return os -> FileCopyUtils.copy(new FileInputStream(f), os);
     }
 
+    /**
+     * It takes a restaurant id and a number, and returns a carousel photo of the restaurant
+     * 
+     * @param id the id of the restaurant
+     * @param n the number of the carousel image
+     * @return A StreamingResponseBody object.
+     */
     @GetMapping("/rimg/{id}/carousel{n}")
     public StreamingResponseBody getFotoCarousel(@PathVariable long id, @PathVariable long n) throws IOException {
         File f = localData.getFile("restaurante/"+id, ""+id+"Carousel"+n);
         return os -> FileCopyUtils.copy(new FileInputStream(f), os);
     }
 
-
+	/**
+     * This class is a RuntimeException that is thrown when a user tries to access a resource that they
+     * don't have permission to access.
+     */
     @ResponseStatus(
 		value=HttpStatus.FORBIDDEN, 
 		reason="Alto ahí, no tienes permiso para hacer esto")  // 403
-	public static class PermisoDenegadoException extends RuntimeException {}
+    public static class PermisoDenegadoException extends RuntimeException {}
 
+    /**
+     * It takes a restaurant id, finds the restaurant in the database, and then returns a page with the
+     * restaurant's name and a list of its dishes
+     * 
+     * @param model This is the model that will be passed to the view.
+     * @param id The id of the restaurant we want to display.
+     * @return Redirects to a page with the info of the restaurant and its dishes
+     */
     @GetMapping("/restaurante")
     public String restaurante(Model model, @RequestParam long id) {
         Restaurante restaur = entityManager.find(Restaurante.class, id);
@@ -75,24 +106,42 @@ public class RootController {
         return "restaurante";
     }
 
+    /**
+     * It takes a long id as a parameter, finds the corresponding Plato object in the database, and adds it
+     * to the model
+     * 
+     * @param model This is the model that will be passed to the view.
+     * @param id The id of the plato to be displayed.
+     * @return Redirects to a page with the dish info and a button to add it to the cart.
+     */
     @GetMapping("/platos")
     public String platos(Model model, @RequestParam long id) {
-        //String query = "Select x From Plato x Where id = " + id;
-        //Plato plato = (Plato) entityManager.createQuery(query).getSingleResult();
-        //Restaurante restaurante = entityManager.find(Restaurante.class, id);
         Plato plato = entityManager.find(Plato.class, id);
         model.addAttribute("plato", plato);
-        //model.addAttribute("restaurante", restaurante);
         return "platos";
     }
 
 
+    /**
+     * It returns the login.html page
+     * 
+     * @param model The model is a Map that is used to store the data that will be displayed on the view
+     * page.
+     * @return A string that is the name of the view.
+     */
 	@GetMapping("/login")
     public String login(Model model) {
         return "login";
     }
 
-	@GetMapping("/")
+	/**
+     * It gets all the restaurants from the database and puts them in a list, then it puts that list in
+     * the model
+     * 
+     * @param model This is the model that will be passed to the view.
+     * @return Redirects to the home page where its listed all the restaurants from the database
+     */
+    @GetMapping("/")
     public String index(Model model) {
         String query = "SELECT x FROM Restaurante x"; 
         List<Restaurante> availableRestaurants = entityManager.createQuery(query, Restaurante.class).getResultList();
