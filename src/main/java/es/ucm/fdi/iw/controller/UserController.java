@@ -1,10 +1,11 @@
 package es.ucm.fdi.iw.controller;
 
 import es.ucm.fdi.iw.LocalData;
-
+import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Pedido;
+import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.PlatoPedido;
 import es.ucm.fdi.iw.model.Transferable;
 import es.ucm.fdi.iw.model.User;
@@ -35,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -47,6 +49,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -421,4 +424,53 @@ public class UserController {
 		messagingTemplate.convertAndSend("/user/"+u.getUsername()+"/queue/updates", json);
 		return "{\"result\": \"message sent.\"}";
 	}	
+
+
+	 //TODO - Hacer bien el calculo del precio, obtener latitud y longitud
+	@Transactional
+    @PostMapping("/addToCart")
+    public String addToCart(Model model, HttpSession session, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
+		Cliente u = (Cliente) session.getAttribute("u");
+		String query = "SELECT X FROM PEDIDO X WHERE X.CLIENTE="+u.getId()+" AND X.ESTADO=0";
+		Pedido cart;
+		// Comprobando si el usuario tiene un carrito. Si no, crea uno nuevo.
+		try{
+			cart = (Pedido) entityManager.createQuery(query).getSingleResult();
+			Plato plato = entityManager.find(Plato.class, id);
+			PlatoPedido platoPed = new PlatoPedido();
+			platoPed.setPlato(plato);
+			platoPed.setCantidad(amount);
+			List<PlatoPedido> contenidoPedido = cart.getContenidoPedido();
+			contenidoPedido.add(platoPed);
+			cart.setContenidoPedido(contenidoPedido);
+			cart.setPrecioServicio(cart.getPrecioServicio() + (platoPed.getCantidad() * plato.getPrecio()));
+			entityManager.merge(cart);
+			entityManager.flush();
+		}catch(NoResultException ex){
+			//Crea el carrito nuevo, asignando la informacion basica
+			cart = new Pedido();
+			cart.setCliente(u);
+			cart.setDirEntrega(u.getDireccion());
+			cart.setEstado(Estado.NO_CONFIRMADO);
+			cart.setFechaPedido(LocalDateTime.now());
+			cart.setLat(0.0);
+			cart.setLng(0.0);
+			cart.setPrecioEntrega(3.54);
+			//Busca la informacion relativa al plato que se esta agregando y la agrega al carrito
+			Plato plato = entityManager.find(Plato.class, id);
+			cart.setRestaurante(plato.getRestaurante());
+			//Carga el plato y su informacion en un platoPedido
+			PlatoPedido platoPed = new PlatoPedido();
+			platoPed.setPlato(plato);
+			platoPed.setCantidad(1);
+			List<PlatoPedido> contenidoPedido = new ArrayList<>();
+			contenidoPedido.add(platoPed);
+			cart.setContenidoPedido(contenidoPedido);
+			cart.setPrecioServicio(plato.getPrecio() * platoPed.getCantidad());
+			//Una vez terminado de cargar los datos se persiste el carrito en la BD
+			entityManager.persist(cart);
+			entityManager.flush();
+		}
+        return carrito(model, u.getId());
+    }
 }

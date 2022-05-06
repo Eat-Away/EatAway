@@ -99,7 +99,7 @@ INSERT INTO Comentario (id, texto, user_id, plato_id, restaurante_id)
 VALUES (1, 'Tiene buen sabor', 2, 1, 1);
 -- TABLA PEDIDO
 INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
-VALUES (1,'Calle Falsisima1, 345', 0, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 1, 0.0,40.420177,-3.703928);
+VALUES (1,'Calle Falsisima1, 345', 1, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 1, 0.0,40.420177,-3.703928);
 INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
 VALUES (2,'Calle Falsisima2, 345', 1, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 2, 0.0,0,0);
 INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)

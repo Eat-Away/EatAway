@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	            .antMatchers("/css/**", "/js/**", "/img/**", "/", "/error", "/restaurante",  "/rimg/**",  "/platos", "/registro").permitAll()
 				.antMatchers("/api/**").permitAll()            // <-- public api access	
 				.antMatchers("/admin/**").hasRole("ADMIN")	   // <-- administration
-	            .antMatchers("/user/**", "/carrito").hasRole("USER")	   // <-- logged-in users
+	            .antMatchers("/user/**", "/carrito", "/addToCart").hasRole("USER")	   // <-- logged-in users
 				.antMatchers("/restaurante/**", "/addRestaurante/**").hasRole("RESTAURANTE") // <-- Dueños de restaurante
 	            .antMatchers("/repartidor/**").hasRole("REPARTIDOR") // <-- Usuarios con rol repartidor
 				.anyRequest().authenticated()
