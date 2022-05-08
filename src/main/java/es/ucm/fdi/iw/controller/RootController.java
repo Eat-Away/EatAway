@@ -3,28 +3,38 @@ package es.ucm.fdi.iw.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.servlet.http.HttpSession;
 
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Label;
+import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
+import es.ucm.fdi.iw.model.PlatoPedido;
 import es.ucm.fdi.iw.model.Restaurante;
+import es.ucm.fdi.iw.model.User;
+import es.ucm.fdi.iw.model.Pedido.Estado;
 
 
 /**
@@ -161,4 +171,53 @@ public class RootController {
         model.addAttribute("labelOptions",labelOptions);
         return "index";
     }
+    
+    //TODO - Obtener latitud y longitud
+	@Transactional
+	@PostMapping("/addToCart")
+	public String addToCart(Model model, HttpSession session, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
+        User u = (User) session.getAttribute("u");
+        Cliente cliente = entityManager.find(Cliente.class, u.getId());
+        String query = "SELECT X FROM Pedido X WHERE X.cliente="+u.getId()+" AND X.estado=0";
+        Pedido cart;
+        // Comprobando si el usuario tiene un carrito. Si no, crea uno nuevo.
+        try{
+            cart = (Pedido) entityManager.createQuery(query).getSingleResult();
+            Plato plato = entityManager.find(Plato.class, id);
+            PlatoPedido platoPed = new PlatoPedido();
+            platoPed.setPlato(plato);
+            platoPed.setCantidad(amount);
+            List<PlatoPedido> contenidoPedido = cart.getContenidoPedido();
+            contenidoPedido.add(platoPed);
+            cart.setContenidoPedido(contenidoPedido);
+            cart.setPrecioServicio(cart.getPrecioServicio() + (platoPed.getCantidad() * plato.getPrecio()));
+            entityManager.merge(cart);
+            entityManager.flush();
+        }catch(NoResultException ex){
+            //Crea el carrito nuevo, asignando la informacion basica
+            cart = new Pedido();
+            cart.setCliente(cliente);
+            cart.setDirEntrega(u.getDireccion());
+            cart.setEstado(Estado.NO_CONFIRMADO);
+            cart.setFechaPedido(LocalDateTime.now());
+            cart.setLat(0.0);
+            cart.setLng(0.0);
+            cart.setPrecioEntrega(3.54);
+            //Busca la informacion relativa al plato que se esta agregando y la agrega al carrito
+            Plato plato = entityManager.find(Plato.class, id);
+            cart.setRestaurante(plato.getRestaurante());
+            //Carga el plato y su informacion en un platoPedido
+            PlatoPedido platoPed = new PlatoPedido();
+            platoPed.setPlato(plato);
+            platoPed.setCantidad(amount);
+            List<PlatoPedido> contenidoPedido = new ArrayList<>();
+            contenidoPedido.add(platoPed);
+            cart.setContenidoPedido(contenidoPedido);
+            cart.setPrecioServicio(plato.getPrecio() * platoPed.getCantidad());
+            //Una vez terminado de cargar los datos se persiste el carrito en la BD
+            entityManager.persist(cart);
+            entityManager.flush();
+        }
+        return "carrito";
+	 }
 }

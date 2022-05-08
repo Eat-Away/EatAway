@@ -56,6 +56,8 @@
                 </div>
                 <div class="col-3">
                     <input type="hidden" th:value="${plato.id}" id="id" name="id"/>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
                     <button type="submit" class="btn btn-success">Añadir al pedido</button>
                 </div> 
             </form>

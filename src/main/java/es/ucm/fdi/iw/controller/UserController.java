@@ -63,6 +63,14 @@ import java.util.stream.Collectors;
 @Controller()
 @RequestMapping("user")
 public class UserController {
+	/**
+	* This class is a RuntimeException that is thrown when a user tries to access a resource that they
+	* don't have permission to access.
+	*/
+   @ResponseStatus(
+	   value=HttpStatus.FORBIDDEN, 
+	   reason="Alto ahí, no tienes permiso para hacer esto")  // 403
+   public static class PermisoDenegadoException extends RuntimeException {}
 
 	private static final Logger log = LogManager.getLogger(UserController.class);
 
@@ -70,7 +78,7 @@ public class UserController {
 	private EntityManager entityManager;
 
 	@Autowired
-    private LocalData localData;
+	private LocalData localData;
 
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
@@ -78,12 +86,12 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-    /**
-     * Exception to use when denying access to unauthorized users.
-     * 
-     * In general, admins are always authorized, but users cannot modify
-     * each other's profiles.
-     */
+	/**
+	 * Exception to use when denying access to unauthorized users.
+	 * 
+	 * In general, admins are always authorized, but users cannot modify
+	 * each other's profiles.
+	 */
 	@ResponseStatus(
 		value=HttpStatus.FORBIDDEN, 
 		reason="No eres administrador, y éste no es tu perfil")  // 403
@@ -102,31 +110,31 @@ public class UserController {
 		return passwordEncoder.encode(rawPassword);
 	}
 
-    /**
-     * Generates random tokens. From https://stackoverflow.com/a/44227131/15472
-     * @param byteLength
-     * @return
-     */
-    public static String generateRandomBase64Token(int byteLength) {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] token = new byte[byteLength];
-        secureRandom.nextBytes(token);
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(token); //base64 encoding
-    }
+	/**
+	 * Generates random tokens. From https://stackoverflow.com/a/44227131/15472
+	 * @param byteLength
+	 * @return
+	 */
+	public static String generateRandomBase64Token(int byteLength) {
+		SecureRandom secureRandom = new SecureRandom();
+		byte[] token = new byte[byteLength];
+		secureRandom.nextBytes(token);
+		return Base64.getUrlEncoder().withoutPadding().encodeToString(token); //base64 encoding
+	}
 
-    /**
-     * Landing page for a user profile
-     */
+	/**
+	 * Landing page for a user profile
+	 */
 	@GetMapping("{id}")
-    public String index(@PathVariable long id, Model model, HttpSession session) {
-        User target = entityManager.find(User.class, id);
-        model.addAttribute("user", target);
-        return "user";
-    }
-
-    /**
-     * Alter or create a user
-     */
+	public String index(@PathVariable long id, Model model, HttpSession session) {
+		User target = entityManager.find(User.class, id);
+		model.addAttribute("user", target);
+		return "user";
+	}
+	
+	/**
+	 * Alter or create a user
+	 */
 	@PostMapping("/{id}")
 	@Transactional
 	public String postUser(
@@ -136,21 +144,21 @@ public class UserController {
 			@RequestParam(required=false) String pass2,
 			Model model, HttpSession session) throws IOException {
 
-        User requester = (User)session.getAttribute("u");
-        User target = null;
-        if (id == -1 && requester.hasRole(Role.ADMIN)) {
-            // create new user with random password
-            target = new User();
-            target.setPassword(encodePassword(generateRandomBase64Token(12)));
-            target.setEnabled(true);
-            entityManager.persist(target);
-            entityManager.flush(); // forces DB to add user & assign valid id
-            id = target.getId();   // retrieve assigned id from DB
-        }
-        
-        // retrieve requested user
-        target = entityManager.find(User.class, id);
-        model.addAttribute("user", target);
+		User requester = (User)session.getAttribute("u");
+		User target = null;
+		if (id == -1 && requester.hasRole(Role.ADMIN)) {
+			// create new user with random password
+			target = new User();
+			target.setPassword(encodePassword(generateRandomBase64Token(12)));
+			target.setEnabled(true);
+			entityManager.persist(target);
+			entityManager.flush(); // forces DB to add user & assign valid id
+			id = target.getId();   // retrieve assigned id from DB
+		}
+		
+		// retrieve requested user
+		target = entityManager.find(User.class, id);
+		model.addAttribute("user", target);
 		
 		if (requester.getId() != target.getId() &&
 				! requester.hasRole(Role.ADMIN)) {
@@ -158,50 +166,50 @@ public class UserController {
 		}
 		
 		if (edited.getPassword() != null) {
-            if ( ! edited.getPassword().equals(pass2)) {
-                throw new NoEsTuPerfilException();
-            } else {
-                // save encoded version of password
-                target.setPassword(encodePassword(edited.getPassword()));
-            }
+			if ( ! edited.getPassword().equals(pass2)) {
+				throw new NoEsTuPerfilException();
+			} else {
+				// save encoded version of password
+				target.setPassword(encodePassword(edited.getPassword()));
+			}
 		}		
 		target.setUsername(edited.getUsername());
 		target.setFirstName(edited.getFirstName());
 		target.setLastName(edited.getLastName());
 
 		// update user session so that changes are persisted in the session, too
-        if (requester.getId() == target.getId()) {
-            session.setAttribute("u", target);
-        }
+		if (requester.getId() == target.getId()) {
+			session.setAttribute("u", target);
+		}
 
 		return "user";
 	}	
 
-    /**
-     * Returns the default profile pic
-     * 
-     * @return
-     */
-    private static InputStream defaultPic() {
-	    return new BufferedInputStream(Objects.requireNonNull(
-            UserController.class.getClassLoader().getResourceAsStream(
-                "static/img/default-pic.jpg")));
-    }
+	/**
+	 * Returns the default profile pic
+	 * 
+	 * @return
+	 */
+	private static InputStream defaultPic() {
+		return new BufferedInputStream(Objects.requireNonNull(
+			UserController.class.getClassLoader().getResourceAsStream(
+				"static/img/default-pic.jpg")));
+	}
 
 	/**
-     * Downloads a profile pic for a user id
-     * 
-     * @param id
-     * @return
-     * @throws IOException
-     */
-    @GetMapping("{id}/conf")
-    public StreamingResponseBody getConf(@PathVariable long id) throws IOException {
-        File f = localData.getFile("user", ""+id+".jpg");
-        InputStream in = new BufferedInputStream(f.exists() ?
-            new FileInputStream(f) : UserController.defaultPic());
-        return os -> FileCopyUtils.copy(in, os);
-    }
+	 * Downloads a profile pic for a user id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 */
+	@GetMapping("{id}/conf")
+	public StreamingResponseBody getConf(@PathVariable long id) throws IOException {
+		File f = localData.getFile("user", ""+id+".jpg");
+		InputStream in = new BufferedInputStream(f.exists() ?
+			new FileInputStream(f) : UserController.defaultPic());
+		return os -> FileCopyUtils.copy(in, os);
+	}
 
 	@PostMapping("/{id}/conf")
 	@ResponseBody
@@ -211,13 +219,13 @@ public class UserController {
 	HttpServletResponse response, HttpSession session, Model model) throws IOException{
 
 		User target = entityManager.find(User.class, id);
-        model.addAttribute("user", target);
+		model.addAttribute("user", target);
 		
 		// check permissions
 		User requester = (User)session.getAttribute("u");
 		if (requester.getId() != target.getId() &&
 				! requester.hasRole(Role.ADMIN)) {
-            throw new NoEsTuPerfilException();
+			throw new NoEsTuPerfilException();
 		}
 		
 		//Profile pic update
@@ -258,40 +266,40 @@ public class UserController {
 	}
 
 	/**
-     * Downloads a profile pic for a user id
-     * 
-     * @param id
-     * @return
-     * @throws IOException
-     */
-    /*@GetMapping("{id}/pic")
-    public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
-        File f = localData.getFile("user", ""+id+".jpg");
-        InputStream in = new BufferedInputStream(f.exists() ?
-            new FileInputStream(f) : UserController.defaultPic());
-        return os -> FileCopyUtils.copy(in, os);
-    }*/
+	 * Downloads a profile pic for a user id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 */
+	/*@GetMapping("{id}/pic")
+	public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
+		File f = localData.getFile("user", ""+id+".jpg");
+		InputStream in = new BufferedInputStream(f.exists() ?
+			new FileInputStream(f) : UserController.defaultPic());
+		return os -> FileCopyUtils.copy(in, os);
+	}*/
 
-    /**
-     * Uploads a profile pic for a user id
-     * 
-     * @param id
-     * @return
-     * @throws IOException
-     */
-    /*@PostMapping("{id}/pic")
+	/**
+	 * Uploads a profile pic for a user id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 */
+	/*@PostMapping("{id}/pic")
 	@ResponseBody
-    public String setPic(@RequestParam("photo") MultipartFile photo, @PathVariable long id, 
-        HttpServletResponse response, HttpSession session, Model model) throws IOException {
+	public String setPic(@RequestParam("photo") MultipartFile photo, @PathVariable long id, 
+		HttpServletResponse response, HttpSession session, Model model) throws IOException {
 
-        User target = entityManager.find(User.class, id);
-        model.addAttribute("user", target);
+		User target = entityManager.find(User.class, id);
+		model.addAttribute("user", target);
 		
 		// check permissions
 		User requester = (User)session.getAttribute("u");
 		if (requester.getId() != target.getId() &&
 				! requester.hasRole(Role.ADMIN)) {
-            throw new NoEsTuPerfilException();
+			throw new NoEsTuPerfilException();
 		}
 		
 		log.info("Updating photo for user {}", id);
@@ -303,19 +311,19 @@ public class UserController {
 					new BufferedOutputStream(new FileOutputStream(f))) {
 				byte[] bytes = photo.getBytes();
 				stream.write(bytes);
-                log.info("Uploaded photo for {} into {}!", id, f.getAbsolutePath());
+				log.info("Uploaded photo for {} into {}!", id, f.getAbsolutePath());
 			} catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				log.warn("Error uploading " + id + " ", e);
 			}
 		}
 		return "{\"status\":\"photo uploaded correctly\"}";
-    }*/
-    
+	}*/
+	
 	@GetMapping("{id}/carrito")
-    public String carrito(Model model, @PathVariable long id) {
+	public String carrito(Model model, @PathVariable long id) {
 		User user = entityManager.find(User.class, id);
-        model.addAttribute("user", user);
+		model.addAttribute("user", user);
 
 		List<Pedido> pedidos = user.getPedidos();
 		Pedido pedido = null;
@@ -346,18 +354,18 @@ public class UserController {
 			model.addAttribute("total", total);
 		}
 
-        return "carrito";
-    }
+		return "carrito";
+	}
 
 	@GetMapping("/{id}/pedidoCliente")
-    public String pedidoCliente(Model model) {
-        return "pedidoCliente";
-    }
+	public String pedidoCliente(Model model) {
+		return "pedidoCliente";
+	}
 
-    /**
-     * Returns JSON with all received messages
-     */
-    @GetMapping(path = "received", produces = "application/json")
+	/**
+	 * Returns JSON with all received messages
+	 */
+	@GetMapping(path = "received", produces = "application/json")
 	@Transactional // para no recibir resultados inconsistentes
 	@ResponseBody  // para indicar que no devuelve vista, sino un objeto (jsonizado)
 	public List<Message.Transfer> retrieveMessages(HttpSession session) {
@@ -367,10 +375,10 @@ public class UserController {
 				u.getUsername(), u.getReceived().size());
 		return  u.getReceived().stream().map(Transferable::toTransfer).collect(Collectors.toList());
 	}	
-    
-    /**
-     * Returns JSON with count of unread messages 
-     */
+	
+	/**
+	 * Returns JSON with count of unread messages 
+	 */
 	@GetMapping(path = "unread", produces = "application/json")
 	@ResponseBody
 	public String checkUnread(HttpSession session) {
@@ -380,15 +388,15 @@ public class UserController {
 			.getSingleResult();
 		session.setAttribute("unread", unread);
 		return "{\"unread\": " + unread + "}";
-    }
-    
-    /**
-     * Posts a message to a user.
-     * @param id of target user (source user is from ID)
-     * @param o JSON-ized message, similar to {"message": "text goes here"}
-     * @throws JsonProcessingException
-     */
-    @PostMapping("/{id}/msg")
+	}
+	
+	/**
+	 * Posts a message to a user.
+	 * @param id of target user (source user is from ID)
+	 * @param o JSON-ized message, similar to {"message": "text goes here"}
+	 * @throws JsonProcessingException
+	 */
+	@PostMapping("/{id}/msg")
 	@ResponseBody
 	@Transactional
 	public String postMsg(@PathVariable long id, 
@@ -424,53 +432,4 @@ public class UserController {
 		messagingTemplate.convertAndSend("/user/"+u.getUsername()+"/queue/updates", json);
 		return "{\"result\": \"message sent.\"}";
 	}	
-
-
-	 //TODO - Hacer bien el calculo del precio, obtener latitud y longitud
-	@Transactional
-    @PostMapping("/addToCart")
-    public String addToCart(Model model, HttpSession session, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
-		Cliente u = (Cliente) session.getAttribute("u");
-		String query = "SELECT X FROM PEDIDO X WHERE X.CLIENTE="+u.getId()+" AND X.ESTADO=0";
-		Pedido cart;
-		// Comprobando si el usuario tiene un carrito. Si no, crea uno nuevo.
-		try{
-			cart = (Pedido) entityManager.createQuery(query).getSingleResult();
-			Plato plato = entityManager.find(Plato.class, id);
-			PlatoPedido platoPed = new PlatoPedido();
-			platoPed.setPlato(plato);
-			platoPed.setCantidad(amount);
-			List<PlatoPedido> contenidoPedido = cart.getContenidoPedido();
-			contenidoPedido.add(platoPed);
-			cart.setContenidoPedido(contenidoPedido);
-			cart.setPrecioServicio(cart.getPrecioServicio() + (platoPed.getCantidad() * plato.getPrecio()));
-			entityManager.merge(cart);
-			entityManager.flush();
-		}catch(NoResultException ex){
-			//Crea el carrito nuevo, asignando la informacion basica
-			cart = new Pedido();
-			cart.setCliente(u);
-			cart.setDirEntrega(u.getDireccion());
-			cart.setEstado(Estado.NO_CONFIRMADO);
-			cart.setFechaPedido(LocalDateTime.now());
-			cart.setLat(0.0);
-			cart.setLng(0.0);
-			cart.setPrecioEntrega(3.54);
-			//Busca la informacion relativa al plato que se esta agregando y la agrega al carrito
-			Plato plato = entityManager.find(Plato.class, id);
-			cart.setRestaurante(plato.getRestaurante());
-			//Carga el plato y su informacion en un platoPedido
-			PlatoPedido platoPed = new PlatoPedido();
-			platoPed.setPlato(plato);
-			platoPed.setCantidad(1);
-			List<PlatoPedido> contenidoPedido = new ArrayList<>();
-			contenidoPedido.add(platoPed);
-			cart.setContenidoPedido(contenidoPedido);
-			cart.setPrecioServicio(plato.getPrecio() * platoPed.getCantidad());
-			//Una vez terminado de cargar los datos se persiste el carrito en la BD
-			entityManager.persist(cart);
-			entityManager.flush();
-		}
-        return carrito(model, u.getId());
-    }
 }
