@@ -11,8 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpSession;
 
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Cliente;
+import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
@@ -49,7 +51,7 @@ public class RootController {
     @Autowired
 	private EntityManager entityManager;
 
-	//private static final Logger log = LogManager.getLogger(RootController.class);
+	private static final Logger log = LogManager.getLogger(RootController.class);
 
     /**
      * It gets the logo image of a restaurant
@@ -188,11 +190,16 @@ public class RootController {
 	    //TODO - Obtener latitud y longitud
 		@Transactional
 		@PostMapping("/addToCart")
-		public String addToCart(Model model, HttpSession session, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
+		public String addToCart(Model model, HttpSession session,@RequestParam(value = "extras[]", required = false) long[] extras, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
 			User u = (User) session.getAttribute("u");
 			Cliente cliente = entityManager.find(Cliente.class, u.getId());
 			String query = "SELECT X FROM Pedido X WHERE X.cliente="+u.getId()+" AND X.estado=0";
 			Pedido cart;
+            if(extras == null){
+                log.warn("Extras cargados: 0");
+            }else{
+                log.warn("Extras cargados: "+ extras.length);
+            }
 			// Comprobando si el usuario tiene un carrito. Si no, crea uno nuevo.
 			try{
 				cart = (Pedido) entityManager.createQuery(query).getSingleResult();
@@ -200,6 +207,17 @@ public class RootController {
 				PlatoPedido platoPed = new PlatoPedido();
 				platoPed.setPlato(plato);
 				platoPed.setCantidad(amount);
+                //Cargamos los extras
+                if(!(extras == null)){
+                    List<Extra> lExtras = new ArrayList<>();
+                    for(int i = 0; i < extras.length;i++){
+                        Extra ex = entityManager.find(Extra.class, extras[i]);
+                        lExtras.add(ex);
+                        cart.setPrecioServicio(cart.getPrecioServicio() + ex.getPrecio());
+                    }
+                    platoPed.setExtras(lExtras);
+                }
+                //Actualizamos el resto del pedido
 				List<PlatoPedido> contenidoPedido = cart.getContenidoPedido();
 				contenidoPedido.add(platoPed);
 				cart.setContenidoPedido(contenidoPedido);
@@ -223,6 +241,16 @@ public class RootController {
 				PlatoPedido platoPed = new PlatoPedido();
 				platoPed.setPlato(plato);
 				platoPed.setCantidad(amount);
+                //Cargamos los extras
+                if(!(extras == null)){
+                    List<Extra> lExtras = new ArrayList<>();
+                    for(int i = 0; i < extras.length;i++){
+                        Extra ext = entityManager.find(Extra.class, extras[i]);
+                        lExtras.add(ext);
+                        cart.setPrecioServicio(cart.getPrecioServicio() + ext.getPrecio());
+                    }
+                    platoPed.setExtras(lExtras);
+                }
 				List<PlatoPedido> contenidoPedido = new ArrayList<>();
 				contenidoPedido.add(platoPed);
 				cart.setContenidoPedido(contenidoPedido);

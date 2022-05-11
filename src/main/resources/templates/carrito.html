@@ -58,7 +58,7 @@
                                 <li th:each="x: ${pedido.contenidoPedido}" class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="me-auto">
                                         <div class="fw-bold" th:text="${x.plato.nombre}"></div>
-                                        <p class="mb-0" th:each="y: ${x.plato.extras}" th:text="${y.nombre}"></p>
+                                        <p class="mb-0" th:each="y: ${x.extras}" th:text="${y.nombre}"></p>
                                     </div>
                                     <span class="badge bg-dark rounded-pill" th:text="${x.cantidad}"></span>
                                 </li>
@@ -71,25 +71,25 @@
                         <div class="row justify-content-center mt-2">
                             <div class="col-8 d-flex justify-content-between align-items-start">
                                 <div class="fw-bold h6">Subtotal</div>
-                                <p th:text="${precio}"></p>
+                                <p th:text="|${precio}€|"></p>
                             </div>
                         </div>
                         <div class="row justify-content-center">
                             <div class="col-8 d-flex justify-content-between align-items-start">
                                 <div class="fw-bold h6">Servicio</div>
-                                <p th:text="${pedido.precioServicio}"></p>
+                                <p th:text="|${pedido.precioServicio}€|"></p>
                             </div>
                         </div>
                         <div class="row justify-content-center">
                             <div class="col-8 d-flex justify-content-between align-items-start">
                                 <div class="fw-bold h6">Entrega</div>
-                                <p th:text="${pedido.precioEntrega}"></p>
+                                <p th:text="|${pedido.precioEntrega}€|"></p>
                             </div>
                         </div>
                         <div class="row justify-content-center mt-3">
                             <div class="col-8 d-flex justify-content-between align-items-start">
                                 <div class="fw-bold h5">Total</div>
-                                <p th:text="${total}"></p>
+                                <p th:text="|${total}€|"></p>
                             </div>
                         </div>
                         <div class="row justify-content-center mt-4 mb-2">

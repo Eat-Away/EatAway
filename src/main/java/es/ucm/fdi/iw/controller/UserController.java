@@ -350,7 +350,7 @@ public class UserController {
 			}
 			model.addAttribute("precio", precio);
 
-			Double total = precio + pedido.getPrecioEntrega() + pedido.getPrecioServicio();
+			Double total = pedido.getPrecioEntrega() + pedido.getPrecioServicio();
 		
 			model.addAttribute("total", total);
 		}
