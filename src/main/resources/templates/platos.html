@@ -9,7 +9,9 @@
 <body class="d-flex flex-column h-100">
     <header th:replace="fragments/nav.html :: nav"></header>
     <div class="container mt-3">
-        
+        <div class="container" th:if="${message != null}">
+            <div class="alert alert-success" role="alert" th:text="${message}"></div>
+        </div>
         <div class="row justify-content-center">
             <h3 class="text-center" th:text="${plato.nombre}"></h3>
             <div class="card col-8">

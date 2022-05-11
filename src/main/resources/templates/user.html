@@ -9,6 +9,9 @@
 <body class="d-flex flex-column h-100">
     <header th:replace="fragments/nav.html :: nav"></header>
 
+    <div class="container" th:if="${message != null}">
+        <div class="alert alert-success" role="alert" th:text="${message}"></div>
+    </div>
     <main class="flex-shrink-0">
         <div class="container px-5">
             <div class="row justify-content-center mt-4">

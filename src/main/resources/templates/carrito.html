@@ -13,7 +13,7 @@
         <div class="container">
             <h3 class="text-center mt-3">Carrito</h3>
             <div class="row"  th:if="${pedido != null}">
-                <div class="col"> <!--Formulario ent"rega-->
+                <div class="col"> <!--Formulario entrega-->
                     <div class="row  justify-content-center">
                         <div class="col-8">
                             <div class="form mb-3">
@@ -57,10 +57,10 @@
                             <ul class="list-group list-group-flush border rounded">
                                 <li th:each="x: ${pedido.contenidoPedido}" class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="me-auto">
-                                        <div class="fw-bold" th:text="${x.plato.nombre}">Hamburguesa Vip</div>
-                                        <p class="mb-0" th:each="y: ${x.plato.extras}" th:text="${y.nombre}">Patatas fritas</p>
+                                        <div class="fw-bold" th:text="${x.plato.nombre}"></div>
+                                        <p class="mb-0" th:each="y: ${x.plato.extras}" th:text="${y.nombre}"></p>
                                     </div>
-                                    <span class="badge bg-dark rounded-pill" th:text="${x.cantidad}">1</span>
+                                    <span class="badge bg-dark rounded-pill" th:text="${x.cantidad}"></span>
                                 </li>
                             </ul>
                         </div>  
@@ -71,29 +71,33 @@
                         <div class="row justify-content-center mt-2">
                             <div class="col-8 d-flex justify-content-between align-items-start">
                                 <div class="fw-bold h6">Subtotal</div>
-                                <p th:text="${precio}">22'75</p>
+                                <p th:text="${precio}"></p>
                             </div>
                         </div>
                         <div class="row justify-content-center">
                             <div class="col-8 d-flex justify-content-between align-items-start">
                                 <div class="fw-bold h6">Servicio</div>
-                                <p th:text="${pedido.precioServicio}">1'25</p>
+                                <p th:text="${pedido.precioServicio}"></p>
                             </div>
                         </div>
                         <div class="row justify-content-center">
                             <div class="col-8 d-flex justify-content-between align-items-start">
                                 <div class="fw-bold h6">Entrega</div>
-                                <p th:text="${pedido.precioEntrega}">2'5</p>
+                                <p th:text="${pedido.precioEntrega}"></p>
                             </div>
                         </div>
                         <div class="row justify-content-center mt-3">
                             <div class="col-8 d-flex justify-content-between align-items-start">
                                 <div class="fw-bold h5">Total</div>
-                                <p th:text="${total}">26'5</p>
+                                <p th:text="${total}"></p>
                             </div>
                         </div>
                         <div class="row justify-content-center mt-4 mb-2">
-                            <button type="button" class="btn btn-outline-success col-6">Hacer pedido</button>
+                            <form action="/procesaPedido" method="post">
+                                <input type="hidden" th:value="${pedido.id}" id="id" name="id"/>
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button type="submit" class="btn btn-outline-success col-6">Hacer pedido</button>
+                            </form>
                         </div>
                     </div>
                 </div>

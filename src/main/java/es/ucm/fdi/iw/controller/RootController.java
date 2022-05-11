@@ -131,7 +131,20 @@ public class RootController {
         return "platos";
     }
 
-
+    //TODO: Pensar a donde dirige el cliente cuando procesa su pedido
+	@Transactional
+	@PostMapping("/procesaPedido")
+	public String procesaPedido(Model model, HttpSession session, @RequestParam("id") long id){
+		Pedido ped = entityManager.find(Pedido.class, id);
+		User u = (User) session.getAttribute("u");
+		Cliente cliente = entityManager.find(Cliente.class, u.getId());
+		if(cliente.getId() != ped.getCliente().getId()){
+			throw new PermisoDenegadoException();
+		}
+		ped.setEstado(Estado.PENDIENTE);
+		model.addAttribute("message", "El pedido se ha procesado correctamente");
+		return index(model);
+	}
     /**
      * It returns the login.html page
      * 
@@ -172,52 +185,53 @@ public class RootController {
         return "index";
     }
     
-    //TODO - Obtener latitud y longitud
-	@Transactional
-	@PostMapping("/addToCart")
-	public String addToCart(Model model, HttpSession session, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
-        User u = (User) session.getAttribute("u");
-        Cliente cliente = entityManager.find(Cliente.class, u.getId());
-        String query = "SELECT X FROM Pedido X WHERE X.cliente="+u.getId()+" AND X.estado=0";
-        Pedido cart;
-        // Comprobando si el usuario tiene un carrito. Si no, crea uno nuevo.
-        try{
-            cart = (Pedido) entityManager.createQuery(query).getSingleResult();
-            Plato plato = entityManager.find(Plato.class, id);
-            PlatoPedido platoPed = new PlatoPedido();
-            platoPed.setPlato(plato);
-            platoPed.setCantidad(amount);
-            List<PlatoPedido> contenidoPedido = cart.getContenidoPedido();
-            contenidoPedido.add(platoPed);
-            cart.setContenidoPedido(contenidoPedido);
-            cart.setPrecioServicio(cart.getPrecioServicio() + (platoPed.getCantidad() * plato.getPrecio()));
-            entityManager.merge(cart);
-            entityManager.flush();
-        }catch(NoResultException ex){
-            //Crea el carrito nuevo, asignando la informacion basica
-            cart = new Pedido();
-            cart.setCliente(cliente);
-            cart.setDirEntrega(u.getDireccion());
-            cart.setEstado(Estado.NO_CONFIRMADO);
-            cart.setFechaPedido(LocalDateTime.now());
-            cart.setLat(0.0);
-            cart.setLng(0.0);
-            cart.setPrecioEntrega(3.54);
-            //Busca la informacion relativa al plato que se esta agregando y la agrega al carrito
-            Plato plato = entityManager.find(Plato.class, id);
-            cart.setRestaurante(plato.getRestaurante());
-            //Carga el plato y su informacion en un platoPedido
-            PlatoPedido platoPed = new PlatoPedido();
-            platoPed.setPlato(plato);
-            platoPed.setCantidad(amount);
-            List<PlatoPedido> contenidoPedido = new ArrayList<>();
-            contenidoPedido.add(platoPed);
-            cart.setContenidoPedido(contenidoPedido);
-            cart.setPrecioServicio(plato.getPrecio() * platoPed.getCantidad());
-            //Una vez terminado de cargar los datos se persiste el carrito en la BD
-            entityManager.persist(cart);
-            entityManager.flush();
-        }
-        return "carrito";
-	 }
+	    //TODO - Obtener latitud y longitud
+		@Transactional
+		@PostMapping("/addToCart")
+		public String addToCart(Model model, HttpSession session, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
+			User u = (User) session.getAttribute("u");
+			Cliente cliente = entityManager.find(Cliente.class, u.getId());
+			String query = "SELECT X FROM Pedido X WHERE X.cliente="+u.getId()+" AND X.estado=0";
+			Pedido cart;
+			// Comprobando si el usuario tiene un carrito. Si no, crea uno nuevo.
+			try{
+				cart = (Pedido) entityManager.createQuery(query).getSingleResult();
+				Plato plato = entityManager.find(Plato.class, id);
+				PlatoPedido platoPed = new PlatoPedido();
+				platoPed.setPlato(plato);
+				platoPed.setCantidad(amount);
+				List<PlatoPedido> contenidoPedido = cart.getContenidoPedido();
+				contenidoPedido.add(platoPed);
+				cart.setContenidoPedido(contenidoPedido);
+				cart.setPrecioServicio(cart.getPrecioServicio() + (platoPed.getCantidad() * plato.getPrecio()));
+				entityManager.merge(cart);
+				entityManager.flush();
+			}catch(NoResultException ex){
+				//Crea el carrito nuevo, asignando la informacion basica
+				cart = new Pedido();
+				cart.setCliente(cliente);
+				cart.setDirEntrega(u.getDireccion());
+				cart.setEstado(Estado.NO_CONFIRMADO);
+				cart.setFechaPedido(LocalDateTime.now());
+				cart.setLat(0.0);
+				cart.setLng(0.0);
+				cart.setPrecioEntrega(3.54);
+				//Busca la informacion relativa al plato que se esta agregando y la agrega al carrito
+				Plato plato = entityManager.find(Plato.class, id);
+				cart.setRestaurante(plato.getRestaurante());
+				//Carga el plato y su informacion en un platoPedido
+				PlatoPedido platoPed = new PlatoPedido();
+				platoPed.setPlato(plato);
+				platoPed.setCantidad(amount);
+				List<PlatoPedido> contenidoPedido = new ArrayList<>();
+				contenidoPedido.add(platoPed);
+				cart.setContenidoPedido(contenidoPedido);
+				cart.setPrecioServicio(plato.getPrecio() * platoPed.getCantidad());
+				//Una vez terminado de cargar los datos se persiste el carrito en la BD
+				entityManager.persist(cart);
+				entityManager.flush();
+			}
+            model.addAttribute("message", "Se ha añadido el producto al carrito");
+			return platos(model, id);
+		 }
 }

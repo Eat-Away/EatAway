@@ -319,6 +319,7 @@ public class UserController {
 		}
 		return "{\"status\":\"photo uploaded correctly\"}";
 	}*/
+
 	
 	@GetMapping("{id}/carrito")
 	public String carrito(Model model, @PathVariable long id) {
@@ -356,6 +357,7 @@ public class UserController {
 
 		return "carrito";
 	}
+
 
 	@GetMapping("/{id}/pedidoCliente")
 	public String pedidoCliente(Model model) {
