@@ -93,12 +93,7 @@ En *finRegistro.html* la base de datos también está siendo usada para poder sa
 ## Funcionalidades pendientes de arreglar
 [comment]: <> (Habría que ir poniendo aquí que cosas fallan)
 * Vista de Administración está en blanco
-* Implementar funcionalidad en el carrito
 * Al editar el restaurante sin cargar fotos para el carrusel de fotos de su vista individual, se queda sin cargar la primera imagen del carrusel
-* Poder listar los extras de cada plato en su vista
-* Poder añadir platos con extras (si se piden) al carrito
-* Procesar pedidos
-* Hacer que un pedido en curso pueda pasar a estar listo para recoger (Lo hace el propietario del restaurante?)
 * Que el repartidor pueda marcar un pedido como completado
 * El usuario debe poder valorar un pedido una vez finalizado
 * Dinamizar los últimos pedidos de los usuarios
