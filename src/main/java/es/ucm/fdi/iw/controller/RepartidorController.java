@@ -25,6 +25,7 @@ import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Repartidor;
+import es.ucm.fdi.iw.model.User;
 
 
 /**
@@ -56,6 +57,8 @@ public class RepartidorController {
 	 */
     @GetMapping("/{id}")
     public String index(Model model,HttpSession session, @PathVariable long id) {
+		Repartidor target = (Repartidor)entityManager.find(User.class, id);
+		model.addAttribute("user", target);
         return "repartidor";
     }
 	
