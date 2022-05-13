@@ -77,6 +77,7 @@ public class RepartidorController {
 		u = entityManager.find(Repartidor.class,u.getId());
 
 		if(u.getPedido() != null){ //Si el repartidor ya tiene asignado un pedido
+			model.addAttribute("idRepartidor",id);
 			return "chatRepartidor";
 		}
 		else{ //Si no tiene asignado ningún pedido
