@@ -12,11 +12,55 @@
     <main class="flex-shrink-0">
         <div class="container">
             <div class="flex-grow-1 ms-3">
-            <h1>Pagina principal Admin: <span th:text="${user.username}"></span></h1>
+            <h1>Administrador: <span th:text="${user.username}"></span></h1>
             <h3 th:text="|Nombre: ${user.firstName}|"></h3>
             <h3 th:text="|Apellidos: ${user.lastName}|"></h3>
         </div>
     </main>
+
+    
+    <main class="flex-shrink-0">
+        <div class="container">
+            <div class="flex-grow-1 ms-3"> 
+            <h3>Informacion Usuarios</h3>
+            <table class="table">
+                <thead>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Informacion Pago</th>
+                    <th scope="col">Informacion pedido</th>   
+                </thead>
+                <tbody>
+                    
+
+                </tbody>
+                
+               
+            
+
+              
+            </table>  
+            <h3>Informacion Restaurantes</h3>
+            <table class="table">
+                <thead>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Direccion</th>
+                    <th scope="col">Horario</th>
+                    <th scope="col">Valoracion</th> 
+                   
+                </thead>
+                <tbody>
+                    
+
+                </tbody>
+
+
+            </table>
+        </div>
+    </main>
+
+
 
     <th:block th:replace="fragments/footer.html :: footer" />
 </body>
