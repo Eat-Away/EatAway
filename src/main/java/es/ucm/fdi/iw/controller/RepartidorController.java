@@ -87,7 +87,6 @@ public class RepartidorController {
 		else{ //Si no tiene asignado ningún pedido y los pedidos estan listos para recoger
 			String query = "SELECT X FROM Pedido X WHERE X.repartidor = null AND X.estado = 3";
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
-			
 			model.addAttribute("pedidos", pedidos);
 			model.addAttribute("idRepartidor",idRepartidor);
 			return "listaPedidos";

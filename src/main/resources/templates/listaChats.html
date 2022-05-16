@@ -3,7 +3,7 @@
 
 <head>
   <th:block th:replace="fragments/head :: header" />
-  <title>IW: listaChats</title>
+  <title>EatAway: Pedidos Realizados</title>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -38,6 +38,38 @@
               </tr>
           </table>
         </div>
+      </div>
+    </div>
+
+    
+    <h1 class="text-center my-3">PEDIDOS REALIZADOS EN ESPERA</h1>
+    <div class="container">
+      <div class="row">
+        <!-- Pedidos-->
+        <div class="col">
+          <table class="table table-hover">
+            <thead class="table-success">
+              <tr>
+                <th scope="col">PEDIDO</th>
+                <th scope="col">ESTADO</th>
+                <th scope="col">RESTAURANTE</th>
+                <th scope="col">DIR RESTAURANTE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="x : ${pedidosEspera}">
+                <th scope="row" th:text=${x.id}></th>
+                <th:block th:switch="${x.estado}">
+                  <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}" scope="col" class="text-secondary">Pendiente</td>
+                  <th th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PREPARANDO}" scope="col" class="text-primary">Preparando</th>
+                  <th th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).LISTORECOGIDA}" scope="col" class="text-info">Listo para Recoger</th>
+                  <th th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).REPARTO}" scope="col" class="text-success">En Reparto</th>
+                </th:block>
+                <td th:text=${x.restaurante.nombre}></td>
+                <td th:text=${x.restaurante.direccion}></td>
+                <td><button type="submit" class="btn btn-success" disabled>HABLAR</button></td>
+              </tr>
+          </table>
         </div>
       </div>
     </div>

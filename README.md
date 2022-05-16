@@ -94,8 +94,5 @@ En *finRegistro.html* la base de datos también está siendo usada para poder sa
 [comment]: <> (Habría que ir poniendo aquí que cosas fallan)
 * Vista de Administración está en blanco
 * Al editar el restaurante sin cargar fotos para el carrusel de fotos de su vista individual, se queda sin cargar la primera imagen del carrusel
-* Que el repartidor pueda marcar un pedido como completado
-* El usuario debe poder valorar un pedido una vez finalizado
-* Dinamizar los últimos pedidos de los usuarios
 * Darle funcionamiento a los botones de categoría, filtrado y búsqueda del index
 * Añadir pruebas con Karate

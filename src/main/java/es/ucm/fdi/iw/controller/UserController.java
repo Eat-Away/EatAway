@@ -138,6 +138,9 @@ public class UserController {
 		if(target.getPedidos().size() != 0){
 			String query = "SELECT X FROM Pedido X WHERE X.cliente =" +id +" AND X.estado = 4";
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
+			query = "SELECT X FROM Pedido X WHERE X.estado < 4 AND X.estado > 0";
+			List<Pedido> pedidosEspera = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
+			model.addAttribute("pedidosEspera", pedidosEspera);
 			model.addAttribute("pedidos", pedidos);
 		}
 		return "listaChats";
@@ -152,6 +155,25 @@ public class UserController {
 		model.addAttribute("idPedido", idPedido);
 			return "chatCliente";
 	}
+
+	@Transactional
+	@PostMapping("/{id}/valorar")
+	public String valorarPedido(Model model, HttpSession session, @RequestParam("idPedido") long idPedido, @RequestParam("valoracion") double val ){
+		User u = (User) session.getAttribute("u");
+		Cliente cli = entityManager.find(Cliente.class, u.getId());
+		Pedido p = entityManager.find(Pedido.class, idPedido);
+		if(cli.getId() != p.getCliente().getId()){
+			throw new PermisoDenegadoException();
+		}
+        p.setCliente(p.getCliente());
+        p.setContenidoPedido(p.getContenidoPedido());
+        p.setRestaurante(p.getRestaurante());
+		p.setValoracion(val);
+        entityManager.merge(p);
+        entityManager.flush();
+		return index(cli.getId(), model, session);
+	}
+
 	/**
 	 * Alter or create a user
 	 */
