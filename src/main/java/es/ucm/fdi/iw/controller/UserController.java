@@ -136,7 +136,7 @@ public class UserController {
 		User target = entityManager.find(User.class, id);
 		model.addAttribute("user", target);
 		if(target.getPedidos().size() != 0){
-			String query = "SELECT X FROM Pedido X WHERE X.cliente =" +id +" AND X.estado = 1 AND X.repartidor != null";
+			String query = "SELECT X FROM Pedido X WHERE X.cliente =" +id +" AND X.estado = 4";
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
 			model.addAttribute("pedidos", pedidos);
 		}

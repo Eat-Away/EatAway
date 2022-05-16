@@ -106,6 +106,8 @@ INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, preci
 VALUES (3,'Calle Falsisima68, 419', 1, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 1, 0.0,40.420177,-3.703928);
 INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
 VALUES (4,'Calle Falsisima69, 420', 2, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 1, 0.0,40.420177,-3.703928);
+INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
+VALUES (5,'Calle Falsisima69, 420', 3, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 4, 0.0,40.420177,-3.703928);
 
 --TABLA PLATOPEDIDO               
 INSERT INTO Plato_pedido (id, cantidad, pedido_id, plato_id)

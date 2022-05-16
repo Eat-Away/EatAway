@@ -26,6 +26,7 @@ import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Repartidor;
 import es.ucm.fdi.iw.model.User;
+import es.ucm.fdi.iw.model.Pedido.Estado;
 
 
 /**
@@ -80,8 +81,8 @@ public class RepartidorController {
 			model.addAttribute("idRepartidor",u);
 			return "chatRepartidor";
 		}
-		else{ //Si no tiene asignado ningún pedido
-			String query = "SELECT X FROM Pedido X WHERE X.repartidor = null";
+		else{ //Si no tiene asignado ningún pedido y los pedidos estan listos para recoger
+			String query = "SELECT X FROM Pedido X WHERE X.repartidor = null AND X.estado = 3";
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
 			
 			model.addAttribute("pedidos", pedidos);
@@ -108,10 +109,11 @@ public class RepartidorController {
 		if(pedido.getRepartidor() == null){ //no cogido 
 
 			//query = "UPDATE Pedido Y SET Y.repartidor=" + id + "WHERE Y.id=" + idPedido;
-			
+			//y modificar el estado a en REPARTO
 			Pedido x = entityManager.find(Pedido.class, idPedido);
 			Repartidor y = entityManager.find(Repartidor.class,id);
 			x.setRepartidor(y);
+			x.setEstado(Estado.REPARTO);
 			entityManager.persist(x);
 			entityManager.flush();
 			//query = "UPDATE User X SET X.pedido=" + idPedido + "WHERE X.id =" + id;
