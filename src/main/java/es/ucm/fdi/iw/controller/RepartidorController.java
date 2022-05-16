@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Message;
@@ -92,6 +95,15 @@ public class RepartidorController {
 	}
 
 	/**
+     * This class is a RuntimeException that is thrown when a user tries to access a resource that they
+     * don't have permission to access.
+     */
+    @ResponseStatus(
+		value=HttpStatus.FORBIDDEN, 
+		reason="Alto ahí, no tienes permiso para hacer esto")  // 403
+    public static class PermisoDenegadoException extends RuntimeException {}
+
+	/**
 	 * It takes the id of the repartidor and the id of the pedido, and if the pedido is not taken, it takes
 	 * it and redirects to the chatRepartidor page
 	 * 
@@ -123,6 +135,27 @@ public class RepartidorController {
 			entityManager.flush();
 		}
 		return listaPedidos(model,session,id);
+	}
+
+	@Transactional
+	@PostMapping("/{id}/deliver")
+	public String entregaPedido(Model model, HttpSession session, @RequestParam("idPedido") long idPed, @RequestParam("sigEstado") Estado estado){
+		User u = (User) session.getAttribute("u");
+		Repartidor rep = entityManager.find(Repartidor.class, u.getId());
+		Pedido p = entityManager.find(Pedido.class, idPed);
+		// Checking if the user is the owner of the restaurant.
+		if(rep.getId() != p.getRepartidor().getId()){
+			throw new PermisoDenegadoException();
+		}
+		p.setRepartidor(null);
+        p.setCliente(p.getCliente());
+        p.setContenidoPedido(p.getContenidoPedido());
+        p.setRestaurante(p.getRestaurante());
+        p.setEstado(estado);
+        entityManager.merge(p);
+		rep.setPedido(null);
+        entityManager.flush();
+		return index(model, session, rep.getId());
 	}
 
 	@MessageMapping("/message")
