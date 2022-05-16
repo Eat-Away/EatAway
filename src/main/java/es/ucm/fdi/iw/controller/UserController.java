@@ -131,7 +131,27 @@ public class UserController {
 		model.addAttribute("user", target);
 		return "user";
 	}
-	
+	@GetMapping("/{id}/chats")
+	public String chats(@PathVariable long id,Model model, HttpSession session) {
+		User target = entityManager.find(User.class, id);
+		model.addAttribute("user", target);
+		if(target.getPedidos().size() != 0){
+			String query = "SELECT X FROM Pedido X WHERE X.cliente =" +id +" AND X.estado = 1 AND X.repartidor != null";
+			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
+			model.addAttribute("pedidos", pedidos);
+		}
+		return "listaChats";
+	}
+	@GetMapping("/{id}/chat/{idPedido}")
+	public String chat(@PathVariable long id,Model model, HttpSession session,@PathVariable long idPedido){
+		User target = entityManager.find(User.class, id);
+		model.addAttribute("user", target);
+		Pedido pedido = entityManager.find(Pedido.class, idPedido);
+		long idRepartidor = pedido.getRepartidor().getId();
+		model.addAttribute("idRepartidor", idRepartidor);
+		model.addAttribute("idPedido", idPedido);
+			return "chatCliente";
+	}
 	/**
 	 * Alter or create a user
 	 */

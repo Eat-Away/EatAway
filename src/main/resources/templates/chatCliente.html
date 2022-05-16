@@ -2,7 +2,7 @@
 <html class="h-100" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:replace="fragments/head :: header" />
-        <title>EatAway: Chat Repartidor</title>
+        <title>EatAway: Chat Cliente</title>
     </head>
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
@@ -18,12 +18,12 @@
             <div class="row">
               <div style="display:flex; align-items:initial; margin-top: 10px;">
                  <!-- envío de mensajes -->
-                 <form th:action="@{/user/2/msg}" method="POST">
+                 <form th:action="@{/user/} +${idRepartidor}+ @{/msg}" method="POST">
                   <input type="text" id="message" placeholder="escribe a este usuario" />
-                  <button id="sendmsg" th:attr="data-id=${idRepartidor.id}" class="btn btn-success" type="submit">Enviar</button>
+                  <button id="sendmsg" th:attr="data-id=${user.id}" class="btn btn-success" type="submit">Enviar</button>
               </form>
               &nbsp; &nbsp;
-              <form th:action="@{/repartidor/} + ${idRepartidor.id}+ @{/listaPedidos}" method="get">
+              <form th:action="@{/user/} + ${user.id}+ @{/chat/} + ${idPedido}" method="get">
                 <button type="submit" class="btn btn-success">Refrescar mensajes</button></td>
               </form>
               </div>
@@ -37,7 +37,7 @@
 <script>
   // envio de mensajes con AJAX
   function copiarMensajeEnviado(id){
-    go("/user/"+ id +"/msg", 'POST', {
+    go("/user/" + id +"/msg", 'POST', {
               message: document.getElementById("message").value
           })
           .then(d => console.log("happy", d))

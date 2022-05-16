@@ -70,7 +70,12 @@
                     </ul>
                 </div>
             </div>
-
+            <div class="row justify-content-center mt-4">
+                <form th:action="@{/user/}+ ${user.id}+ @{/chats}" method="get">
+                    <button class="btn btn-outline-success mt-3 col-6">Hablar con tu repartidor</button>
+                </form>
+                
+            </div>
             <!-- recepción de mensajes -->
             <div class="py-5 row" id="mensajes">
             </div>

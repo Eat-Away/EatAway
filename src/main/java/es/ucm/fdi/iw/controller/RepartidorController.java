@@ -75,17 +75,17 @@ public class RepartidorController {
     public String listaPedidos(Model model,HttpSession session, @PathVariable long id) {
 		Repartidor u =(Repartidor)session.getAttribute("u");
 		u = entityManager.find(Repartidor.class,u.getId());
-
+		long idRepartidor = u.getId();
 		if(u.getPedido() != null){ //Si el repartidor ya tiene asignado un pedido
-			model.addAttribute("idRepartidor",id);
+			model.addAttribute("idRepartidor",u);
 			return "chatRepartidor";
 		}
 		else{ //Si no tiene asignado ningún pedido
 			String query = "SELECT X FROM Pedido X WHERE X.repartidor = null";
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
-
+			
 			model.addAttribute("pedidos", pedidos);
-			model.addAttribute("idRepartidor",id);
+			model.addAttribute("idRepartidor",idRepartidor);
 			return "listaPedidos";
 		}
 	}
@@ -105,10 +105,8 @@ public class RepartidorController {
     public String getPedido(Model model, @PathVariable long id,@PathVariable long idPedido,HttpSession session) {
 		Pedido pedido = entityManager.find(Pedido.class, idPedido);
 		
-		if(pedido.getRepartidor() != null){ //ya cogido 
-			return listaPedidos(model,session,id);
-		}
-		else{
+		if(pedido.getRepartidor() == null){ //no cogido 
+
 			//query = "UPDATE Pedido Y SET Y.repartidor=" + id + "WHERE Y.id=" + idPedido;
 			
 			Pedido x = entityManager.find(Pedido.class, idPedido);
@@ -121,10 +119,8 @@ public class RepartidorController {
 			y.setPedido(x2);
 			entityManager.persist(y);
 			entityManager.flush();
-
-
-			return "chatRepartidor";
 		}
+		return listaPedidos(model,session,id);
 	}
 
 	@MessageMapping("/message")
