@@ -40,10 +40,17 @@
                             <td>
                                 <div class="row">
                                     <div class="col">
-                                        <button class="btn btn-danger">Bloquear</button>
+                                        <form th:if="${u.enabled == true}" th:action="@{/admin/banUser}" name="banUser" method="post" th:id="@{banUser?id=}+${u.id}">
+                                            <input type="hidden" id="idUsr" name="idUsr" th:value="${u.id}">
+                                            <button type="button" class="btn btn-danger banUser" th:attr="data-idusr=${u.id}, data-nombreusuario=${u.username}">Bloquear</button>
+                                        </form>
+                                        <form th:if="${u.enabled == false}" th:action="@{/admin/unbanUser}" name="unbanUser" method="post" th:id="@{unbanUser?id=}+${u.id}">
+                                            <input type="hidden" id="idUsr" name="idUsr" th:value="${u.id}">
+                                            <button type="button" class="btn btn-success unbanUser" th:attr="data-idusr=${u.id}, data-nombreusuario=${u.username}">Desbloquear</button>
+                                        </form>
                                     </div>
                                     <div class="col">
-                                        <button class="btn btn-warning">Borrar Foto</button>
+                                        <button type="button" class="btn btn-warning">Borrar Foto</button>
                                     </div>
                                 </div>
                             </td>
@@ -81,6 +88,7 @@
                 </table>
             </div>
         </main>
+        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
         <th:block th:replace="fragments/footer.html :: footer" />
     </body>
 </html>

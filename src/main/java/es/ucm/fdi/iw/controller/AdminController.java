@@ -77,6 +77,7 @@ public class AdminController {
     public String index(Model model, HttpSession session) {
         String query = "SELECT X FROM User X";
         List<User> listaUsuarios = entityManager.createQuery(query, User.class).getResultList();
+        listaUsuarios.remove(0);//Elimina el admin de la lista (No bloquearnos a nosotros mismos)
         query = "SELECT X FROM Restaurante X";
         List<Restaurante> listaRestaurantes = entityManager.createQuery(query, Restaurante.class).getResultList();
         User u = (User) session.getAttribute("u");
@@ -128,6 +129,45 @@ public class AdminController {
 		return os -> FileCopyUtils.copy(in, os);
 	}
 
+    //FUNCIONES DE GESTION DE USUARIOS
+
+    @Transactional
+    @PostMapping("/banUser")
+    public String banearUsuario(Model model, HttpSession session, @RequestParam("idUsr") long id){
+        User u = (User) session.getAttribute("u");
+        if(!u.hasRole(Role.ADMIN)){
+            throw new PermisoDenegadoException();
+        }
+        User usr = entityManager.find(User.class, id);
+        usr.setEnabled(false);
+        usr.setPedidos(usr.getPedidos());
+        usr.setReceived(usr.getReceived());
+        usr.setRestaurantes(usr.getRestaurantes());
+        usr.setSent(usr.getSent());
+        entityManager.merge(usr);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha bloqueado al usuario correctamente");
+        return index(model, session);
+    }
+
+    @Transactional
+    @PostMapping("/unbanUser")
+    public String desbanearUsuario(Model model, HttpSession session, @RequestParam("idUsr") long id){
+        User u = (User) session.getAttribute("u");
+        if(!u.hasRole(Role.ADMIN)){
+            throw new PermisoDenegadoException();
+        }
+        User usr = entityManager.find(User.class, id);
+        usr.setEnabled(true);
+        usr.setPedidos(usr.getPedidos());
+        usr.setReceived(usr.getReceived());
+        usr.setRestaurantes(usr.getRestaurantes());
+        usr.setSent(usr.getSent());
+        entityManager.merge(usr);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha desbloqueado al usuario correctamente");
+        return index(model, session);
+    }
 
     //FUNCIONES DE GESTION DE RESTAURANTES
     /**

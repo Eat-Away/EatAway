@@ -42,3 +42,24 @@ document.querySelectorAll(".updatePedido").forEach(b => {
         }
     })
 })
+//Controla el bloqueo/desbloqueo de usuarios del sistema
+/* Agregar un detector de eventos al botón con la clase banUser. Cuando se hace clic en el botón, se le
+preguntará al usuario si desea bloquear la cuenta de usuario. Si hacen clic en sí, se enviará el
+formulario con el id banUser?id=<id del usuario>. */
+document.querySelectorAll(".banUser").forEach(b => {
+    b.addEventListener("click", updatePedido => {
+       if(confirm("Deseas bloquear la cuenta del usuario "+updatePedido.target.dataset.nombreusuario+"?") == true){
+           document.getElementById("banUser?id="+updatePedido.target.dataset.idusr).submit();
+        }
+    })
+})
+/* Agregar un detector de eventos al botón con la clase unbanUser. Cuando se hace clic en el botón, se
+le preguntará al usuario si desea desbloquear la cuenta de usuario. Si hacen clic en sí, se enviará
+el formulario con el id unbanUser?id=<id del usuario>. */
+document.querySelectorAll(".unbanUser").forEach(b => {
+    b.addEventListener("click", updatePedido => {
+       if(confirm("Deseas desbloquear la cuenta del usuario "+updatePedido.target.dataset.nombreusuario+"?") == true){
+           document.getElementById("unbanUser?id="+updatePedido.target.dataset.idusr).submit();
+        }
+    })
+})
