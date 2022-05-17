@@ -63,3 +63,11 @@ document.querySelectorAll(".unbanUser").forEach(b => {
         }
     })
 })
+//Controla el borrado de la imagen del usuario desde el admin
+document.querySelectorAll(".delPic").forEach(b => {
+    b.addEventListener("click", updatePedido => {
+       if(confirm("Deseas borrar la foto del usuario "+updatePedido.target.dataset.nombreusuario+"?") == true){
+           document.getElementById("delPic?id="+updatePedido.target.dataset.idusr).submit();
+        }
+    })
+})

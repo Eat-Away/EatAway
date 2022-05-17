@@ -31,7 +31,7 @@
                         <th scope="col">Acciones disponibles</th>
                     </thead>
                     <tbody>
-                        <tr th:each="u: ${usuarios}">
+                        <tr th:each="u, pos: ${usuarios}">
                             <td><img th:src="@{/user/{id}/conf(id=${u.id})}" width="100px" height="100px" alt="Foto del Usuario"></td>
                             <td th:text="|${u.firstName} ${u.lastName}|"></td>
                             <td th:text="|${u.username}|"></td>
@@ -50,7 +50,11 @@
                                         </form>
                                     </div>
                                     <div class="col">
-                                        <button type="button" class="btn btn-warning">Borrar Foto</button>
+                                        <form  th:if="${hasImg[pos.index] == true}" th:action="@{/admin/delPic}" name="delPic" method="post" th:id="@{delPic?id=}+${u.id}">
+                                            <input type="hidden" id="idUsr" name="idUsr" th:value="${u.id}">
+                                            <button type="button" class="btn btn-warning delPic" th:attr="data-idusr=${u.id}, data-nombreusuario=${u.username}">Borrar Foto</button>
+                                        </form>
+                                        <button th:if="${hasImg[pos.index] == false}" type="button" class="btn btn-warning" disabled>Borrar Foto</button>
                                     </div>
                                 </div>
                             </td>

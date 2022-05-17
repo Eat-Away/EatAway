@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.io.FileInputStream;
@@ -81,8 +83,16 @@ public class AdminController {
         query = "SELECT X FROM Restaurante X";
         List<Restaurante> listaRestaurantes = entityManager.createQuery(query, Restaurante.class).getResultList();
         User u = (User) session.getAttribute("u");
+        //Comprueba si los usuarios tienen foto o no (Para saber si se puede borrar o no)
+        List<Boolean> tieneImg = new ArrayList<>();
+        Iterator<User> iteraUsuarios = listaUsuarios.iterator();
+        while(iteraUsuarios.hasNext()){
+            User usr = iteraUsuarios.next();
+            tieneImg.add(checkImg(usr.getId()));
+        }
         model.addAttribute("user", u);
         model.addAttribute("usuarios", listaUsuarios);
+        model.addAttribute("hasImg", tieneImg);
         model.addAttribute("restaurantes", listaRestaurantes);
         return "admin";
     }
@@ -114,6 +124,18 @@ public class AdminController {
         return os -> FileCopyUtils.copy(in, os);
     }
 
+
+    /**
+     * Si el archivo existe, devuelve verdadero, de lo contrario, devuelve falso.
+     * 
+     * @param id la identificación del usuario
+     * @return Un valor booleano.
+     */
+    public boolean checkImg(@PathVariable long id){
+        File f = localData.getFile("user", ""+id+".jpg");
+        return f.exists();
+    }
+
     /**
 	 * Downloads a profile pic for a user id
 	 * 
@@ -130,6 +152,29 @@ public class AdminController {
 	}
 
     //FUNCIONES DE GESTION DE USUARIOS
+
+    @Transactional
+    @PostMapping("/delPic")
+    public String delPic(Model model, HttpSession session, @RequestParam("idUsr") long id){
+        User u = (User) session.getAttribute("u");
+        if(!u.hasRole(Role.ADMIN)){
+            throw new PermisoDenegadoException();
+        }
+        User usr = entityManager.find(User.class, id);
+        File f = localData.getFolder("user/"+usr.getId()+".jpg");
+        try{
+            if(FileSystemUtils.deleteRecursively(f)){
+                log.info("Se ha borrado la foto de perfil del usuario "+usr.getId());
+            }else{
+                log.warn("Error eliminando la foto de perfil del usuario. Ruta: " + f.getAbsolutePath());
+            }
+        }catch(Exception ex){
+            log.error("Excepcion eliminando la foto de perfil del usuario. Ruta: " + f.getAbsolutePath());
+            throw ex;
+        }
+        model.addAttribute("message", "Se ha borrado  la foto de perfil del usuario "+ usr.getUsername() + " exitosamente!");
+        return index(model, session);
+    }
 
     @Transactional
     @PostMapping("/banUser")
