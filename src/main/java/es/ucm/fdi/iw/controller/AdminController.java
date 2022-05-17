@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -33,10 +34,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
+import es.ucm.fdi.iw.model.Repartidor;
 import es.ucm.fdi.iw.model.Restaurante;
+import es.ucm.fdi.iw.model.Restaurador;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.Pedido.Estado;
 import es.ucm.fdi.iw.model.User.Role;
@@ -66,6 +70,8 @@ public class AdminController {
 	private EntityManager entityManager;
     @Autowired
     private LocalData localData;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
     /**
      * This function is called when the user navigates to the admin page. It checks if the user is logged
@@ -152,6 +158,56 @@ public class AdminController {
 	}
 
     //FUNCIONES DE GESTION DE USUARIOS
+
+    @GetMapping("/altaUsuario")
+    public String altaUsuario(Model model, @RequestParam("rol") int rol){
+        switch(rol){
+            case 0://Cliente
+                model.addAttribute("usuario", new Cliente());
+                break;
+            case 1://Repartidor
+                model.addAttribute("usuario", new Repartidor());
+                break;
+            case 2://Propietario de restaurante
+                model.addAttribute("usuario", new Restaurador());
+                break;
+        }
+        model.addAttribute("role", rol);
+        return "registroAvanzado";
+    }
+
+    /**
+     * It registers a new user of Cliente type to the system
+     * 
+     * @param usuario The object that will be used to store the data entered by the user.
+     * @param model This is the model that will be passed to the view.
+     * @return Redirects to a welcome view to the new user
+     */
+    @Transactional
+    @PostMapping("/registro")
+    public String hacerRegistro(@ModelAttribute User usuario, @RequestParam("role") String rol ,Model model, HttpSession session){
+        //User user;
+        switch(rol){
+            case "1":
+                //usuario = (Repartidor) user;
+                rol = "REPARTIDOR";
+            break;
+            case "2":
+                //usuario = (Restaurador) user;
+                rol = "RESTAURANTE";
+            break;
+            default:
+                //usuario = (Cliente) user;
+            break;
+        }
+        usuario.setRoles(rol+",USER");
+        usuario.setEnabled(true);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        entityManager.persist(usuario);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha creado el usuario nuevo. Contacte con el interesado para darle su usuario y contraseña");
+        return index(model, session);
+    }
 
     @Transactional
     @PostMapping("/delPic")
