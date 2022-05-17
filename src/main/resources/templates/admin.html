@@ -1,68 +1,98 @@
 <!DOCTYPE html>
 <html class="h-100" xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <th:block th:replace="fragments/head :: header" />
-    <title>IW: Admin</title>
-</head>
-
-<body class="d-flex flex-column h-100">
-    <header th:replace="fragments/nav.html :: nav"></header>
-
-    <main class="flex-shrink-0">
-        <div class="container">
-            <div class="flex-grow-1 ms-3">
-            <h1>Administrador: <span th:text="${user.username}"></span></h1>
-            <h3 th:text="|Nombre: ${user.firstName}|"></h3>
-            <h3 th:text="|Apellidos: ${user.lastName}|"></h3>
-        </div>
-    </main>
-
-    
-    <main class="flex-shrink-0">
-        <div class="container">
-            <div class="flex-grow-1 ms-3"> 
-            <h3>Informacion Usuarios</h3>
-            <table class="table">
-                <thead>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Rol</th>
-                    <th scope="col">Informacion Pago</th>
-                    <th scope="col">Informacion pedido</th>   
-                </thead>
-                <tbody>
-                    
-
-                </tbody>
-                
-               
-            
-
-              
-            </table>  
-            <h3>Informacion Restaurantes</h3>
-            <table class="table">
-                <thead>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Direccion</th>
-                    <th scope="col">Horario</th>
-                    <th scope="col">Valoracion</th> 
-                   
-                </thead>
-                <tbody>
-                    
-
-                </tbody>
-
-
-            </table>
-        </div>
-    </main>
-
-
-
-    <th:block th:replace="fragments/footer.html :: footer" />
-</body>
-
+    <head>
+        <th:block th:replace="fragments/head :: header" />
+        <title>IW: Admin</title>
+    </head>
+    <body class="d-flex flex-column h-100">
+        <header th:replace="fragments/nav.html :: nav"></header>
+        <main class="flex-shrink-0">
+            <div class="container" th:if="${message != null}">
+                <div class="alert alert-success" role="alert" th:text="${message}"></div>
+            </div>
+            <div class="container">
+                <div class="flex-grow-1 ms-3">
+                <h1>Administrador: <span th:text="${user.username}"></span></h1>
+                <h3 th:text="|Nombre: ${user.firstName}|"></h3>
+                <h3 th:text="|Apellidos: ${user.lastName}|"></h3>
+            </div>
+        </main>
+        <main class="flex-shrink-0">
+            <div class="container">
+                <div class="flex-grow-1 ms-3"> 
+                <h3>Informacion Usuarios</h3>
+                <table class="table">
+                    <thead>
+                        <th scope="col">Imagen</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Nombre de usuario</th>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Dirección de entrega</th>
+                        <th scope="col">Acciones disponibles</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u, pos: ${usuarios}">
+                            <td><img th:src="@{/user/{id}/conf(id=${u.id})}" width="100px" height="100px" alt="Foto del Usuario"></td>
+                            <td th:text="|${u.firstName} ${u.lastName}|"></td>
+                            <td th:text="|${u.username}|"></td>
+                            <td th:text="|${u.roles}|"></td>
+                            <td th:text="|${u.direccion}|"></td>
+                            <td>
+                                <div class="row">
+                                    <div class="col">
+                                        <form th:if="${u.enabled == true}" th:action="@{/admin/banUser}" name="banUser" method="post" th:id="@{banUser?id=}+${u.id}">
+                                            <input type="hidden" id="idUsr" name="idUsr" th:value="${u.id}">
+                                            <button type="button" class="btn btn-danger banUser" th:attr="data-idusr=${u.id}, data-nombreusuario=${u.username}">Bloquear</button>
+                                        </form>
+                                        <form th:if="${u.enabled == false}" th:action="@{/admin/unbanUser}" name="unbanUser" method="post" th:id="@{unbanUser?id=}+${u.id}">
+                                            <input type="hidden" id="idUsr" name="idUsr" th:value="${u.id}">
+                                            <button type="button" class="btn btn-success unbanUser" th:attr="data-idusr=${u.id}, data-nombreusuario=${u.username}">Desbloquear</button>
+                                        </form>
+                                    </div>
+                                    <div class="col">
+                                        <form  th:if="${hasImg[pos.index] == true}" th:action="@{/admin/delPic}" name="delPic" method="post" th:id="@{delPic?id=}+${u.id}">
+                                            <input type="hidden" id="idUsr" name="idUsr" th:value="${u.id}">
+                                            <button type="button" class="btn btn-warning delPic" th:attr="data-idusr=${u.id}, data-nombreusuario=${u.username}">Borrar Foto</button>
+                                        </form>
+                                        <button th:if="${hasImg[pos.index] == false}" type="button" class="btn btn-warning" disabled>Borrar Foto</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>  
+                <h3>Informacion Restaurantes</h3>
+                <table class="table">
+                    <thead>
+                        <th scope="col">Imagen</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Descripcion</th>
+                        <th scope="col">Direccion</th>
+                        <th scope="col">Horario</th>
+                        <th scope="col">Valoracion</th>
+                        <th scope="col">Acciones disponibles</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u: ${restaurantes}">
+                            <td><img th:src="@{/rimg/{id}(id=${u.id})}" width="100px" height="100px" alt="Foto del Restaurante"></td>
+                            <td th:text="${u.nombre}"></td>
+                            <td th:text="${u.descripcion}"></td>
+                            <td th:text="${u.direccion}"></td>
+                            <td th:text="${u.horario}"></td>
+                            <td th:text="${u.valoracion}"></td>
+                            <td>
+                                <div class="row">
+                                    <div class="col">
+                                        <a th:href="@{'/admin/adminRestaurante?id='}+${u.id}" class="text-decoration-none btn btn-warning">Administrar</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
+        <th:block th:replace="fragments/footer.html :: footer" />
+    </body>
 </html>

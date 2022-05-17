@@ -97,6 +97,7 @@ public class RestauranteController {
         List<Pedido> p = (List<Pedido>) entityManager.createQuery(query, Pedido.class).getResultList();
         model.addAttribute("restaurante", r);
         model.addAttribute("pedidos", p);
+        model.addAttribute("admin", 0);
         return "adminRestaurante";
     }
 
@@ -298,6 +299,7 @@ public class RestauranteController {
     public String editarRestaurante(@RequestParam long id, Model model){
         Restaurante rest = entityManager.find(Restaurante.class, id);
         model.addAttribute("restaurante", rest);
+        model.addAttribute("admin", 0);
         return "editRestaurante";
     }
 
@@ -341,10 +343,13 @@ public class RestauranteController {
             }
             for(int i=0;i<arrayLength;i++){
                 int n = i + 1;
-                if(uploadPhoto("restaurante/"+restaurante.getId(), restaurante.getId()+"Carousel"+n, carouselPhotos[i])){
-                    log.info("Successfully uploaded photo!");
-                }else{
-                    log.warn("Error uploading photo");
+                if (!photo.isEmpty()) {
+                    log.info("Updating photo for restaurant {}", u.getId());
+                    if(uploadPhoto("restaurante/"+restaurante.getId(), restaurante.getId()+"Carousel"+n, carouselPhotos[i])){
+                        log.info("Successfully uploaded photo!");
+                    }else{
+                        log.warn("Error uploading photo");
+                    }
                 }
             }
         }else{
@@ -369,6 +374,7 @@ public class RestauranteController {
         Plato listaPlatos = entityManager.find(Plato.class, id);
         model.addAttribute("extra", new Extra());
         model.addAttribute("plato", listaPlatos);
+        model.addAttribute("admin", 0);
         return "addExtra";
     }
 
@@ -433,6 +439,7 @@ public class RestauranteController {
         Extra extra = entityManager.find(Extra.class, id);
         model.addAttribute("extra", extra);
         model.addAttribute("nombrePlato", extra.getPlato().getNombre());
+        model.addAttribute("admin", 0);
         return "editExtra";
     }
 
@@ -473,6 +480,7 @@ public class RestauranteController {
         Restaurante r = entityManager.find(Restaurante.class, id);
         model.addAttribute("plato", new Plato());
         model.addAttribute("restaurante", r);
+        model.addAttribute("admin", 0);
         return "addPlato";
     }
 
@@ -562,6 +570,7 @@ public class RestauranteController {
     public String editarPlato(@RequestParam long id, Model model){
         Plato plato = entityManager.find(Plato.class, id);
         model.addAttribute("plato", plato);
+        model.addAttribute("admin", 0);
         return "editPlato";
     }
 
