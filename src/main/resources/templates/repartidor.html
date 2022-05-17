@@ -19,45 +19,40 @@
                     <div class="row">
                         <div class="col d-flex">
                             <div class="flex-shrink-0">
-                              <img class="rounded-circle iwthumb profile-pic" th:src="@{/user/{id}/conf(id=${session.u.id})}" alt="Profile pic">
+                              <img class="rounded-circle iwthumb profile-pic" th:src="@{/repartidor/{id}/conf(id=${session.u.id})}" alt="Profile pic">
                             </div>
                             <div class="flex-grow-1 ms-3">
-                                <p>Usuario: <span th:text="${user.username}">Paco</span></p>
-                                <p>Nombre: <span data-reveal-id="firstName" th:text="${user.firstName}">Paco</span></p>
-                                <p>Apellidos: <span data-reveal-id="lastName" th:text="${user.lastName}">Paco</span></p>
-                                <p>Dirección: <span data-reveal-id="direction" th:text="${user.direccion}">C/ bbb, 9</span></p>                       
+                                <p>Usuario: <span th:text="${repartidor.username}">Paco</span></p>
+                                <p>Nombre: <span data-reveal-id="firstName" th:text="${repartidor.firstName}">Paco</span></p>
+                                <p>Apellidos: <span data-reveal-id="lastName" th:text="${repartidor.lastName}">Paco</span></p>
+                                <p>Dirección: <span data-reveal-id="direction" th:text="${repartidor.direccion}">C/ bbb, 9</span></p>                       
                             </div>
                         </div> 
                     </div>
                     <div class="row">
-                        <button class="btn btn-outline-success mt-3 col-6" data-bs-toggle="collapse" data-bs-target="#ajustes">Configuración</button>
-                        <div id="ajustes" class="collapse my-3 px-0">
-                            <form th:action="@{/user/__${user.id}__/conf}" method="POST" enctype = "multipart/form data">
-                                <div id="profile" class="mb-4 col-10">
-                                    <label for="f_avatar" class="form-label">Cambiar foto de perfil</label>
-                                    <input type="file" class="mb-2 form-control" id="f_avatar" name="photo" accept="image/jpeg,image/png">
-                                    <img id="avatar" class="mb-2 img-fluid" alt="imagen a subir"/>
+                        <button class="btn btn-outline-success mt-3 col-6" data-bs-toggle="collapse" data-bs-target="#ajustesR">Configuración</button>
+                        <div id="ajustesR" class="collapse my-3 px-0">
+                            <form th:action="@{/repartidor/__${repartidor.id}__/conf}" method="POST" th:object="${repartidor}" enctype="multipart/form-data">
+                                <div class="mb-4 col-10">
+                                    <label for="f_avatarR" class="form-label">Cambiar foto de perfil</label>
+                                    <input type="file" class="mb-2 form-control" id="f_avatarR" name="photo" accept="image/jpeg,image/png">
+                                    <img id="avatarR" class="mb-2 img-fluid" alt="imagen a subir"/>
                                 </div>
                                 <div class="mb-4 col-10">
-                                    <label for="firstNameConf" class="form-label">Nombre:</label>
-                                    <input type="text" class="mb-2 form-control" name="firstName" id="firstNameConf" value="">
-                                    <label for="lastNameConf" class="form-label">Apellidos</label>
-                                    <input type="text" class="mb-2 form-control" name="lastName" id="lastNameConf" value=""> 
+                                    <label for="firstNameConfR" class="form-label">Nombre:</label>
+                                    <input type="text" class="mb-2 form-control" name="firstName" id="firstNameConfR" th:value="${repartidor.firstName}">
+                                    <label for="lastNameConfR" class="form-label">Apellidos</label>
+                                    <input type="text" class="mb-2 form-control" name="lastName" id="lastNameConfR" th:value="${repartidor.lastName}"> 
                                 </div>
-                                <div class="mb-4 col-10">
-                                    <label for="dirConf" class="form-label">Dirección de entrega:</label>
-                                    <input type="text" class="mb-2 form-control" name="direction" id="dirConf" value="">
-                                </div>
-                                <button type="submit" class="btn btn-outline-secondary" id="postConf">Guardar cambios</button>
+                                <button type="submit" class="btn btn-outline-secondary">Guardar cambios</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="col-5 me-3">
-                    <form th:action="@{/repartidor/} + ${user.id}+ @{/listaPedidos}" method="get">
+                    <form th:action="@{/repartidor/} + ${repartidor.id}+ @{/listaPedidos}" method="get">
                         <button type="submit" class="btn btn-outline-success mt-3 col-6">¡ A TRABAJAR !</button>
-                      </form>
-                    
+                    </form>
                 </div>
             </div>
 
@@ -66,7 +61,7 @@
             </div>
             <!-- envío de mensajes -->
             <div class="py-5 row ">
-                <form th:action="@{/user/__${user.id}__/msg}" method="POST">
+                <form th:action="@{/user/__${repartidor.id}__/msg}" method="POST">
                     <input type="text" id="message" placeholder="escribe a este usuario" />
                     <button id="sendmsg" class="btn btn-secondary" type="submit">Enviar</button>
                 </form>
@@ -77,7 +72,7 @@
     <th:block th:replace="fragments/footer.html :: footer" />
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            document.querySelector("#avatar").style.display = "none";
+            document.querySelector("#avatarR").style.display = "none";
         });
 
         // envio de mensajes con AJAX
@@ -112,55 +107,13 @@
         }
 
         // refresca previsualizacion cuando cambias imagen
-        document.querySelector("#f_avatar").onchange = e => {
-            document.querySelector("#avatar").style.display = "inline";
-            let img = document.querySelector("#avatar");
-            let fileInput = document.querySelector("#f_avatar");
+        document.querySelector("#f_avatarR").onchange = e => {
+            document.querySelector("#avatarR").style.display = "inline";
+            let img = document.querySelector("#avatarR");
+            let fileInput = document.querySelector("#f_avatarR");
             readImageFileData(fileInput.files[0], img);
         };
 
-        // click en boton de guardar cambios
-        document.querySelector("#postConf").onclick = e => {
-            e.preventDefault();
-            let url = document.querySelector("#postConf").parentNode.action;
-            let img = document.querySelector("#avatar");
-            let file = document.querySelector("#f_avatar");
-            let firstName = document.querySelector("#firstNameConf");
-            let lastName = document.querySelector("#lastNameConf");
-            let direction = document.querySelector("#dirConf");
-
-            /* let fd = new FormData();
-
-            if(file.files.length != 0){
-                let imageBlob = postImage(img, url, "photo", file).then(() => {
-                    let cacheBuster = "?" + new Date().getTime();
-                    document.querySelector("a.nav-link>img.iwthumb").src = url + cacheBuster;
-                });
-                fd.append("photo", imageBlob, file);
-            }
-            
-            if(firstName.value != ""){
-                document.querySelector("[data-reveal-id='firstName']").innerHTML = firstName.value;
-                value = firstName.value;
-                fd.append("firstName", value);
-                console.log(fd);
-            }
-            
-            if(lastName.value != ""){
-                document.querySelector("[data-reveal-id='lastName']").innerHTML = lastName.value;
-                fd.append("lastName", lastName);
-            }
-
-            if(direction.value != ""){
-                document.querySelector("[data-reveal-id='direction']").innerHTML = direction.value;
-                fd.append("direction", direction);
-            }
-            go(url, "POST", fd, {}); */
-            postImage(img, url, "photo").then(() => {
-                let cacheBuster = "?" + new Date().getTime();
-                document.querySelector("a.nav-link>img.iwthumb").src = url + cacheBuster;
-            });
-        };
     </script>
 </body>
 

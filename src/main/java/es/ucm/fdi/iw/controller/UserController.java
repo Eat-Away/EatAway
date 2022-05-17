@@ -5,7 +5,6 @@ import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Pedido;
-import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.PlatoPedido;
 import es.ucm.fdi.iw.model.Transferable;
 import es.ucm.fdi.iw.model.User;
@@ -36,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -49,7 +47,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -247,17 +244,15 @@ public class UserController {
 	 */
 	@GetMapping("{id}/conf")
 	public StreamingResponseBody getConf(@PathVariable long id) throws IOException {
-		File f = localData.getFile("user", ""+id+".jpg");
+		File f = localData.getFile("user", "user"+id+".jpg");
 		InputStream in = new BufferedInputStream(f.exists() ?
 			new FileInputStream(f) : UserController.defaultPic());
 		return os -> FileCopyUtils.copy(in, os);
 	}
 
 	@PostMapping("/{id}/conf")
-	@ResponseBody
 	@Transactional
-	public String setConf(@RequestParam MultipartFile photo, /* @RequestParam String firstName, 
-	@RequestParam String lastName, @RequestParam String direction, */ @PathVariable long id, 
+	public String setConf(@ModelAttribute User user, @RequestParam MultipartFile photo, @PathVariable long id, 
 	HttpServletResponse response, HttpSession session, Model model) throws IOException{
 
 		User target = entityManager.find(User.class, id);
@@ -269,11 +264,18 @@ public class UserController {
 				! requester.hasRole(Role.ADMIN)) {
 			throw new NoEsTuPerfilException();
 		}
-		
+
+		target.setFirstName(user.getFirstName());
+		target.setLastName(user.getLastName());
+		target.setDireccion(user.getDireccion());
+
+		entityManager.merge(target);
+		entityManager.flush();
+
 		//Profile pic update
 		if(!photo.isEmpty()){
 			log.info("Updating photo for user {}", id);
-			File f = localData.getFile("user", ""+id+".jpg");
+			File f = localData.getFile("user/", "user"+id+".jpg");
 
 			try (BufferedOutputStream stream =
 					new BufferedOutputStream(new FileOutputStream(f))) {
@@ -285,82 +287,9 @@ public class UserController {
 				log.warn("Error uploading " + id + " ", e);
 			}
 		}
-		//else{
-			//log.info("failed to upload photo: emtpy file?");
-		//}
-
-		/* if(!firstName.isBlank()){
-			log.info("Updating first name for user {}", id);
-			target.setFirstName(firstName);
-		}
-		if(!lastName.isBlank()){
-			log.info("Updating last name for user {}", id);
-			target.setLastName(lastName);
-		}
-		if(!direction.isBlank()){
-			log.info("Updating direction for user {}", id);
-			target.setDireccion(direction);
-		}
-		entityManager.persist(target);
-		entityManager.flush();
- */
-		return "{\"status\":\"configuration uploaded correctly\"}";
+		//return "{\"status\":\"configuration uploaded correctly\"}";
+		return index(id, model, session);
 	}
-
-	/**
-	 * Downloads a profile pic for a user id
-	 * 
-	 * @param id
-	 * @return
-	 * @throws IOException
-	 */
-	/*@GetMapping("{id}/pic")
-	public StreamingResponseBody getPic(@PathVariable long id) throws IOException {
-		File f = localData.getFile("user", ""+id+".jpg");
-		InputStream in = new BufferedInputStream(f.exists() ?
-			new FileInputStream(f) : UserController.defaultPic());
-		return os -> FileCopyUtils.copy(in, os);
-	}*/
-
-	/**
-	 * Uploads a profile pic for a user id
-	 * 
-	 * @param id
-	 * @return
-	 * @throws IOException
-	 */
-	/*@PostMapping("{id}/pic")
-	@ResponseBody
-	public String setPic(@RequestParam("photo") MultipartFile photo, @PathVariable long id, 
-		HttpServletResponse response, HttpSession session, Model model) throws IOException {
-
-		User target = entityManager.find(User.class, id);
-		model.addAttribute("user", target);
-		
-		// check permissions
-		User requester = (User)session.getAttribute("u");
-		if (requester.getId() != target.getId() &&
-				! requester.hasRole(Role.ADMIN)) {
-			throw new NoEsTuPerfilException();
-		}
-		
-		log.info("Updating photo for user {}", id);
-		File f = localData.getFile("user", ""+id+".jpg");
-		if (photo.isEmpty()) {
-			log.info("failed to upload photo: emtpy file?");
-		} else {
-			try (BufferedOutputStream stream =
-					new BufferedOutputStream(new FileOutputStream(f))) {
-				byte[] bytes = photo.getBytes();
-				stream.write(bytes);
-				log.info("Uploaded photo for {} into {}!", id, f.getAbsolutePath());
-			} catch (Exception e) {
-				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				log.warn("Error uploading " + id + " ", e);
-			}
-		}
-		return "{\"status\":\"photo uploaded correctly\"}";
-	}*/
 
 	
 	@GetMapping("{id}/carrito")

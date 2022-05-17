@@ -1,14 +1,17 @@
 package es.ucm.fdi.iw.controller;
 
 
+import java.io.*;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,19 +20,25 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Repartidor;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.Pedido.Estado;
+import es.ucm.fdi.iw.model.User.Role;
 
 
 /**
@@ -45,11 +54,25 @@ import es.ucm.fdi.iw.model.Pedido.Estado;
 public class RepartidorController {
     @Autowired
 	private EntityManager entityManager;
+
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 
+	@Autowired
+	private LocalData localData;
 
-	//private static final Logger log = LogManager.getLogger(RepartidorController.class);
+	private static final Logger log = LogManager.getLogger(RepartidorController.class);
+
+		/**
+	 * Exception to use when denying access to unauthorized users.
+	 * 
+	 * In general, admins are always authorized, but users cannot modify
+	 * each other's profiles.
+	 */
+	@ResponseStatus(
+		value=HttpStatus.FORBIDDEN, 
+		reason="No eres administrador, y éste no es tu perfil")  // 403
+	public static class NoEsTuPerfilException extends RuntimeException {}
 
 	/**
 	 * It returns the repartidor page.
@@ -61,10 +84,77 @@ public class RepartidorController {
 	 */
     @GetMapping("/{id}")
     public String index(Model model,HttpSession session, @PathVariable long id) {
-		Repartidor target = (Repartidor)entityManager.find(User.class, id);
-		model.addAttribute("user", target);
+		Repartidor target = entityManager.find(Repartidor.class, id);
+		model.addAttribute("repartidor", target);
         return "repartidor";
     }
+
+	/**
+	 * Returns the default profile pic
+	 * 
+	 * @return
+	 */
+	private static InputStream defaultPic() {
+		return new BufferedInputStream(Objects.requireNonNull(
+			UserController.class.getClassLoader().getResourceAsStream(
+				"static/img/default-pic.jpg")));
+	}
+
+	/**
+	 * Downloads a profile pic for a user id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 */
+	@GetMapping("{id}/conf")
+	public StreamingResponseBody getConf(@PathVariable long id) throws IOException {
+		File f = localData.getFile("user", "repartidor"+id+".jpg");
+		InputStream in = new BufferedInputStream(f.exists() ?
+			new FileInputStream(f) : RepartidorController.defaultPic());
+		return os -> FileCopyUtils.copy(in, os);
+	}
+
+	@PostMapping("/{id}/conf")
+	@Transactional
+	public String setConf(@ModelAttribute Repartidor repartidor, @RequestParam MultipartFile photo, @PathVariable long id, 
+	HttpServletResponse response, HttpSession session, Model model) throws IOException{
+
+		Repartidor target = entityManager.find(Repartidor.class, id);
+		model.addAttribute("repartidor", target);
+		
+		// check permissions
+		User requester = (User)session.getAttribute("u");
+		if (requester.getId() != target.getId() &&
+				! requester.hasRole(Role.ADMIN)) {
+			throw new NoEsTuPerfilException();
+		}
+
+		target.setFirstName(repartidor.getFirstName());
+		target.setLastName(repartidor.getLastName());
+
+		entityManager.merge(target);
+		entityManager.flush();
+
+		//Profile pic update
+		if(!photo.isEmpty()){
+			log.info("Updating photo for repartidor {}", id);
+			File f = localData.getFile("user/", "repartidor"+id+".jpg");
+
+			try (BufferedOutputStream stream =
+					new BufferedOutputStream(new FileOutputStream(f))) {
+				byte[] bytes = photo.getBytes();
+				stream.write(bytes);
+				log.info("Uploaded new configuration for {} into {}!", id, f.getAbsolutePath());
+			} catch (Exception e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				log.warn("Error uploading " + id + " ", e);
+			}
+		}
+		
+		//return "{\"status\":\"configuration uploaded correctly\"}";
+		return index(model, session, id);
+	}
 	
 	/**
 	 * It returns a list of all the orders that don't have a delivery man assigned to them
