@@ -8,7 +8,37 @@
         <header th:replace="fragments/nav.html :: nav"></header>
         <div class="container">
             <h1 th:text="|Editar el restaurante ${restaurante.nombre}|"></h1>
-            <form action="#" th:action="@{/restaurante/editRestaurante}" th:object="${restaurante}" method="post" enctype="multipart/form-data">
+            <form action="#" th:if="${admin == 0}" th:action="@{/restaurante/editRestaurante}" th:object="${restaurante}" method="post" enctype="multipart/form-data">
+                <div class="container">
+                    <label for="nombre" class="form-label">Nombre del Restaurante:</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" th:value="${restaurante.nombre}" required>
+                </div>
+                <div class="container">
+                    <label for="descripcion" class="form-label">Descripción del Restaurante:</label>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" th:value="${restaurante.descripcion}" required>
+                </div>
+                <div class="container">
+                    <label for="horario" class="form-label">Horario de Atención:</label>
+                    <input type="text" class="form-control" id="horario" name="horario" th:value="${restaurante.horario}" required>
+                </div>
+                <div class="container">
+                    <label for="direccion" class="form-label">Dirección del Restaurante:</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion" th:value="${restaurante.direccion}" required>
+                </div>
+                <div class="container">
+                    <label for="logoRestaurante" class="form-label">Logotipo del restaurante:</label>
+                    <input type="file" id="photo" name="photo" class="form-control">
+                </div>
+                <div class="col mb-2">
+                    <label for="formFileMultiple" class="form-label">Fotos de carrusel:</label>
+                    <input type="file" id="carousel" name="carousel" class="form-control" multiple>
+                </div>
+                <div class="container">
+                    <input type="hidden" id="id" name="id" th:value="${restaurante.id}">
+                    <button type="submit" class="btn btn-success">Editar</button>
+                </div>
+            </form>
+            <form action="#" th:if="${admin == 1}" th:action="@{/admin/editRestaurante}" th:object="${restaurante}" method="post" enctype="multipart/form-data">
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre del Restaurante:</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" th:value="${restaurante.nombre}" required>

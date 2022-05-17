@@ -13,25 +13,35 @@
             <h3 th:text="${restaurante.nombre}"></h3>
             <div class="row align-items-center">
                 <div class="col-6">
-                    <img th:src="@{/restaurante/rimg/{id}(id=${restaurante.id})}" width="300px" height="300px" alt="Logo del restaurante">
+                    <img th:src="@{/rimg/{id}(id=${restaurante.id})}" width="300px" height="300px" alt="Logo del restaurante">
                 </div>
                 <div class="col-6">
                     <div class="container">
                         <h4>Configuración del restaurante</h4>
                         <div class="row align-items-start">
                             <div class="col">
-                                <a th:href="@{'/restaurante/'+${id}+ '/addPlato?id='}+${restaurante.id}" class="text-decoration-none btn btn-outline-success">
+                                <a th:if="${admin == 0}" th:href="@{'/restaurante/'+${id}+ '/addPlato?id='}+${restaurante.id}" class="text-decoration-none btn btn-outline-success">
+                                    Añadir plato
+                                </a>
+                                <a th:if="${admin == 1}" th:href="@{'/admin/addPlato?id='}+${restaurante.id}" class="text-decoration-none btn btn-outline-success">
                                     Añadir plato
                                 </a>
                             </div>
                             <div class="col">
-                                <form th:action="@{/restaurante/delRestaurante}" method="post" name="delRestaurante" th:id="@{delRestaurante?id=}+${restaurante.id}">
+                                <form th:if="${admin == 0}" th:action="@{/restaurante/delRestaurante}" method="post" name="delRestaurante" th:id="@{delRestaurante?id=}+${restaurante.id}">
+                                    <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                    <button type="button" class="btn btn-outline-danger delRest" th:attr="data-idrestaurante=${restaurante.id}, data-nombrerestaurante=${restaurante.nombre}">Eliminar Restaurante</button>
+                                </form>
+                                <form th:if="${admin == 1}" th:action="@{/admin/delRestaurante}" method="post" name="delRestaurante" th:id="@{delRestaurante?id=}+${restaurante.id}">
                                     <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
                                     <button type="button" class="btn btn-outline-danger delRest" th:attr="data-idrestaurante=${restaurante.id}, data-nombrerestaurante=${restaurante.nombre}">Eliminar Restaurante</button>
                                 </form>
                             </div>
                             <div class="col">
-                                <a th:href="@{'/restaurante/'+${id}+'/editRestaurante?id='}+${restaurante.id}">
+                                <a th:if="${admin == 0}"  th:href="@{'/restaurante/'+${id}+'/editRestaurante?id='}+${restaurante.id}">
+                                    <button type="button" class="btn btn-outline-warning">Editar restaurante</button>
+                                </a>
+                                <a th:if="${admin == 1}"  th:href="@{'/admin/editRestaurante?id='}+${restaurante.id}">
                                     <button type="button" class="btn btn-outline-warning">Editar restaurante</button>
                                 </a>
                             </div>
@@ -83,17 +93,27 @@
                                         <div class="container">
                                             <div class="row align-items-start">
                                                 <div class="col">
-                                                    <a th:href="@{'/restaurante/'+${id}+ '/addExtra?id='}+${p.id}" class="text-decoration-none btn btn-outline-success">
+                                                    <a th:if="${admin == 0}"  th:href="@{'/restaurante/'+${id}+ '/addExtra?id='}+${p.id}" class="text-decoration-none btn btn-outline-success">
+                                                        Añadir extras
+                                                    </a>
+                                                    <a th:if="${admin == 1}"  th:href="@{'/admin/addExtra?id='}+${p.id}" class="text-decoration-none btn btn-outline-success">
                                                         Añadir extras
                                                     </a>
                                                 </div>
                                                 <div class="col">
-                                                    <a th:href="@{'/restaurante/'+${id}+ '/editPlato?id='}+${p.id}">
+                                                    <a th:if="${admin == 0}"  th:href="@{'/restaurante/'+${id}+ '/editPlato?id='}+${p.id}">
+                                                        <button type="button" class="btn btn-outline-warning">Editar</button>
+                                                    </a>
+                                                    <a th:if="${admin == 1}"  th:href="@{'/admin/editPlato?id='}+${p.id}">
                                                         <button type="button" class="btn btn-outline-warning">Editar</button>
                                                     </a>
                                                 </div>
                                                 <div class="col">
-                                                    <form th:action="@{/restaurante/delPlato}" method="post" name="delPlato" th:id="@{delPlato?id=}+${p.id}">
+                                                    <form th:if="${admin == 0}"  th:action="@{/restaurante/delPlato}" method="post" name="delPlato" th:id="@{delPlato?id=}+${p.id}">
+                                                        <input type="hidden" th:value="${p.id}" id="idPlato" name="idPlato">
+                                                        <button type="button" class="btn btn-outline-danger delPlato" th:attr="data-idplato=${p.id}, data-nombreplato=${p.nombre}">Eliminar</button>
+                                                    </form>
+                                                    <form th:if="${admin == 1}"  th:action="@{/admin/delPlato}" method="post" name="delPlato" th:id="@{delPlato?id=}+${p.id}">
                                                         <input type="hidden" th:value="${p.id}" id="idPlato" name="idPlato">
                                                         <button type="button" class="btn btn-outline-danger delPlato" th:attr="data-idplato=${p.id}, data-nombreplato=${p.nombre}">Eliminar</button>
                                                     </form>
@@ -108,12 +128,19 @@
                                                 <li class="list-group-item" th:each="e: ${p.extras}">
                                                     <p th:text="|${e.nombre}: ${e.precio}€|"></p>
                                                     <div class="col">
-                                                        <a th:href="@{'/restaurante/'+${id}+ '/editExtra?id='}+${e.id}">
+                                                        <a th:if="${admin == 0}"  th:href="@{'/restaurante/'+${id}+ '/editExtra?id='}+${e.id}">
+                                                            <button type="button" class="btn btn-outline-warning">Editar</button>
+                                                        </a>
+                                                        <a th:if="${admin == 1}"  th:href="@{'/admin/editExtra?id='}+${e.id}">
                                                             <button type="button" class="btn btn-outline-warning">Editar</button>
                                                         </a>
                                                     </div>
                                                     <div class="col">
-                                                        <form th:action="@{/restaurante/delExtra}" method="post" name="delExtra" th:id="@{delExtra?id=}+${e.id}">
+                                                        <form th:if="${admin == 0}"  th:action="@{/restaurante/delExtra}" method="post" name="delExtra" th:id="@{delExtra?id=}+${e.id}">
+                                                            <input type="hidden" th:value="${e.id}" id="idExtra" name="idExtra">
+                                                            <button type="button" class="btn btn-outline-danger delExtra" th:attr="data-idextra=${e.id}, data-nombreextra=${e.nombre}">Eliminar</button>
+                                                        </form>
+                                                        <form th:if="${admin == 1}"  th:action="@{/admin/delExtra}" method="post" name="delExtra" th:id="@{delExtra?id=}+${e.id}">
                                                             <input type="hidden" th:value="${e.id}" id="idExtra" name="idExtra">
                                                             <button type="button" class="btn btn-outline-danger delExtra" th:attr="data-idextra=${e.id}, data-nombreextra=${e.nombre}">Eliminar</button>
                                                         </form>
@@ -166,13 +193,25 @@
                             </td>
                             <th:block th:switch="${ped.estado}">
                                 <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}">
-                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                    <form th:if="${admin == 0}"  th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
                                         <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
                                         <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
                                         <input type="hidden" value="PREPARANDO" id="sigEstado" name="sigEstado">
                                         <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Preparando">Preparando</button>
                                     </form>
-                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                    <form th:if="${admin == 0}"  th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-danger updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Cancelado">Cancelar Pedido</button>
+                                    </form>
+                                    <form th:if="${admin == 1}"  th:action="@{/admin/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="PREPARANDO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Preparando">Preparando</button>
+                                    </form>
+                                    <form th:if="${admin == 1}"  th:action="@{/admin/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
                                         <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
                                         <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
                                         <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">
@@ -180,13 +219,25 @@
                                     </form>
                                 </td>
                                 <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PREPARANDO}">
-                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                    <form th:if="${admin == 0}"  th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
                                         <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
                                         <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
                                         <input type="hidden" value="LISTORECOGIDA" id="sigEstado" name="sigEstado">
                                         <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado='Listo para Recoger'">Listo para Recoger</button>
                                     </form>
-                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                    <form th:if="${admin == 0}"  th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-danger updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Cancelado">Cancelar Pedido</button>
+                                    </form>
+                                    <form th:if="${admin == 1}"  th:action="@{/admin/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="LISTORECOGIDA" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-success updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado='Listo para Recoger'">Listo para Recoger</button>
+                                    </form>
+                                    <form th:if="${admin == 1}"  th:action="@{/admin/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
                                         <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
                                         <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
                                         <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">
@@ -195,7 +246,13 @@
                                 </td>
                                 <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).LISTORECOGIDA}">
                                     <p class="text-info">Esperando al repartidor...</p>
-                                    <form th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                    <form th:if="${admin == 0}"  th:action="@{/restaurante/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
+                                        <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
+                                        <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
+                                        <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">
+                                        <button type="button" class="btn btn-outline-danger updatePedido" th:attr="data-idpedido=${ped.id}, data-nuevoestado=Cancelado">Cancelar Pedido</button>
+                                    </form>
+                                    <form th:if="${admin == 1}"  th:action="@{/admin/updatePedido}" method="post" name="updatePedido" th:id="@{updatePedido?id=}+${ped.id}">
                                         <input type="hidden" th:value="${ped.id}" id="idPed" name="idPed">
                                         <input type="hidden" th:value="${restaurante.id}" id="id" name="id">
                                         <input type="hidden" value="CANCELADO" id="sigEstado" name="sigEstado">

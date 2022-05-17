@@ -8,7 +8,21 @@
         <header th:replace="fragments/nav.html :: nav"></header>
         <div class="container">
             <h1 th:text="|Añadir un extra para el plato ${plato.nombre}|"></h1>
-            <form action="#" th:action="@{/restaurante/addExtra}" th:object="${extra}" method="post">
+            <form action="#" th:if="${admin == 0}" th:action="@{/restaurante/addExtra}" th:object="${extra}" method="post">
+                <div class="container">
+                    <label for="nombre" class="form-label">Nombre del extra:</label>
+                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>
+                </div>
+                <div class="container">
+                    <label for="precio" class="form-label">Precio del extra:</label>
+                    <input type="text" class="form-control" id="precio" th:field="*{precio}" required>
+                </div>
+                <div class="container">
+                    <input type="hidden" id="idPlato" name="idPlato" th:value="${plato.id}" required>
+                    <button type="submit" class="btn btn-success">Añadir</button>
+                </div>
+            </form>
+            <form action="#" th:if="${admin == 1}" th:action="@{/admin/addExtra}" th:object="${extra}" method="post">
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre del extra:</label>
                     <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>
