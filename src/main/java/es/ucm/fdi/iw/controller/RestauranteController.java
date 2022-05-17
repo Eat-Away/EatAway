@@ -341,10 +341,13 @@ public class RestauranteController {
             }
             for(int i=0;i<arrayLength;i++){
                 int n = i + 1;
-                if(uploadPhoto("restaurante/"+restaurante.getId(), restaurante.getId()+"Carousel"+n, carouselPhotos[i])){
-                    log.info("Successfully uploaded photo!");
-                }else{
-                    log.warn("Error uploading photo");
+                if (!photo.isEmpty()) {
+                    log.info("Updating photo for restaurant {}", u.getId());
+                    if(uploadPhoto("restaurante/"+restaurante.getId(), restaurante.getId()+"Carousel"+n, carouselPhotos[i])){
+                        log.info("Successfully uploaded photo!");
+                    }else{
+                        log.warn("Error uploading photo");
+                    }
                 }
             }
         }else{
