@@ -148,7 +148,7 @@ public class RootController {
 		}
 		ped.setEstado(Estado.PENDIENTE);
 		model.addAttribute("message", "El pedido se ha procesado correctamente");
-		return index(model);
+		return index(model, null);
 	}
 
     /**
@@ -171,22 +171,28 @@ public class RootController {
      * @return Redirects to the home page where its listed all the restaurants from the database
      */
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, @RequestParam(required = false) Long categoria_id) {
         String query = "SELECT x FROM Restaurante x"; 
         List<Restaurante> availableRestaurants = entityManager.createQuery(query, Restaurante.class).getResultList();
-        model.addAttribute("availableRestaurants", availableRestaurants);
 
-        List<String> filterOptions = new ArrayList<>();
-        filterOptions.add("Sin Filtro");
-        filterOptions.add("Favoritos");
-        filterOptions.add("Precio Ascendente");
-        filterOptions.add("Precio Descendente");
-        filterOptions.add("Populares");
-        
         query = "Select x from Label x";
         List<Label> labelOptions = entityManager.createQuery(query, Label.class).getResultList();
 
-        model.addAttribute("filterOptions",filterOptions);
+        if(categoria_id == null){ //Se muestran todos los restaurantes
+            model.addAttribute("availableRestaurants", availableRestaurants);
+        }
+
+        else{
+            Label cat = entityManager.find(Label.class, categoria_id);
+            List<Restaurante> restaurantesCategoria = new ArrayList<>();
+            for(int i = 0; i < availableRestaurants.size(); i++){
+                if(availableRestaurants.get(i).getLabels().contains(cat)){
+                    restaurantesCategoria.add(availableRestaurants.get(i));
+                }
+            }
+            model.addAttribute("availableRestaurants", restaurantesCategoria);
+        }
+
         model.addAttribute("labelOptions",labelOptions);
         return "index";
     }
@@ -202,7 +208,8 @@ public class RootController {
          * @param amount La cantidad del producto que el usuario quiere añadir al carrito.
          * @return Una cadena con el nombre de la vista que se representará.
          */
-        @Transactional
+	    //TODO - Obtener latitud y longitud
+		@Transactional
 		@PostMapping("/addToCart")
 		public String addToCart(Model model, HttpSession session,@RequestParam(value = "extras[]", required = false) long[] extras, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
 			User u = (User) session.getAttribute("u");

@@ -27,7 +27,7 @@
                 <div class="list-group list-group-horizontal">
                     <div class="row align-items-center ms-1">
                         <div class="col" th:each = "x : ${labelOptions}">
-                            <button class="btn btn-success" th:text="${x.nombre}"></button>
+                            <a th:href="@{/(categoria_id=${x.id})}" class="btn btn-success" th:text="${x.nombre}"></a>
                         </div>
                     </div>
                 </div>

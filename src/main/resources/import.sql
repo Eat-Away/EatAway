@@ -145,6 +145,70 @@ VALUES(4, 'Pasta');
 INSERT INTO LABEL (id,nombre)
 VALUES(5, 'Meriendas');
 INSERT INTO LABEL (id,nombre)
-VALUES(6, 'Burritos');
+VALUES(6, 'Sushi');
+
+
+--TABLA RESTAURANTE_LABELS
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(1, 1);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(3, 1);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(8, 1);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(13, 1);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(15, 1);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(16, 1);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(17, 1);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(18, 1);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(3, 2);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(6, 2);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(7, 2);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(9, 2);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(14, 2);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(2, 3);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(4, 3);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(5, 3);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(10, 3);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(11, 3);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(14, 3);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(19, 3);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(3, 4);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(9, 4);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(14, 4);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(1, 5);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(8, 5);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(15, 5);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(16, 5);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(17, 5);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(18, 5);
+INSERT INTO RESTAURANTE_LABELS (restaurante_id, labels_id)
+VALUES(12, 6);
+
 
 ALTER SEQUENCE "PUBLIC"."GEN" RESTART WITH 1024;

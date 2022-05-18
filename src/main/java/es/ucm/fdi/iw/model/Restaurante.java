@@ -33,7 +33,7 @@ public class Restaurante{
     @JoinColumn(name="Restaurante_id")
     private List<Comentario> comentarios = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany 
     @JoinColumn(name="Restaurante_id")
     private List<Label> labels = new ArrayList<>();
 

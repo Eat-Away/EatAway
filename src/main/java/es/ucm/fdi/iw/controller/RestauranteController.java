@@ -32,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
 import es.ucm.fdi.iw.model.Extra;
+import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurador;
@@ -630,4 +631,112 @@ public class RestauranteController {
         model.addAttribute("message", "Se ha actualizado el estado del pedido " + p.getId() + " a " + p.getEstado());
         return adminRestaurante(model, session, r.getId());
     }
+
+
+    // //GESTION DE LABELS
+
+    // /**
+    //  * It takes the id of a restaurante, finds the restaurante in the database, and then passes the restaurante to the
+    //  * addLabel.html template, where a new label will be added to that restaurante
+    //  * 
+    //  * @param model This is the model that will be passed to the view.
+    //  * @param id the id of the dish
+    //  * @return Redirects to a form where the restaurant owner can add a label to the dish
+    //  */
+    // @GetMapping("/{id}/addLabel")
+    // public String altaLabel(Model model, @RequestParam long id){
+    //     Restaurante listaRestaurantes = entityManager.find(Restaurante.class, id);
+    //     model.addAttribute("label", new Label());
+    //     model.addAttribute("restaurante", listaRestaurantes);
+    //     model.addAttribute("admin", 0);
+    //     return "addLabel";
+    // }
+
+    // /**
+    //  * It adds a label to a dish
+    //  * 
+    //  * @param idRestaurante The id of the dish to which the label will be added.
+    //  * @param label The object that will be created and persisted.
+    //  * @param session The session object.
+    //  * @param model The model object that is used to pass data to the view.
+    //  * @return Redirects to the page with the restaurant info.
+    //  */
+    // @Transactional
+    // @PostMapping("/addLabel")
+    // public String procesaAltaLabel(@RequestParam long idRestaurante, @ModelAttribute Label label, HttpSession session, Model model){
+    //      //Obtiene el usuario que agrega el plato para al procesarse vuelva al adminRestaurante
+    //     User u = (User)session.getAttribute("u");
+    //     u = entityManager.find(User.class, u.getId());
+    //     Restaurante r = entityManager.find(Restaurante.class, idRestaurante);
+    //     if(r == null || r.getPropietario().getId() != u.getId()){
+    //         throw new PermisoDenegadoException();
+    //     }
+    //     label.setRestaurante(r);  // meter setter label
+    //     entityManager.persist(label);
+    //     r.getLabels().add(label);
+    //     model.addAttribute("message", "Se ha añadido la etiqueta nueva en el restaurante "+r.getNombre());
+    //     return adminRestaurante(model, session, r.getId());
+    // }
+
+    // /**
+    //  * It deletes an label from a dish
+    //  * 
+    //  * @param model The model object that will be used to render the view.
+    //  * @param idLabel The id of the label to be deleted
+    //  * @param session The session object, which is used to get the user object.
+    //  * @return  Redirects to the page with the restaurant info.
+    //  */
+    // @Transactional
+    // @PostMapping("/delLabel")
+    // public String procesaBajaLabel(Model model, @RequestParam long idLabel, HttpSession session){
+    //     User u = (User) session.getAttribute("u");
+    //     u = entityManager.find(User.class, u.getId());
+    //     Label la = entityManager.find(Label.class, idLabel);
+    //     if(la == null || la.getRestaurante().getPropietario().getId() != u.getId()){
+    //         throw new PermisoDenegadoException();
+    //     }
+    //     entityManager.remove(la);
+    //     entityManager.flush();
+    //     model.addAttribute("message", "Se ha borrado el label " + la.getNombre() + " del restaurante " + la.getRestaurante().getNombre() + " exitosamente");
+    //     return adminRestaurante(model, session, la.getRestaurante().getId());
+    // }
+
+    // /**
+    //  * It gets the label with the given id, and then passes it to the editLabel view, where the owner can edit the label info.
+    //  * 
+    //  * @param model The model is an object that will be used to pass data to the view.
+    //  * @param id the id of the label we want to edit
+    //  * @return Redirects to a form where the restaurant owner can edit the info of a label.
+    //  */
+    // @GetMapping("/{id}/editLabel")
+    // public String editarLabel(Model model, @RequestParam long id){
+    //     Label label = entityManager.find(Label.class, id);
+    //     model.addAttribute("label", label);
+    //     model.addAttribute("nombreRestaurante", label.getRestaurante().getNombre());
+    //     model.addAttribute("admin", 0);
+    //     return "editExtra";
+    // }
+
+    // /**
+    //  * It takes an extra object, a session object, and a model object, and then it updates the extra object
+    //  * in the database
+    //  * 
+    //  * @param extra The object that will be updated.
+    //  * @param session The session object.
+    //  * @param model The model object that is used to pass data to the view.
+    //  * @return  Redirects to the page with the restaurant info.
+    //  */
+    // @Transactional
+    // @PostMapping("/editLabel")
+    // public String procesarEditarLabel(@ModelAttribute Label label, HttpSession session, Model model){
+    //     User u = (User) session.getAttribute("u");
+    //     u = entityManager.find(User.class, u.getId());
+    //     Label la = entityManager.find(Label.class, label.getId());
+    //     label.setRestaurante(la.getRestaurante());
+    //     entityManager.merge(label);
+    //     entityManager.flush();
+    //     model.addAttribute("message", "Se ha actualizado el label " + la.getNombre() + " del restaurante " + la.getRestaurante().getNombre() + " exitosamente!");
+    //     return adminRestaurante(model, session, la.getRestaurante().getId());
+    // }
+
 }
