@@ -244,7 +244,7 @@ public class UserController {
 	 */
 	@GetMapping("{id}/conf")
 	public StreamingResponseBody getConf(@PathVariable long id) throws IOException {
-		File f = localData.getFile("user", "user"+id+".jpg");
+		File f = localData.getFile("user", ""+id+".jpg");
 		InputStream in = new BufferedInputStream(f.exists() ?
 			new FileInputStream(f) : UserController.defaultPic());
 		return os -> FileCopyUtils.copy(in, os);
@@ -275,7 +275,7 @@ public class UserController {
 		//Profile pic update
 		if(!photo.isEmpty()){
 			log.info("Updating photo for user {}", id);
-			File f = localData.getFile("user/", "user"+id+".jpg");
+			File f = localData.getFile("user/", ""+id+".jpg");
 
 			try (BufferedOutputStream stream =
 					new BufferedOutputStream(new FileOutputStream(f))) {
