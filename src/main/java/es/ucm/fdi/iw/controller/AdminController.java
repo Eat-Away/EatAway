@@ -184,23 +184,33 @@ public class AdminController {
      * @return Redirects to a welcome view to the new user
      */
     @Transactional
-    @PostMapping("/registro")
-    public String hacerRegistro(@ModelAttribute User usuario, @RequestParam("role") String rol ,Model model, HttpSession session){
-        //User user;
-        switch(rol){
-            case "1":
-                //usuario = (Repartidor) user;
-                rol = "REPARTIDOR";
-            break;
-            case "2":
-                //usuario = (Restaurador) user;
-                rol = "RESTAURANTE";
-            break;
-            default:
-                //usuario = (Cliente) user;
-            break;
-        }
-        usuario.setRoles(rol+",USER");
+    @PostMapping("/registroCliente")
+    public String registroCliente(@ModelAttribute Cliente usuario, @RequestParam("role") String rol ,Model model, HttpSession session){
+        usuario.setRoles("USER");
+        usuario.setEnabled(true);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        entityManager.persist(usuario);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha creado el usuario nuevo. Contacte con el interesado para darle su usuario y contraseña");
+        return index(model, session);
+    }
+
+    @Transactional
+    @PostMapping("/registroRepartidor")
+    public String registroRepartidor(@ModelAttribute Repartidor usuario, @RequestParam("role") String rol ,Model model, HttpSession session){
+        usuario.setRoles("REPARTIDOR,USER");
+        usuario.setEnabled(true);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        entityManager.persist(usuario);
+        entityManager.flush();
+        model.addAttribute("message", "Se ha creado el usuario nuevo. Contacte con el interesado para darle su usuario y contraseña");
+        return index(model, session);
+    }
+
+    @Transactional
+    @PostMapping("/registroPropietario")
+    public String registroPropietario(@ModelAttribute Restaurador usuario, @RequestParam("role") String rol ,Model model, HttpSession session){
+        usuario.setRoles("RESTAURANTE,USER");
         usuario.setEnabled(true);
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         entityManager.persist(usuario);

@@ -40,6 +40,7 @@ import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
 import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
+import es.ucm.fdi.iw.model.Restaurador;
 import es.ucm.fdi.iw.model.Restaurante;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.Pedido.Estado;
@@ -67,13 +68,9 @@ public class RestauranteController {
     @GetMapping("{id}")
     public String perfilRestaurante(Model model, HttpSession session, @PathVariable long id){
         User u =(User)session.getAttribute("u");
-        Restaurante r = entityManager.find(Restaurante.class, id);
-
-        if (u.getId() != r.getPropietario().getId()) {
-            return "index";
-        }
-        model.addAttribute("availableRestaurants", r.getPropietario().getRestaurantes());
-        model.addAttribute("propietario", r.getPropietario());
+        Restaurador owner = entityManager.find(Restaurador.class, u.getId());
+        model.addAttribute("availableRestaurants", owner.getRestaurantes());
+        model.addAttribute("propietario", owner);
         return "perfilRestaurante";
     }
 

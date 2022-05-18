@@ -10,7 +10,55 @@
         <main class="flex-shrink-0">
             <h1>Bienvenido a EatAway</h1>
             <h3>Regístrate para empezar a comprar</h3>
-            <form action="#" th:action="@{/admin/registro}" th:object="${usuario}" method="post">
+            <form action="#" th:if="${role == 0}" th:action="@{/admin/registroCliente}" th:object="${usuario}" method="post">
+                <div class="container">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                    <input type="text" class="form-control" id="nombre" th:field="*{firstName}" required>
+                </div>
+                <div class="container">
+                    <label for="apellido" class="form-label">Apellido:</label>
+                    <input type="text" class="form-control" id="apellido" th:field="*{lastName}" required>
+                </div>
+                <div class="container">
+                    <label for="passwd" class="form-label">Contraseña:</label>
+                    <input type="password" class="form-control" id="passwd" aria-describedby="passwdHelp" th:field="*{password}" required>
+                    <div id="passwdHelp" class="form-text">Debe tener mínimo 8 caracteres, al menos un número, una letra minúscula, una letra mayúscula y un símbolo</div>
+                </div>
+                <div class="container">
+                    <label for="username" class="form-label">Nombre de Usuario:</label>
+                    <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" th:field="*{username}" required>
+                    <div id="usernameHelp" class="form-text">Así es como te verán los demás dentro de la aplicación</div>
+                </div>
+                <div class="container">
+                    <input type="hidden" name="role" id="role" th:Value="${role}">
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                </div>
+            </form>
+            <form action="#" th:if="${role == 1}" th:action="@{/admin/registroRepartidor}" th:object="${usuario}" method="post">
+                <div class="container">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                    <input type="text" class="form-control" id="nombre" th:field="*{firstName}" required>
+                </div>
+                <div class="container">
+                    <label for="apellido" class="form-label">Apellido:</label>
+                    <input type="text" class="form-control" id="apellido" th:field="*{lastName}" required>
+                </div>
+                <div class="container">
+                    <label for="passwd" class="form-label">Contraseña:</label>
+                    <input type="password" class="form-control" id="passwd" aria-describedby="passwdHelp" th:field="*{password}" required>
+                    <div id="passwdHelp" class="form-text">Debe tener mínimo 8 caracteres, al menos un número, una letra minúscula, una letra mayúscula y un símbolo</div>
+                </div>
+                <div class="container">
+                    <label for="username" class="form-label">Nombre de Usuario:</label>
+                    <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" th:field="*{username}" required>
+                    <div id="usernameHelp" class="form-text">Así es como te verán los demás dentro de la aplicación</div>
+                </div>
+                <div class="container">
+                    <input type="hidden" name="role" id="role" th:Value="${role}">
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                </div>
+            </form>
+            <form action="#" th:if="${role == 2}" th:action="@{/admin/registroPropietario}" th:object="${usuario}" method="post">
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre:</label>
                     <input type="text" class="form-control" id="nombre" th:field="*{firstName}" required>

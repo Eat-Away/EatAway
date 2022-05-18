@@ -23,7 +23,8 @@
         </div>
         <div class="container mb-5 restaurant">
             <div class="col">
-                <table class="table">
+                <h3 th:if="${#lists.isEmpty(availableRestaurants)}" class="text-center text-danger">No tienes ningún restaurante asociado. Empieza añadiendo tus restaurantes con el botón de arriba</h3>
+                <table class="table" th:if="${not #lists.isEmpty(availableRestaurants)}">
                     <thead>
                         <th scope="col">Nombre del Restaurante</th>
                         <th scope="col">Logo del Restaurante</th>

@@ -29,19 +29,19 @@
                                     <li class="nav-item me-2 mb-2 align-self-start" th:if="${session.u.hasRole('RESTAURANTE')}">
                                         <a class="nav-link p-0" th:href="@{/restaurante/{id}/(id=${session.u.id})}">
                                             <img class="iwthumb rounded" th:src="@{/user/{id}/conf(id=${session.u.id})}">
-                                            <span th:text="${session.u.username}">Pepe</span>
+                                            <span th:text="${session.u.username}"></span>
                                         </a>
                                     </li>
                                     <li class="nav-item me-2 mb-2 align-self-start" th:if="${session.u.hasRole('REPARTIDOR')}">
                                         <a class="nav-link p-0" th:href="@{/repartidor/{id}(id=${session.u.id})}">
                                             <img class="iwthumb rounded" th:src="@{/repartidor/{id}/conf(id=${session.u.id})}">
-                                            <span th:text="${session.u.username}">Pepe</span>
+                                            <span th:text="${session.u.username}"></span>
                                         </a>
                                     </li>
                                     <li class="nav-item me-2 mb-2 align-self-start" th:if="${! session.u.hasRole('RESTAURANTE') && ! session.u.hasRole('REPARTIDOR') && ! session.u.hasRole('ADMIN') }">
                                         <a class="nav-link p-0" th:href="@{/user/{id}(id=${session.u.id})}">
                                             <img class="iwthumb rounded" th:src="@{/user/{id}/conf(id=${session.u.id})}">
-                                            <span th:text="${session.u.username}">Pepe</span>
+                                            <span th:text="${session.u.username}"></span>
                                         </a>
                                     </li>
                                     <li class="nav-item align-self-start me-4 mb-2">
@@ -54,6 +54,19 @@
                                             <button type="submit" class="btn btn-outline-secondary btn-sm">logout</button>
                                         </form>
                                     </li>
+                                </th:block>
+                                <!--Carrito-->
+                                <th:block class="row align-items-end" th:if="${session.u != null && session.u.hasRole('USER')}">
+                                    <div class="col">
+                                        <a th:href="@{/user/{id}/carrito(id=${session.u.id})}" class="btn btn-outline-success position-relative">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16" style="color: green;">
+                                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                            </svg>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">0
+                                                <span class="visually-hidden">items carrito</span>
+                                            </span>
+                                        </a>
+                                    </div>
                                 </th:block>
                                 <th:block th:unless="${session.u}">
                                     <li class="nav-item me-2 align-self-start">
@@ -98,19 +111,6 @@
                         </div>
                     </div>
                 </div>
-                <!--Carrito-->
-                <th:block class="row align-items-end" th:if="${session.u != null && session.u.hasRole('USER')}">
-                    <div class="col">
-                        <a th:href="@{/user/{id}/carrito(id=${session.u.id})}" class="btn btn-outline-success position-relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16" style="color: green;">
-                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                            </svg>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">0
-                                <span class="visually-hidden">items carrito</span>
-                            </span>
-                        </a>
-                    </div>
-                </th:block>
             </nav>
         </header>
 </body>
