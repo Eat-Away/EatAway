@@ -8,9 +8,8 @@
     <body class="d-flex flex-column h-100">
         <header th:replace="fragments/nav.html :: nav"></header>
         <main class="flex-shrink-0">
-            <h1>Bienvenido a EatAway</h1>
-            <h3>Regístrate para empezar a comprar</h3>
             <form action="#" th:if="${role == 0}" th:action="@{/admin/registroCliente}" th:object="${usuario}" method="post">
+                <h1 class="text-center">Alta de nuevo cliente</h1>
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre:</label>
                     <input type="text" class="form-control" id="nombre" th:field="*{firstName}" required>
@@ -27,7 +26,6 @@
                 <div class="container">
                     <label for="username" class="form-label">Nombre de Usuario:</label>
                     <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" th:field="*{username}" required>
-                    <div id="usernameHelp" class="form-text">Así es como te verán los demás dentro de la aplicación</div>
                 </div>
                 <div class="container">
                     <input type="hidden" name="role" id="role" th:Value="${role}">
@@ -35,6 +33,7 @@
                 </div>
             </form>
             <form action="#" th:if="${role == 1}" th:action="@{/admin/registroRepartidor}" th:object="${usuario}" method="post">
+                <h1 class="text-center">Alta de nuevo repartidor</h1>
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre:</label>
                     <input type="text" class="form-control" id="nombre" th:field="*{firstName}" required>
@@ -51,7 +50,6 @@
                 <div class="container">
                     <label for="username" class="form-label">Nombre de Usuario:</label>
                     <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" th:field="*{username}" required>
-                    <div id="usernameHelp" class="form-text">Así es como te verán los demás dentro de la aplicación</div>
                 </div>
                 <div class="container">
                     <input type="hidden" name="role" id="role" th:Value="${role}">
@@ -59,6 +57,7 @@
                 </div>
             </form>
             <form action="#" th:if="${role == 2}" th:action="@{/admin/registroPropietario}" th:object="${usuario}" method="post">
+                <h1 class="text-center">Alta de nuevo propietario de restaurantes</h1>
                 <div class="container">
                     <label for="nombre" class="form-label">Nombre:</label>
                     <input type="text" class="form-control" id="nombre" th:field="*{firstName}" required>
@@ -75,7 +74,6 @@
                 <div class="container">
                     <label for="username" class="form-label">Nombre de Usuario:</label>
                     <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" th:field="*{username}" required>
-                    <div id="usernameHelp" class="form-text">Así es como te verán los demás dentro de la aplicación</div>
                 </div>
                 <div class="container">
                     <input type="hidden" name="role" id="role" th:Value="${role}">
