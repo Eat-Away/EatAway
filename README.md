@@ -5,7 +5,7 @@
 > "Come donde, cuando y como quieras"
 
 ## Funcionalidad
-Con EatAway podrás elegir entre diferentes restaurantes. Estos estarán clasificados, por ejemplo, por el tipo de comida (hamburguesas, pizzas, etc) o por el rango de precios para hacer más sencilla la búsqueda.
+Con EatAway podrás elegir entre diferentes restaurantes. Estos estarán clasificados, por ejemplo, por el tipo de comida (hamburguesas, pizzas, etc) ó directamente también aparecen todos los disponibles.
 
 Seleccionando un restaurante podrás ver información sobre éste, como las opiniones, valoración, dirección, horario... 
 
@@ -13,7 +13,7 @@ A su vez, podrás elegir un plato del menú del restaurante para ver su descripc
 
 
 ## Usuarios
-Disponemos de 4 tipos de usuarios. Dependiendo de cuál se trate, se podrá acceder a diferentes vistas de la aplicación:
+Disponemos de 4 tipos de usuarios. Dependiendo de cuál se trate, se podrá acceder a diferentes vistas de la aplicación. Más abajo explicamos mejor que puede hacer cada Usuario.
 
 * **Usuario no registrado**: 
     - Podrá visitar los restaurantes y hacer pedidos. 
@@ -36,7 +36,7 @@ Disponemos de 4 tipos de usuarios. Dependiendo de cuál se trate, se podrá acce
 
 
 * **Administrador**: 
-    - Tiene total autorización para modificar la base de datos de la aplicación. Tendrá la opción de eliminar o suspender cuentas de usuario por un mal uso, así como los comentarios que no cumplas con las normas. 
+    - Tiene total autorización para modificar la base de datos de la aplicación. Tendrá la opción de  bloquear cuentas de usuario por un mal uso, crear nuevos usuarios y ver todos los que existen y a su vez, administrar los restaurantes.
 
 ## Vistas
 
@@ -70,27 +70,53 @@ Dentro del import.sql que crea la base de datos inicial de la aplicación contam
 
 ## Vistas en detalle
 
-En la vista *user.html* podemos encontrar el uso de la base de datos para poder obtener el nombre y la dirección del usuario:             
-```
-<p>Nombre: <span th:text="${user.username}">Paco</span></p>
-    <p>Dirección: <span th:text="${user.direccion}">C/ bbb, 9</span></p>
-```  
+Si entramos con el rol de dueño de los restaurantes encontraremos:
 
-Podemos verlo en estas dos líneas de código, teniendo Paco y C/ bbb, 9 como datos por defecto.
+La pagina principal *perfilRestaurante.html* de este rol una vez iniciado sesión es una tabla con los diferentes restaurantes, su descripción, dirección, horario, valoración media y las acciones disponibles que será "Administrar".
+Si pulsamos dicho botón, nos manda a la vista *adminRestaurante.html* de ese restaurante con toda su información y donde encontraremos una configuración para "Añadir Plato" (*addPlato.html*), "Editar restaurante"(*editRestaurante.html*) y "Eliminar Restaurante".  Para los dos primeros nos redirige a un formulario con varios campos a rellenar para hacer la funcionalidad. 
+Dentro de dicha vista, podemos encontrar los platos que dispone dicho Restaurante con su propia información y con varias acciones disponibles para los extras (Editar *editExtra.html*, Eliminar los ya existentes) ó para el propio plato (Añadir extras *addExtra.html*, editar el plato *editPlato.html* o eliminarlo).
+Además, al final de la lista de platos encontramos otra tabla con la información sobre los pedidos activos de dicho restaurante. Y con ello puede cambiar el estado del pedido o cancelarlo.
 
-En la vista princiapal, *index.html*, usamos la base de datos para obtener los nombres de las etiquetas (label) para filtrar por tipo de restaurante y para listar los restaurantes con su nombre
+En la pagina principal también dispone de un botón para añadir un restaurante nuevo que si pulsamos, nos manda a un formulario *addRestaurante.html* donde se deben rellenar diferentes campos para poder realizar la función que el propio botón con su nombre indica.En dicho formulario una vez rellenado los diferentes datos y si pulsamos registrar, añade el nuevo Restaurante. 
 
-En la vista de *restaurante.html* usamos la base de datos para poder obtener el nombre de dicho lugar y a su vez tenemos una lista de platos para poder ver los que hay en cada restaurante. En este caso disponemos de momento del restaurante Vips (id = 1), más adelante se seguirán añadiendo más platos a los diferentes restaurantes de la base de datos. 
 
-En la vista *platos.html* usamos la base de datos para saber su nombre, la descripción y precio. Aún está por implementar en cuanto a los extras de los platos para poder añadirlos a tu pedido ya que estos no serán los mismos para los diferentes platos a elegir.
 
-En la vista *perfilRestaurante.html* solo tendrá acceso un usuario registrado como el dueño del restaurante. Ahí podrá añadir, modificar o eliminar las ofertas, platos, restaurantes... De momento se usa la base de datos para obtener el nombre del restaurante.
+Si entramos con el rol de admin encontraremos:
 
-En la vista *listaPedidos.html* usamos la base de datos para sacar el nombre y el id del pedido.
+Su página principal *admin.html* podemos realizar diferentes acciones como es el dar de alta a diferentes usuarios, encontrando respectivos botones para ello y si pulsamos, nos manda a la vista de *registroAvanzado.html*. 
+Además, encontramos una tabla con los diferentes usuarios que hay en la aplicación y toda su información. Con ellos el administrador puede bloquearlos y borrar su foto.
+También encontramos otra tabla con toda la información de los restaurantes y el admin podrá también administrarlos, que si pulsamos éste botón, nos manda a la vista *adminRestaurante.html* y podrá realizar las mismas funciones que el rol de restaurante explicadas ya anteriormente.
 
-En *finRegistro.html* la base de datos también está siendo usada para poder sacar el nombre del usuario que ha sido registrado.
 
-## Funcionalidades pendientes de arreglar
-[comment]: <> (Habría que ir poniendo aquí que cosas fallan)
-* Darle funcionamiento a los botones de categoría, filtrado y búsqueda del index
-* Añadir pruebas con Karate
+
+Si entramos sin registrarnos, accedemos a la página principal donde podemos filtrar los restaurantes en categorías en función de lo que estemos buscando. Si buscamos Hamburguesas y pulsamos éste boton, nos aparecerán los restaurantes que contengan Hamburguesas. Y así con el resto de categorías que aparecen.
+Si pulsamos uno de los restaurantes, nos redirige a su página *restaurante.html*, donde podremos ver una pequeña descripción de éste,y sus platos principales.  Si pulsamos en uno de ellos nos redirige a *platos.html* donde vemos información e ingredientes del plato, añadir extras, si queremos mas de un plato o si queremos añadir al pedido.
+Si añadimos al pedido al no estar registrados, nos manda al *login.html* para que lo hagamos. 
+
+
+Entrariamos ahora al usuario registrado, si añadimos el pedido nos sale un mensaje de éxito que se ha añadido. 
+Para poder pagar tenemos que pulsar al emoticono del carrito que hay arriba a la derecha, que nos manda a la vista de *carrito.html*.
+En dicha vista rellenaremos los campos que nosotros creamos, podremos nuestros articulos a pedir y un botón de Hacer Pedido. Si pulsamos nos lleva a la página principal de nuevo de la aplicación saliendo un mensaje de éxito sobre el pedido.
+
+
+Si entramos como repartidor encontramos:
+
+La vista *repartidor.html* donde tenemos un botón configuración por si queremos cambiar algún campo de nuestra informacion de usuario y otro de A TRABAJAR, que si pulsamos nos manda a los pedidos disponibles *listaPedidos.html* . Podremos pulsar un botón de Info donde si pulsamos nos accede al Google Maps y nos da la información del restaurante y del cliente. Si le damos a recoger, nos manda a *chatCliente.htm* para poder hablar con él y marcar como entregado el pedido.
+
+
+
+
+La vista de *registro.html* es para poder registrarnos como usuarios nuevos en la aplicación rellenando los diferentes campos que aparecen.
+
+En la vista *user.html* podemos encontrar la información relacionada al usuario donde podremos valorar pedidos anteriores. También tenemos una configuración por si queremos cambiar algo de nuestro perfil.  Además encontramos un botón de Hablar con el Repartidor que nos manda al chat con el repartidor *listaChats.html* y poder ver los pedidos en reparto y en espera, junto con su estado y para poder hablar. Si le damos a hablar nos manda a *chatRepartidor.html* para poder comunicarnos con él en caso de que un usuario Cliente tenga un pedido pendiente.
+
+La vista *finRegistro.html* nos sale cuando nos hemos registrado correctamente como nuevo usuario en la aplicación.
+
+
+
+
+
+
+
+
+
