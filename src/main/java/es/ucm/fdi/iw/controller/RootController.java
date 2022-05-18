@@ -6,14 +6,11 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpSession;
-
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -26,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Extra;
@@ -133,7 +129,14 @@ public class RootController {
         return "platos";
     }
 
-    //TODO: Pensar a donde dirige el cliente cuando procesa su pedido
+    /**
+     * Procesa el carrito de un usuario, pasando su estado a Pendiente para que el restaurante lo gestione
+     * 
+     * @param model El objeto de modelo que se usará para representar la vista.
+     * @param session El objeto de sesión se utiliza para almacenar la información del usuario.
+     * @param id El id del pedido a procesar.
+     * @return Una cuerda
+     */
 	@Transactional
 	@PostMapping("/procesaPedido")
 	public String procesaPedido(Model model, HttpSession session, @RequestParam("id") long id){
@@ -147,6 +150,7 @@ public class RootController {
 		model.addAttribute("message", "El pedido se ha procesado correctamente");
 		return index(model);
 	}
+
     /**
      * It returns the login.html page
      * 
@@ -187,8 +191,18 @@ public class RootController {
         return "index";
     }
     
-	    //TODO - Obtener latitud y longitud
-		@Transactional
+	    
+		/**
+         * Añade un plato al carrito.
+         * 
+         * @param model El objeto de modelo que se usará para representar la vista.
+         * @param session El objeto de sesión, utilizado para obtener la identificación del usuario.
+         * @param extras Una serie de extras que el usuario quiere añadir al plato.
+         * @param id El id del plato que se agregará al carrito.
+         * @param amount La cantidad del producto que el usuario quiere añadir al carrito.
+         * @return Una cadena con el nombre de la vista que se representará.
+         */
+        @Transactional
 		@PostMapping("/addToCart")
 		public String addToCart(Model model, HttpSession session,@RequestParam(value = "extras[]", required = false) long[] extras, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
 			User u = (User) session.getAttribute("u");

@@ -1,23 +1,19 @@
 package es.ucm.fdi.iw.controller;
 
-
 import java.io.*;
 import java.util.List;
 import java.util.Objects;
-
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+//import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -30,9 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
 import es.ucm.fdi.iw.LocalData;
-import es.ucm.fdi.iw.model.Cliente;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Repartidor;
@@ -55,8 +49,8 @@ public class RepartidorController {
     @Autowired
 	private EntityManager entityManager;
 
-	@Autowired
-	private SimpMessagingTemplate messagingTemplate;
+	//@Autowired
+	//private SimpMessagingTemplate messagingTemplate;
 
 	@Autowired
 	private LocalData localData;
@@ -115,6 +109,19 @@ public class RepartidorController {
 		return os -> FileCopyUtils.copy(in, os);
 	}
 
+	/**
+	 * Actualiza la información de perfil y la foto de perfil del usuario.
+	 * 
+	 * @param repartidor El objeto que se actualizará.
+	 * @param photo El archivo que sube el usuario.
+	 * @param id la identificación del usuario que se actualizará
+	 * @param response El objeto de respuesta, que se utiliza para establecer el código de estado de la
+	 * respuesta.
+	 * @param session el objeto de sesión, que se utiliza para obtener el objeto de usuario.
+	 * @param model El modelo es un mapa que se pasa a la vista. Contiene los datos que se mostrarán en la
+	 * vista.
+	 * @return Una cadena con el nombre de la vista a representar.
+	 */
 	@PostMapping("/{id}/conf")
 	@Transactional
 	public String setConf(@ModelAttribute Repartidor repartidor, @RequestParam MultipartFile photo, @PathVariable long id, 
@@ -226,6 +233,15 @@ public class RepartidorController {
 		return listaPedidos(model,session,id);
 	}
 
+	/**
+	 * Marca el pedido asignado al repartidor como entregado
+	 * 
+	 * @param model El objeto modelo que se usará para pasar datos a la vista.
+	 * @param session El objeto de sesión.
+	 * @param idPed El id de la orden.
+	 * @param estado El estado del pedido.
+	 * @return Una cuerda.
+	 */
 	@Transactional
 	@PostMapping("/{id}/deliver")
 	public String entregaPedido(Model model, HttpSession session, @RequestParam("idPedido") long idPed, @RequestParam("sigEstado") Estado estado){
@@ -247,6 +263,13 @@ public class RepartidorController {
 		return index(model, session, rep.getId());
 	}
 
+	/**
+	 * La función toma un objeto de mensaje como parámetro y devuelve un objeto de mensaje
+	 * 
+	 * @param message El objeto de mensaje que se envía desde el cliente.
+	 * @param session La HttpSession asociada con la solicitud.
+	 * @return El objeto de mensaje está siendo devuelto.
+	 */
 	@MessageMapping("/message")
 	@SendTo("/topic/messages")
 	public Message sendMessage( Message message,HttpSession session){

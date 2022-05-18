@@ -10,13 +10,10 @@ import es.ucm.fdi.iw.model.Transferable;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.Pedido.Estado;
 import es.ucm.fdi.iw.model.User.Role;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -33,17 +30,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -128,6 +122,14 @@ public class UserController {
 		model.addAttribute("user", target);
 		return "user";
 	}
+	/**
+	 * Devuelve una lista de chats que el usuario tiene con otros usuarios
+	 * 
+	 * @param id La identificación del usuario del que desea ver los chats.
+	 * @param model Este es el objeto que se pasa a la vista.
+	 * @param session El objeto de sesión se utiliza para almacenar la información del usuario.
+	 * @return Una lista de conversaciones
+	 */
 	@GetMapping("/{id}/chats")
 	public String chats(@PathVariable long id,Model model, HttpSession session) {
 		User target = entityManager.find(User.class, id);
@@ -142,6 +144,15 @@ public class UserController {
 		}
 		return "listaChats";
 	}
+	/**
+	 * Devuelve la página chatCliente.html, que es la página de chat para el cliente
+	 * 
+	 * @param id La identificación del usuario con el que desea chatear.
+	 * @param model Este es el modelo que se pasará a la vista.
+	 * @param session El objeto de sesión se utiliza para almacenar los datos de la sesión del usuario.
+	 * @param idPedido La identificación del pedido sobre el que el cliente quiere chatear.
+	 * @return Se está devolviendo la página chatCliente.html.
+	 */
 	@GetMapping("/{id}/chat/{idPedido}")
 	public String chat(@PathVariable long id,Model model, HttpSession session,@PathVariable long idPedido){
 		User target = entityManager.find(User.class, id);
@@ -153,6 +164,15 @@ public class UserController {
 			return "chatCliente";
 	}
 
+	/**
+	 * Actualiza la valoración de un pedido hecho por un usuario una vez este ya ha finalizado
+	 * 
+	 * @param model El objeto de modelo que se usará para representar la vista.
+	 * @param session el objeto de sesión
+	 * @param idPedido el id de la orden a calificar
+	 * @param val el valor de la calificación
+	 * @return La vista de perfil del cliente
+	 */
 	@Transactional
 	@PostMapping("/{id}/valorar")
 	public String valorarPedido(Model model, HttpSession session, @RequestParam("idPedido") long idPedido, @RequestParam("valoracion") double val ){
@@ -250,6 +270,18 @@ public class UserController {
 		return os -> FileCopyUtils.copy(in, os);
 	}
 
+	/**
+	 * Actualiza la información de perfil y la foto de perfil del usuario.
+	 * 
+	 * @param user Este es el objeto de usuario que se actualizará.
+	 * @param photo El archivo que sube el usuario.
+	 * @param id El id del usuario a actualizar.
+	 * @param response El objeto de respuesta que se devolverá al cliente.
+	 * @param session El objeto de sesión se utiliza para almacenar los datos de la sesión del usuario.
+	 * @param model El modelo es un mapa que se pasa a la vista. Contiene los datos que se mostrarán en la
+	 * vista.
+	 * @return El perfil del usuario
+	 */
 	@PostMapping("/{id}/conf")
 	@Transactional
 	public String setConf(@ModelAttribute User user, @RequestParam MultipartFile photo, @PathVariable long id, 
@@ -292,6 +324,14 @@ public class UserController {
 	}
 
 	
+	/**
+	 * Obtiene el carrito del usuario y se lo muestra al usuario.
+	 * 
+	 * @param model El modelo es un mapa que se utiliza para almacenar los datos que se mostrarán en la
+	 * página de visualización.
+	 * @param id la identificación del usuario
+	 * @return La vista de carrito del usuario
+	 */
 	@GetMapping("{id}/carrito")
 	public String carrito(Model model, @PathVariable long id) {
 		User user = entityManager.find(User.class, id);
@@ -330,6 +370,13 @@ public class UserController {
 	}
 
 
+	/**
+	 * Devuelve la vista con la información del pedido del usuario
+	 * 
+	 * @param model El modelo es un mapa que se utiliza para almacenar los datos que se mostrarán en la
+	 * página de visualización.
+	 * @return Vista con la información del pedido
+	 */
 	@GetMapping("/{id}/pedidoCliente")
 	public String pedidoCliente(Model model) {
 		return "pedidoCliente";

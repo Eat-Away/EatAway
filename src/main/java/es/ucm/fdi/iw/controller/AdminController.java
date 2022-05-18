@@ -159,6 +159,14 @@ public class AdminController {
 
     //FUNCIONES DE GESTION DE USUARIOS
 
+    /**
+     * Devuelve al formulario de alta de usuarios en funcion del rol que se desea asignar al usuario
+     * 
+     * @param model El modelo es un mapa que se utiliza para almacenar los datos que se mostrarán en la
+     * página de vista.
+     * @param rol 0 = Cliente, 1 = Repartidor, 2 = Propietario de restaurante
+     * @return El formulario de alta de usuario con el rol deseado
+     */
     @GetMapping("/altaUsuario")
     public String altaUsuario(Model model, @RequestParam("rol") int rol){
         switch(rol){
@@ -195,6 +203,13 @@ public class AdminController {
         return index(model, session);
     }
 
+    /**
+     * It registers a new user of Repartidor type to the system
+     * 
+     * @param usuario The object that will be used to store the data entered by the user.
+     * @param model This is the model that will be passed to the view.
+     * @return Redirects to a welcome view to the new user
+     */
     @Transactional
     @PostMapping("/registroRepartidor")
     public String registroRepartidor(@ModelAttribute Repartidor usuario, @RequestParam("role") String rol ,Model model, HttpSession session){
@@ -207,6 +222,13 @@ public class AdminController {
         return index(model, session);
     }
 
+    /**
+     * It registers a new user of Restaurador type to the system
+     * 
+     * @param usuario The object that will be used to store the data entered by the user.
+     * @param model This is the model that will be passed to the view.
+     * @return Redirects to a welcome view to the new user
+     */
     @Transactional
     @PostMapping("/registroPropietario")
     public String registroPropietario(@ModelAttribute Restaurador usuario, @RequestParam("role") String rol ,Model model, HttpSession session){
@@ -219,6 +241,15 @@ public class AdminController {
         return index(model, session);
     }
 
+
+    /**
+     * Elimina la foto de perfil de un usuario
+     * 
+     * @param model El objeto de modelo que se usará para representar la vista.
+     * @param session El objeto de sesión.
+     * @param id La identificación del usuario cuya foto de perfil se va a eliminar.
+     * @return Retorna al home del administrador
+     */
     @Transactional
     @PostMapping("/delPic")
     public String delPic(Model model, HttpSession session, @RequestParam("idUsr") long id){
@@ -242,6 +273,15 @@ public class AdminController {
         return index(model, session);
     }
 
+
+    /**
+     * Bloquea a un usuario del sistema tomando como parámetro su ID y estableciendo su parámetro Enabled a false
+     * 
+     * @param model El objeto de modelo que se usará para representar la vista.
+     * @param session El objeto de sesión.
+     * @param id El id del usuario a ser bloqueado
+     * @return El home del administrador
+     */
     @Transactional
     @PostMapping("/banUser")
     public String banearUsuario(Model model, HttpSession session, @RequestParam("idUsr") long id){
@@ -261,6 +301,14 @@ public class AdminController {
         return index(model, session);
     }
 
+    /**
+     * Desbloquea a un usuario del sistema tomando como parámetro su ID y estableciendo su parámetro Enabled a true
+     * 
+     * @param model El objeto de modelo que se usará para representar la vista.
+     * @param session El objeto de sesión.
+     * @param id El id del usuario a ser desbloqueado
+     * @return El home del administrador
+     */
     @Transactional
     @PostMapping("/unbanUser")
     public String desbanearUsuario(Model model, HttpSession session, @RequestParam("idUsr") long id){
