@@ -29,7 +29,7 @@
 						<h5 class="text-center">Añade extras a tu pedido</h5>
 						<ul class="list-group" th:each="extra: ${plato.extras}">
 							<li class="list-group-item">
-								<input class="form-check-input" type="checkbox" th:value="${extra.id}" id="extras" name="extras[]"> <label th:text="|${extra.nombre} (+${extra.precio}€)|" class="form-check-label"></label>
+								<input class="form-check-input extras" type="checkbox" th:value="${extra.id}" id="extras" name="extras[]"> <label th:text="|${extra.nombre} (+${extra.precio}€)|" class="form-check-label"></label>
 							</li>
 						</ul>
 					</div>
@@ -45,7 +45,7 @@
 						<input type="hidden" th:value="${plato.id}" id="id" name="id"/>
 						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-						<button type="submit" class="btn btn-success">Añadir al pedido</button>
+						<button type="submit" class="add-carrito btn btn-success">Añadir al pedido</button>
 					</div> 
 				</div>
 			</form>

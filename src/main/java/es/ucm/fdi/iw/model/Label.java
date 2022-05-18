@@ -1,8 +1,5 @@
 package es.ucm.fdi.iw.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.*;
 
 import lombok.Data;
@@ -19,7 +16,4 @@ public class Label {
     @SequenceGenerator(name = "gen", sequenceName = "gen")
     private Long id;
     private String nombre;
-
-    // @ManyToOne
-    // private List<Restaurante> restaurantes = new ArrayList<>();
 }

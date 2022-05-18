@@ -12,9 +12,9 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <div class="row align-items-start">
-                    <a href="/" class="fs-1 fst-italic fw-bold text-decoration-none text-success" >EatAway</a>
+                    <a href="/" class="nav-logo fs-1 fst-italic fw-bold text-decoration-none text-success">EatAway</a>
                 </div>
-                <!--Buscador-->
+                
                 <div class="row align-items-center">
                     <div class="col">
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,20 +51,17 @@
                                     </li>
                                     <li class="nav-item align-self-start me-2 mb-2">
                                         <form th:action="@{/logout}" method="post">
-                                            <button type="submit" class="btn btn-outline-secondary btn-sm">logout</button>
+                                            <button type="submit" class="logout nav-item btn btn-outline-secondary btn-sm">Logout</button>
                                         </form>
                                     </li>
                                 </th:block>
                                 <!--Carrito-->
                                 <th:block class="row align-items-end" th:if="${session.u != null && session.u.hasRole('USER')}">
                                     <div class="col">
-                                        <a th:href="@{/user/{id}/carrito(id=${session.u.id})}" class="btn btn-outline-success position-relative">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16" style="color: green;">
+                                        <a th:href="@{/user/{id}/carrito(id=${session.u.id})}" class="carrito btn btn-outline-success position-relative me-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16" style="color: green;">
                                                 <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                                             </svg>
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">0
-                                                <span class="visually-hidden">items carrito</span>
-                                            </span>
                                         </a>
                                     </div>
                                 </th:block>
@@ -96,16 +93,6 @@
                                             </form>
                                         </li>
                                     </th:block>
-                                    <li class="nav-item">
-                                        <form class="d-flex">
-                                            <input class="form-control me-2" type="search" placeholder="Buscar comida" aria-label="Search">
-                                            <button class="btn btn-outline-success" type="submit">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
