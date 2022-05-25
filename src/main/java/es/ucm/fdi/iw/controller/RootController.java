@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Cliente;
+import es.ucm.fdi.iw.model.Comentario;
 import es.ucm.fdi.iw.model.Extra;
 import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Pedido;
@@ -283,4 +285,55 @@ public class RootController {
             model.addAttribute("message", "Se ha añadido el producto al carrito");
 			return platos(model, id);
 		 }
+         
+    //TODO: Ejercicio Examen - Añadir valoraciones a platos
+	@Transactional
+	@PostMapping("/valoraPlato")
+	public String valoraPlato(@RequestParam("idPlato") long id, @RequestParam("valoracion") double valoracion, @RequestParam("comentario") String comm, Model model, HttpSession session){
+		User u = (User) session.getAttribute("u");
+		u = entityManager.find(User.class, u.getId());
+		Plato plato = entityManager.find(Plato.class, id);
+		//Agregamos un comentario nuevo con su valoracion
+		Comentario comentario = new Comentario();
+		comentario.setAutor(u);
+		comentario.setPlato(plato);
+		comentario.setTexto(comm);
+		comentario.setValoracion(valoracion);
+		entityManager.persist(comentario);
+		entityManager.flush();
+		//Actualizamos listas y objetos relacionados para no perder la relación entre ellos
+		plato.setComentarios(plato.getComentarios());
+		plato.setExtras(plato.getExtras());
+		plato.setPlatoPedidos(plato.getPlatoPedidos());
+		plato.setRestaurante(plato.getRestaurante());
+		//Obtenemos los comentarios de ese plato para obtener su valoracion media
+		String query = "SELECT X FROM Comentario X WHERE X.plato = "+plato.getId();
+		List<Comentario> listaComms = entityManager.createQuery(query, Comentario.class).getResultList();
+		//Calculamos la valoracion media
+		Iterator<Comentario> commIterator = listaComms.iterator();
+		double val = 0.0;
+		while(commIterator.hasNext()){
+			Comentario c = commIterator.next();
+			val += c.getValoracion();
+		}
+		val = val / listaComms.size();
+		//Actualizamos la valoracion media del plato
+		plato.setValoracion(val);
+		entityManager.merge(plato);
+		entityManager.flush();
+        //Enlazamos el comentario al restaurante encargado del plato
+        Restaurante rest = plato.getRestaurante();
+        listaComms = rest.getComentarios();
+        listaComms.add(comentario);
+        rest.setComentarios(listaComms);
+        rest.setLabels(rest.getLabels());
+        rest.setPedidos(rest.getPedidos());
+        rest.setPlatos(rest.getPlatos());
+        rest.setPropietario(rest.getPropietario());
+        entityManager.merge(rest);
+        entityManager.flush();
+		//Agregamos un mensaje de exito
+		model.addAttribute("message", "Se ha añadido tu comentario con éxito");
+		return platos(model, id);
+	}
 }

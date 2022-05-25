@@ -76,6 +76,7 @@
                         <th scope="col">Horario</th>
                         <th scope="col">Valoracion</th>
                         <th scope="col">Acciones disponibles</th>
+                        <th scope="col">Cantidad de Platos</th>
                     </thead>
                     <tbody>
                         <tr th:each="u: ${restaurantes}">
@@ -92,6 +93,7 @@
                                     </div>
                                 </div>
                             </td>
+                            <td th:text="${#lists.size(u.platos)}"></td>
                         </tr>
                     </tbody>
                 </table>

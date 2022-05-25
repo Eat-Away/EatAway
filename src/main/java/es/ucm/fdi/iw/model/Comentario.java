@@ -14,6 +14,7 @@ public class Comentario {
     @SequenceGenerator(name = "gen", sequenceName = "gen")
     private long id;
     private String texto;
+    private double valoracion;
     @ManyToOne
     @JoinColumn(name="User_id")
     private User autor;

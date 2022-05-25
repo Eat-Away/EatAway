@@ -55,48 +55,48 @@ INSERT INTO Restaurante (id, nombre, direccion, horario, descripcion, valoracion
 VALUES (19,'Five Guys', 'Calle Falsa, 123', '24/7', 'Lorem ipsum', 4.0, 4);
 
 -- TABLA PLATOS
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (1, 'Carne de vacuno, queso estilo americano y cheddar fundidos, bacon crujiente, salsa BBQ ahumada, cebolla roja a la plancha, pepinillo y salsa baconesa en pan brioche tostado con dos sesamos. Junto de guarnicion a elegir y salsa baconesa.', 'Hamburguesa', 10.99, 1);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (2, 'Pan blanco, tres pisos de pollo, bacon, jamon York, queso americano y queso Emmental, mayonesa, tomate y lechuga. Disponible tambien con pan integral.', 'Sandwich', 13.55, 1);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (3, 'Combo de: Aros de cebolla con salsa especial VIPS, Quesadilla de jamon York y queso con pico de gallo, crema agria y guacamole, Alitas Chili BBQ y Nachos Tex-Mex.', 'Combo', 9.35, 1);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (4, 'Cremosas croquetas de jamon iberico coronadas con paleta iberica y un toque de salsa mayo-sriracha.', 'Croquetas', 8.55, 1);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (5, 'Bacon crujiente y ajetes sobre Mozzarella fundida y una cremosa salsa blanca en base de focaccia.', 'Pizza', 10.50, 1);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (6, 'Aguacate, mango, fresas, queso de cabra, queso feta, tomate cherry, cebolla roja y nueces, rociada con vinagreta de lima y cilantro sobre una base de quinoa y mezcla de lechugas con brotes.', 'Ensalada', 9.35, 1);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (7, 'Costillas de cerdo ahumadas a la parrilla', 'National Star Ribs', 15.99, 2);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (8, 'Carne de vacuno, con queso Cheddar y bacon ahumado, sobre base de lechuga romana, tomate, cebolla y salsa especial FH', 'Directors Choice Version Original', 10.99, 2);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (9, 'Pechua de pollo a la parrilla, bacon crujiente, lechuga romana y salsa parmesana en pan con semillas y copos de avena','Caesar', 12.99, 2);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (10, 'Con chorizo junto con nata, salsa pomodoro y bechamel, gratinados con queso parmesano', 'Rigatoni al Forno', 17.00, 3);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (11, 'Base de tomate triturado, mozzarela, panceta, cebolla caramelizada, aceitunas negras taggiasca y orégano.', 'Pizza', 13.95, 3);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (12, 'Crujiente milanesa de pechuga de pollo, junto de patatas asados con ajo y romero, y salsa de tomate', 'Carne', 14.99, 3);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (13, 'Delicioso pollo crujiente por fuera y jugoso por dentro, junto de queso gouda, cebolla fresca y salsa buffalo', 'Hamburguesa', 5.99, 4);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (14, 'Queso por encima y entre su doble de pollo crispy, queso en la salsa, queso por dentro y fuera del pan', 'Hamburguesa', 5.99, 5);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (15, '100% Vegetal sabor Big King, con su misma lechuga, pepinillos y cebolla de siempre, rociado en su increible salsa entre dos panes de sésamo crujiente pero vegetal. Sin carne', 'Hamburguesa', 6.99, 5);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (16, 'Suave masa horneada con canela y una espiral de glaseado', 'Roll Canela', 3.99, 15);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (17, 'Napolitana con decilioso chocolate', 'Napolitana', 3.99, 15);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (18, 'Carbonara de crema, queso 100%, mozzarella, bacon y cebolla', 'Pizza', 9.99, 6);
-INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id)
-VALUES (19, 'Texas BBQ Crispy con salsa BBQ Texas, queso 100%, mozarrella, bacon crispy, bacon, pollo a la parrilla, carne de vacuno, queso cheddar en el borde', 'Pizza', 3.99, 6);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (1, 'Carne de vacuno, queso estilo americano y cheddar fundidos, bacon crujiente, salsa BBQ ahumada, cebolla roja a la plancha, pepinillo y salsa baconesa en pan brioche tostado con dos sesamos. Junto de guarnicion a elegir y salsa baconesa.', 'Hamburguesa', 10.99, 1, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (2, 'Pan blanco, tres pisos de pollo, bacon, jamon York, queso americano y queso Emmental, mayonesa, tomate y lechuga. Disponible tambien con pan integral.', 'Sandwich', 13.55, 1, 4);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (3, 'Combo de: Aros de cebolla con salsa especial VIPS, Quesadilla de jamon York y queso con pico de gallo, crema agria y guacamole, Alitas Chili BBQ y Nachos Tex-Mex.', 'Combo', 9.35, 1, 3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (4, 'Cremosas croquetas de jamon iberico coronadas con paleta iberica y un toque de salsa mayo-sriracha.', 'Croquetas', 8.55, 1, 3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (5, 'Bacon crujiente y ajetes sobre Mozzarella fundida y una cremosa salsa blanca en base de focaccia.', 'Pizza', 10.50, 1, 4);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (6, 'Aguacate, mango, fresas, queso de cabra, queso feta, tomate cherry, cebolla roja y nueces, rociada con vinagreta de lima y cilantro sobre una base de quinoa y mezcla de lechugas con brotes.', 'Ensalada', 9.35, 1, 5);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (7, 'Costillas de cerdo ahumadas a la parrilla', 'National Star Ribs', 15.99, 2, 2);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (8, 'Carne de vacuno, con queso Cheddar y bacon ahumado, sobre base de lechuga romana, tomate, cebolla y salsa especial FH', 'Directors Choice Version Original', 10.99, 2, 3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (9, 'Pechua de pollo a la parrilla, bacon crujiente, lechuga romana y salsa parmesana en pan con semillas y copos de avena','Caesar', 12.99, 2, 1);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (10, 'Con chorizo junto con nata, salsa pomodoro y bechamel, gratinados con queso parmesano', 'Rigatoni al Forno', 17.00, 3, 4.4);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (11, 'Base de tomate triturado, mozzarela, panceta, cebolla caramelizada, aceitunas negras taggiasca y orégano.', 'Pizza', 13.95, 3, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (12, 'Crujiente milanesa de pechuga de pollo, junto de patatas asados con ajo y romero, y salsa de tomate', 'Carne', 14.99, 3, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (13, 'Delicioso pollo crujiente por fuera y jugoso por dentro, junto de queso gouda, cebolla fresca y salsa buffalo', 'Hamburguesa', 5.99, 4, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (14, 'Queso por encima y entre su doble de pollo crispy, queso en la salsa, queso por dentro y fuera del pan', 'Hamburguesa', 5.99, 5, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (15, '100% Vegetal sabor Big King, con su misma lechuga, pepinillos y cebolla de siempre, rociado en su increible salsa entre dos panes de sésamo crujiente pero vegetal. Sin carne', 'Hamburguesa', 6.99, 5, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (16, 'Suave masa horneada con canela y una espiral de glaseado', 'Roll Canela', 3.99, 15, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (17, 'Napolitana con decilioso chocolate', 'Napolitana', 3.99, 15, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (18, 'Carbonara de crema, queso 100%, mozzarella, bacon y cebolla', 'Pizza', 9.99, 6, 4.3);
+INSERT INTO Plato (id, descripcion, nombre, precio, restaurante_id, valoracion)
+VALUES (19, 'Texas BBQ Crispy con salsa BBQ Texas, queso 100%, mozarrella, bacon crispy, bacon, pollo a la parrilla, carne de vacuno, queso cheddar en el borde', 'Pizza', 3.99, 6, 4.3);
 
 -- TABLA COMENTARIO
-INSERT INTO Comentario (id, texto, user_id, plato_id, restaurante_id)
-VALUES (1, 'Tiene buen sabor', 2, 1, 1);
+INSERT INTO Comentario (id, texto, user_id, plato_id, restaurante_id, valoracion)
+VALUES (1, 'Tiene buen sabor', 2, 1, 1, 4.5);
 -- TABLA PEDIDO
 INSERT INTO Pedido (id, dir_entrega, estado, fecha_pedido, precio_entrega, precio_servicio, cliente_id, repartidor_id, restaurante_id, valoracion,lat,lng)
 VALUES (1,'Calle Falsisima1, 345', 1, CURRENT_TIMESTAMP, 3.54, 6.56, 2, null, 1, 0.0,40.420177,-3.703928);

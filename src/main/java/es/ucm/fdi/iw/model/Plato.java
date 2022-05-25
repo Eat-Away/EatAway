@@ -19,7 +19,7 @@ public class Plato {
     private String descripcion;
     private double precio;
     private String ingredientes;
-
+    private double valoracion; //Debe ser una valoracion media
     @ManyToOne
     private Restaurante restaurante;
 
