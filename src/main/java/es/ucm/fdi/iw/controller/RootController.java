@@ -208,7 +208,6 @@ public class RootController {
          * @param amount La cantidad del producto que el usuario quiere añadir al carrito.
          * @return Una cadena con el nombre de la vista que se representará.
          */
-	    //TODO - Obtener latitud y longitud
 		@Transactional
 		@PostMapping("/addToCart")
 		public String addToCart(Model model, HttpSession session,@RequestParam(value = "extras[]", required = false) long[] extras, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
