@@ -112,11 +112,15 @@ En la vista *user.html* podemos encontrar la información relacionada al usuario
 
 La vista *finRegistro.html* nos sale cuando nos hemos registrado correctamente como nuevo usuario en la aplicación.
 
+## Mejoras Post-Examen
 
+### Participantes
 
+Todos los miembros del grupo hemos participado en las mejoras propuestas
 
+### Mejoras
 
-
-
-
-
+* Arreglos en el addToCart
+* Implementación de WebSockets
+* Mejora del seguimiento de pedidos
+* Mejora de la usabilidad y botón de repetir pedido
