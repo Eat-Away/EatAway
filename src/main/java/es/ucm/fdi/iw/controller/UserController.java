@@ -41,6 +41,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -367,6 +368,68 @@ public class UserController {
 		}
 
 		return "carrito";
+	}
+
+	/**
+     * Crea un nuevo pedido con los mismos datos que el pedido que está repitiendo
+	 * 
+     * @param model El objeto de modelo que se usará para representar la vista.
+     * @param session El objeto de sesión se utiliza para almacenar la información del usuario.
+	 * @param id El id del usuario
+     * @param idPed El id del pedido a procesar.
+     * @return La vista de carrito
+     */
+	@Transactional
+	@PostMapping("/{id}/repitePedido")
+	public String repitePedido(Model model, @PathVariable long id, @RequestParam("idPed") long idPed){
+		Pedido ped = entityManager.find(Pedido.class, idPed);
+		Cliente cliente = entityManager.find(Cliente.class, id);
+		if(cliente.getId() != ped.getCliente().getId()){
+			throw new PermisoDenegadoException();
+		}
+		//ped.setEstado(Estado.PENDIENTE);
+		//model.addAttribute("message", "El pedido se ha procesado correctamente");
+
+        Pedido nuevoPed = new Pedido();
+        nuevoPed.setCliente(ped.getCliente());
+        nuevoPed.setDirEntrega(ped.getDirEntrega());
+        nuevoPed.setEstado(Estado.NO_CONFIRMADO);
+        nuevoPed.setFechaPedido(LocalDateTime.now());
+        nuevoPed.setLat(0.0);
+        nuevoPed.setLng(0.0);
+        nuevoPed.setPrecioEntrega(3.54);
+		nuevoPed.setPrecioServicio(ped.getPrecioServicio());
+        nuevoPed.setRestaurante(ped.getRestaurante());
+		nuevoPed.setValoracion(0.0);
+
+		List<PlatoPedido> platosPedido = new ArrayList<PlatoPedido>();
+		PlatoPedido platoPedido;
+		for(int i = 0; i < ped.getContenidoPedido().size(); i++){
+			PlatoPedido nuevoPlatoPedido = new PlatoPedido();
+			platoPedido = ped.getContenidoPedido().get(i);
+
+			nuevoPlatoPedido.setCantidad(platoPedido.getCantidad());
+			nuevoPlatoPedido.setPlato(platoPedido.getPlato());
+			nuevoPlatoPedido.setPedido(nuevoPed);
+
+			List<Extra> nuevoExtras = new ArrayList<>();
+			Extra nuevoExtra;
+			for(int j = 0; j < platoPedido.getExtras().size(); j++){
+				nuevoExtra = entityManager.find(Extra.class, platoPedido.getExtras().get(j));
+				nuevoExtras.add(nuevoExtra);
+			}
+			nuevoPlatoPedido.setExtras(nuevoExtras);
+			
+			platosPedido.add(nuevoPlatoPedido);
+		}
+        
+		nuevoPed.setContenidoPedido(platosPedido);
+		
+        //Una vez terminado de cargar los datos se persiste el carrito en la BD
+        entityManager.persist(nuevoPed);
+        entityManager.flush();
+
+		return carrito(model, id);
 	}
 
 
