@@ -32,7 +32,6 @@ import javax.servlet.http.HttpSession;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.controller.RootController.PermisoDenegadoException;
 import es.ucm.fdi.iw.model.Extra;
-import es.ucm.fdi.iw.model.Label;
 import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.Restaurador;

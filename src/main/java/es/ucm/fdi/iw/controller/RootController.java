@@ -9,6 +9,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpSession;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.GeocodingResult;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,6 +203,19 @@ public class RootController {
         model.addAttribute("labelOptions",labelOptions);
         return "index";
     }
+
+    private Pedido getCoords(Pedido cart, GeoApiContext geoContext){
+        try{
+            GeocodingResult[] resultado = GeocodingApi.geocode(geoContext, cart.getDirEntrega()).await();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            log.warn(gson.toJson(resultado[0].addressComponents));
+        }catch(Exception ex){
+            log.error("Error obteniendo las coordenadas de la dirección especificada", ex);
+            cart.setLat(40.4527696);
+            cart.setLng(-3.7357);
+        }
+        return cart;
+    }
     
 	    
 		/**
@@ -208,10 +228,9 @@ public class RootController {
          * @param amount La cantidad del producto que el usuario quiere añadir al carrito.
          * @return Una cadena con el nombre de la vista que se representará.
          */
-	    //TODO - Obtener latitud y longitud
 		@Transactional
 		@PostMapping("/addToCart")
-		public String addToCart(Model model, HttpSession session,@RequestParam(value = "extras[]", required = false) long[] extras, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
+		public String addToCart(GeoApiContext geoContext, Model model, HttpSession session,@RequestParam(value = "extras[]", required = false) long[] extras, @RequestParam("id") long id, @RequestParam("cantidad") int amount){
 			User u = (User) session.getAttribute("u");
 			Cliente cliente = entityManager.find(Cliente.class, u.getId());
 			String query = "SELECT X FROM Pedido X WHERE X.cliente="+u.getId()+" AND X.estado=0";
@@ -252,9 +271,8 @@ public class RootController {
 				cart.setDirEntrega(u.getDireccion());
 				cart.setEstado(Estado.NO_CONFIRMADO);
 				cart.setFechaPedido(LocalDateTime.now());
-				cart.setLat(0.0);
-				cart.setLng(0.0);
-				cart.setPrecioEntrega(3.54);
+                cart = getCoords(cart, geoContext); //Obtenemos la latitud y longitud con la API de Google Maps y lo inyectamos en el carrito
+				cart.setPrecioEntrega(3.54); //Precio Fijo de envío
 				//Busca la informacion relativa al plato que se esta agregando y la agrega al carrito
 				Plato plato = entityManager.find(Plato.class, id);
 				cart.setRestaurante(plato.getRestaurante());
