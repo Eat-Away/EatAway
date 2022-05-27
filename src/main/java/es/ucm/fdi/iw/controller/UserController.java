@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -387,48 +388,57 @@ public class UserController {
 		if(cliente.getId() != ped.getCliente().getId()){
 			throw new PermisoDenegadoException();
 		}
-		//ped.setEstado(Estado.PENDIENTE);
-		//model.addAttribute("message", "El pedido se ha procesado correctamente");
-
-        Pedido nuevoPed = new Pedido();
-        nuevoPed.setCliente(ped.getCliente());
-        nuevoPed.setDirEntrega(ped.getDirEntrega());
-        nuevoPed.setEstado(Estado.NO_CONFIRMADO);
-        nuevoPed.setFechaPedido(LocalDateTime.now());
-        nuevoPed.setLat(0.0);
-        nuevoPed.setLng(0.0);
-        nuevoPed.setPrecioEntrega(3.54);
-		nuevoPed.setPrecioServicio(ped.getPrecioServicio());
-        nuevoPed.setRestaurante(ped.getRestaurante());
-		nuevoPed.setValoracion(0.0);
-
-		List<PlatoPedido> platosPedido = new ArrayList<PlatoPedido>();
-		PlatoPedido platoPedido;
-		for(int i = 0; i < ped.getContenidoPedido().size(); i++){
-			PlatoPedido nuevoPlatoPedido = new PlatoPedido();
-			platoPedido = ped.getContenidoPedido().get(i);
-
-			nuevoPlatoPedido.setCantidad(platoPedido.getCantidad());
-			nuevoPlatoPedido.setPlato(platoPedido.getPlato());
-			nuevoPlatoPedido.setPedido(nuevoPed);
-
-			List<Extra> nuevoExtras = new ArrayList<>();
-			Extra nuevoExtra;
-			for(int j = 0; j < platoPedido.getExtras().size(); j++){
-				nuevoExtra = entityManager.find(Extra.class, platoPedido.getExtras().get(j));
-				nuevoExtras.add(nuevoExtra);
-			}
-			nuevoPlatoPedido.setExtras(nuevoExtras);
-			
-			platosPedido.add(nuevoPlatoPedido);
-		}
-        
-		nuevoPed.setContenidoPedido(platosPedido);
 		
-        //Una vez terminado de cargar los datos se persiste el carrito en la BD
-        entityManager.persist(nuevoPed);
-        entityManager.flush();
-
+		//Si tenia un carrito anteriormente lo elimina de la BD
+		String query = "SELECT X FROM Pedido X WHERE X.cliente="+cliente.getId()+" AND X.estado=0";
+		try{
+			Pedido previo = entityManager.createQuery(query, Pedido.class).getSingleResult();
+			entityManager.remove(previo);
+			entityManager.flush();
+		}catch(NoResultException ex){
+			log.info("No habia un carrito anteriormente para el usuario, no se ha purgado nada");
+		}finally{
+			//Una vez vaciado su carrito se llena con los productos del pedido anterior
+			Pedido nuevoPed = new Pedido();
+			nuevoPed.setCliente(ped.getCliente());
+			nuevoPed.setDirEntrega(ped.getDirEntrega());
+			nuevoPed.setEstado(Estado.NO_CONFIRMADO);
+			nuevoPed.setFechaPedido(LocalDateTime.now());
+			nuevoPed.setLat(0.0);
+			nuevoPed.setLng(0.0);
+			nuevoPed.setPrecioEntrega(3.54);
+			nuevoPed.setRestaurante(ped.getRestaurante());
+			nuevoPed.setValoracion(0.0);
+	
+			List<PlatoPedido> platosPedido = new ArrayList<PlatoPedido>();
+			PlatoPedido platoPedido;
+			for(int i = 0; i < ped.getContenidoPedido().size(); i++){
+				PlatoPedido nuevoPlatoPedido = new PlatoPedido();
+				platoPedido = ped.getContenidoPedido().get(i);
+	
+				nuevoPlatoPedido.setCantidad(platoPedido.getCantidad());
+				nuevoPlatoPedido.setPlato(platoPedido.getPlato());
+				nuevoPlatoPedido.setPedido(nuevoPed);
+				nuevoPed.setPrecioServicio(nuevoPed.getPrecioServicio() + ( platoPedido.getPlato().getPrecio() * platoPedido.getCantidad() ));
+	
+				List<Extra> nuevoExtras = new ArrayList<>();
+				Extra nuevoExtra;
+				for(int j = 0; j < platoPedido.getExtras().size(); j++){
+					nuevoExtra = entityManager.find(Extra.class, platoPedido.getExtras().get(j).getId());
+					nuevoExtras.add(nuevoExtra);
+					nuevoPed.setPrecioServicio(nuevoPed.getPrecioServicio() + nuevoExtra.getPrecio());
+				}
+				nuevoPlatoPedido.setExtras(nuevoExtras);
+				
+				platosPedido.add(nuevoPlatoPedido);
+			}
+			
+			nuevoPed.setContenidoPedido(platosPedido);
+			
+			//Una vez terminado de cargar los datos se persiste el carrito en la BD
+			entityManager.persist(nuevoPed);
+			entityManager.flush();	
+		}
 		return carrito(model, id);
 	}
 

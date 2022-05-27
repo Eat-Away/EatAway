@@ -123,4 +123,4 @@ Todos los miembros del grupo hemos participado en las mejoras propuestas
 * Arreglos en el addToCart
 * Implementación de WebSockets
 * Mejora del seguimiento de pedidos
-* Mejora de la usabilidad y botón de repetir pedido
+* Mejora de la usabilidad y botón de repetir pedido: Para esta mejora en el front-end de la página hemos añadido en el perfil del cliente un botón nuevo para cada pedido que haya hecho anteriormente en el que se puede repetir el pedido, de modo que lo que hará será limpiar su carrito actual (si tenía uno), buscar el pedido hecho anteriormente, y hacer una copia del contenido de ese pedido, asegurandose de tener los precios correctos, y redirigiendole a la ventana donde podrá confirmar su información y procesar el pedido
