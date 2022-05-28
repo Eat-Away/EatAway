@@ -1,9 +1,6 @@
 package es.ucm.fdi.iw;
 
 import java.io.File;
-
-import com.google.maps.GeoApiContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,14 +30,6 @@ public class AppConfig {
     public LocalData getLocalData() {
     	return new LocalData(new File(env.getProperty("es.ucm.fdi.base-path")));
     } 
-    
-	@Bean(name="geoConfig")
-	public GeoApiContext getGeoContext(){
-		return new GeoApiContext.Builder()
-		.apiKey("AIzaSyBQZw6dluYpanrSVjTBrFY2I-WVhGAxSY0")
-		.build();
-	}
-
 
 	/**
 	 * Declares a MessageSource Spring bean.

@@ -4,7 +4,7 @@ VALUES (1, 'ADMIN', TRUE, 'ADMIN,USER', 'a',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password, direccion,first_name,last_name)
 VALUES (2, 'CLIENTE', TRUE, 'USER', 'b',
-    '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W', 'C/ de las Moscas, 5, 8ºF','Alberto','Ferichola');
+    '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W', 'Av de la Hispanidad, s/n','Alberto','Ferichola');
 INSERT INTO IWUser (id, disc_rol, enabled, roles, username, password)
 VALUES (3, 'REPARTIDOR', TRUE, 'REPARTIDOR,USER', 'repartidor',
     '{bcrypt}$2a$10$2BpNTbrsarbHjNsUWgzfNubJqBRf.0Vz9924nRSHBqlbPKerkgX.W');

@@ -39,6 +39,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.GeocodingResult;
+
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -371,6 +377,36 @@ public class UserController {
 		return "carrito";
 	}
 
+    /**
+     * Toma un objeto Pedido, obtiene la dirección de él y luego usa la API de Google Maps para obtener la
+     * latitud y longitud de esa dirección.
+     * 
+     * @param cart El objeto del carrito que vamos a actualizar con las coordenadas.
+     * @return Un objeto de Pedido con las coordenadas de la dirección.
+     */
+    private Pedido getCoords(Pedido cart){
+        GeoApiContext geoContext = new GeoApiContext.Builder()
+		.apiKey("AIzaSyA6OCoRWbqZwfRgHV6z9b4C36fB252sEvI")
+		.build();
+        try{
+            log.debug("Buscando coordenadas de la direccion: " + cart.getDirEntrega());
+            GeocodingResult[] resultado = GeocodingApi.geocode(geoContext, cart.getDirEntrega()).await();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            log.debug(gson.toJson(resultado));
+            double lat = resultado[0].geometry.location.lat;
+            double lng = resultado[0].geometry.location.lng;
+            cart.setLat(lat);
+            cart.setLng(lng);
+            log.warn(gson.toJson(resultado[0].geometry.location));
+        }catch(Exception ex){
+            log.error("Error obteniendo las coordenadas de la dirección especificada", ex);
+            cart.setLat(40.4527696);
+            cart.setLng(-3.7357);
+        }
+        return cart;
+    }
+
+
 	/**
      * Crea un nuevo pedido con los mismos datos que el pedido que está repitiendo
 	 * 
@@ -404,8 +440,7 @@ public class UserController {
 			nuevoPed.setDirEntrega(ped.getDirEntrega());
 			nuevoPed.setEstado(Estado.NO_CONFIRMADO);
 			nuevoPed.setFechaPedido(LocalDateTime.now());
-			nuevoPed.setLat(0.0);
-			nuevoPed.setLng(0.0);
+			nuevoPed = getCoords(nuevoPed); //Obtenemos la latitud y longitud con la API de Google Maps y lo inyectamos en el carrito
 			nuevoPed.setPrecioEntrega(3.54);
 			nuevoPed.setRestaurante(ped.getRestaurante());
 			nuevoPed.setValoracion(0.0);
