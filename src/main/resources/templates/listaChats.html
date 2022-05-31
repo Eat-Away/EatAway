@@ -22,6 +22,9 @@
                 <th scope="col">REPARTIDOR</th>
                 <th scope="col">RESTAURANTE</th>
                 <th scope="col">DIR RESTAURANTE</th>
+                <th scope="col">FECHA PEDIDO</th>
+                <th scope="col">FECHA DE CADUCIDAD</th>
+                <th scope="col">TIEMPO RESTANTE</th>
               </tr>
             </thead>
             <tbody>
@@ -30,6 +33,7 @@
                 <td th:text=${x.repartidor.id}></td>
                 <td th:text=${x.restaurante.nombre}></td>
                 <td th:text=${x.restaurante.direccion}></td>
+                <td th:text=${x.fechaPedido}></td>
                 <td>
                     <form th:action="@{/user/} + ${user.id}+ @{/chat/} + ${x.id}" method="GET">
                         <button type="submit" class="btn btn-success">HABLAR</button></td>
@@ -54,6 +58,9 @@
                 <th scope="col">ESTADO</th>
                 <th scope="col">RESTAURANTE</th>
                 <th scope="col">DIR RESTAURANTE</th>
+                <th scope="col">FECHA PEDIDO</th>
+                <th scope="col">FECHA DE CADUCIDAD</th>
+                <th scope="col">TIEMPO RESTANTE</th>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +74,7 @@
                 </th:block>
                 <td th:text=${x.restaurante.nombre}></td>
                 <td th:text=${x.restaurante.direccion}></td>
+                <td th:text=${x.fechaPedido}></td>
                 <td><button type="submit" class="btn btn-success" disabled>HABLAR</button></td>
               </tr>
           </table>
