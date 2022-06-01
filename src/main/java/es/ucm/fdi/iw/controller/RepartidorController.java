@@ -1,6 +1,8 @@
 package es.ucm.fdi.iw.controller;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.EntityManager;
@@ -186,6 +188,21 @@ public class RepartidorController {
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
 			model.addAttribute("pedidos", pedidos);
 			model.addAttribute("idRepartidor",idRepartidor);
+			//Obtiene la lista de pedidos que vayan a caducar
+			List<String> caducidad = new ArrayList<String>();
+			List<String> fechaPedido = new ArrayList<String>();
+			Iterator<Pedido> pedIterator = pedidos.iterator();
+			while(pedIterator.hasNext()){
+				Pedido p = pedIterator.next();
+				caducidad.add(p.getFechaPedido().plusMinutes(30).toString());
+				fechaPedido.add(p.getFechaPedido().toString());
+			}	
+			model.addAttribute("caducidad", pedidos);
+			model.addAttribute("fechaPedido",idRepartidor);
+			
+			
+			
+			
 			return "listaPedidos";
 		}
 	}

@@ -39,8 +39,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:each="x : ${pedidos}">
+              <tr th:each="x, data: ${pedidos}">
                 <th scope="row" th:text=${x.id}></th>
+                <th scope="row" th:text=${fechaPedido[data.index]}></th>
+                <th scope="row" th:text="${caducidad[data.index]}"></th>
                 <td th:text=${x.cliente.firstName}></td>
                 <td th:text=${x.restaurante.nombre}></td>
                 <!-- <td th:text=${x.firstName}></td>

@@ -51,6 +51,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -146,9 +147,11 @@ public class UserController {
 		if(target.getPedidos().size() != 0){
 			String query = "SELECT X FROM Pedido X WHERE X.cliente =" +id +" AND X.estado = 4";
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
-			List<LocalDateTime> fechaCaducidad = new ArrayList<>();
-			for(int i = 0; i < pedidos.size(); i++){
-				fechaCaducidad.add(pedidos.get(i).getFechaPedido().plusMinutes(30));
+			List<String> fechaCaducidad = new ArrayList<>();
+			Iterator<Pedido> pedIterator = pedidos.iterator();
+			while(pedIterator.hasNext()){
+				Pedido p = pedIterator.next();
+				fechaCaducidad.add(p.getFechaPedido().plusMinutes(30).toString());
 			}
 			query = "SELECT X FROM Pedido X WHERE X.estado < 4 AND X.estado > 0";
 			List<Pedido> pedidosEspera = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();

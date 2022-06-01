@@ -28,13 +28,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:each="x : ${pedidos}">
+              <tr th:each="data, x : ${pedidos}">
                 <th scope="row" th:text=${x.id}></th>
                 <td th:text=${x.repartidor.id}></td>
                 <td th:text=${x.restaurante.nombre}></td>
                 <td th:text=${x.restaurante.direccion}></td>
                 <td th:text=${x.fechaPedido}></td>
-                <td>
+                <td th:text=${fechaCaducidad[data.index]}></td>
+                
                     <form th:action="@{/user/} + ${user.id}+ @{/chat/} + ${x.id}" method="GET">
                         <button type="submit" class="btn btn-success">HABLAR</button></td>
                       </form>
@@ -64,7 +65,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:each="x : ${pedidosEspera}">
+              <tr th:each="data, x : ${pedidosEspera}">
                 <th scope="row" th:text=${x.id}></th>
                 <th:block th:switch="${x.estado}">
                   <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}" scope="col" class="text-secondary">Pendiente</td>
@@ -75,6 +76,7 @@
                 <td th:text=${x.restaurante.nombre}></td>
                 <td th:text=${x.restaurante.direccion}></td>
                 <td th:text=${x.fechaPedido}></td>
+                <td th:text=${fechaCaducidad[data.index]}></td>
                 <td><button type="submit" class="btn btn-success" disabled>HABLAR</button></td>
               </tr>
           </table>
