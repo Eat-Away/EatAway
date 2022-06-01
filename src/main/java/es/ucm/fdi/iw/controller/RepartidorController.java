@@ -1,6 +1,7 @@
 package es.ucm.fdi.iw.controller;
 
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -188,21 +189,17 @@ public class RepartidorController {
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
 			model.addAttribute("pedidos", pedidos);
 			model.addAttribute("idRepartidor",idRepartidor);
-			//Obtiene la lista de pedidos que vayan a caducar
-			List<String> caducidad = new ArrayList<String>();
-			List<String> fechaPedido = new ArrayList<String>();
+			//Obtiene la lista de pedidos que esten a punto de caducar
+			List<String> caducidad = new ArrayList<>();
+			List<String> fechaPedido = new ArrayList<>();
 			Iterator<Pedido> pedIterator = pedidos.iterator();
 			while(pedIterator.hasNext()){
 				Pedido p = pedIterator.next();
-				caducidad.add(p.getFechaPedido().plusMinutes(30).toString());
-				fechaPedido.add(p.getFechaPedido().toString());
-			}	
-			model.addAttribute("caducidad", pedidos);
-			model.addAttribute("fechaPedido",idRepartidor);
-			
-			
-			
-			
+				caducidad.add(p.getFechaPedido().plusMinutes(30).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
+				fechaPedido.add(p.getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
+			}
+			model.addAttribute("caducidad", caducidad);
+			model.addAttribute("fechaPedido", fechaPedido);
 			return "listaPedidos";
 		}
 	}

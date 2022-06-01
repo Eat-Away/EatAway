@@ -15,7 +15,7 @@
       <div class="row">
         <!-- Pedidos-->
         <div class="col">
-          <table class="table table-hover">
+          <table class="table table-hover" th:if="${!(#lists.isEmpty(pedidos))}">
             <thead class="table-success">
               <tr>
                 <th scope="col">PEDIDO</th>
@@ -24,18 +24,18 @@
                 <th scope="col">DIR RESTAURANTE</th>
                 <th scope="col">FECHA PEDIDO</th>
                 <th scope="col">FECHA DE CADUCIDAD</th>
-                <th scope="col">TIEMPO RESTANTE</th>
+                <th scope="col">ACCIONES</th>
               </tr>
             </thead>
             <tbody>
-              <tr th:each="data, x : ${pedidos}">
+              <tr th:each="x, data : ${pedidos}">
                 <th scope="row" th:text=${x.id}></th>
                 <td th:text=${x.repartidor.id}></td>
                 <td th:text=${x.restaurante.nombre}></td>
                 <td th:text=${x.restaurante.direccion}></td>
-                <td th:text=${x.fechaPedido}></td>
-                <td th:text=${fechaCaducidad[data.index]}></td>
-                
+                <td th:text=${fechaPedido[data.index]}></td>
+                <td th:text=${caducidad[data.index]}></td>
+                <td>
                     <form th:action="@{/user/} + ${user.id}+ @{/chat/} + ${x.id}" method="GET">
                         <button type="submit" class="btn btn-success">HABLAR</button></td>
                       </form>
@@ -52,7 +52,7 @@
       <div class="row">
         <!-- Pedidos-->
         <div class="col">
-          <table class="table table-hover">
+          <table class="table table-hover" th:if="${!(#lists.isEmpty(pedidosEspera))}">
             <thead class="table-success">
               <tr>
                 <th scope="col">PEDIDO</th>
@@ -61,11 +61,11 @@
                 <th scope="col">DIR RESTAURANTE</th>
                 <th scope="col">FECHA PEDIDO</th>
                 <th scope="col">FECHA DE CADUCIDAD</th>
-                <th scope="col">TIEMPO RESTANTE</th>
+                <th scope="col">ACCIONES</th>
               </tr>
             </thead>
             <tbody>
-              <tr th:each="data, x : ${pedidosEspera}">
+              <tr th:each="x, data : ${pedidosEspera}">
                 <th scope="row" th:text=${x.id}></th>
                 <th:block th:switch="${x.estado}">
                   <td th:case="${T(es.ucm.fdi.iw.model.Pedido.Estado).PENDIENTE}" scope="col" class="text-secondary">Pendiente</td>
@@ -75,8 +75,8 @@
                 </th:block>
                 <td th:text=${x.restaurante.nombre}></td>
                 <td th:text=${x.restaurante.direccion}></td>
-                <td th:text=${x.fechaPedido}></td>
-                <td th:text=${fechaCaducidad[data.index]}></td>
+                <td th:text=${fechaPedidoEspera[data.index]}></td>
+                <td th:text=${caducidadEspera[data.index]}></td>
                 <td><button type="submit" class="btn btn-success" disabled>HABLAR</button></td>
               </tr>
           </table>
@@ -88,5 +88,4 @@
   <th:block th:replace="fragments/footer.html :: footer" />
 
 </body>
-
 </html>

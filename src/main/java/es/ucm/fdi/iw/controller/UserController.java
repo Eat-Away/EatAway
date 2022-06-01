@@ -44,11 +44,10 @@ import com.google.gson.GsonBuilder;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
-
 import java.io.*;
 import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
@@ -147,17 +146,32 @@ public class UserController {
 		if(target.getPedidos().size() != 0){
 			String query = "SELECT X FROM Pedido X WHERE X.cliente =" +id +" AND X.estado = 4";
 			List<Pedido> pedidos = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
-			List<String> fechaCaducidad = new ArrayList<>();
+			query = "SELECT X FROM Pedido X WHERE X.estado < 4 AND X.estado > 0 AND X.cliente ="+id;
+			List<Pedido> pedidosEspera = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
+			//Obtiene la lista de pedidos que esten a punto de caducar
+			List<String> caducidad = new ArrayList<>();
+			List<String> fechaPedido = new ArrayList<>();
 			Iterator<Pedido> pedIterator = pedidos.iterator();
 			while(pedIterator.hasNext()){
 				Pedido p = pedIterator.next();
-				fechaCaducidad.add(p.getFechaPedido().plusMinutes(30).toString());
+				caducidad.add(p.getFechaPedido().plusMinutes(30).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
+				fechaPedido.add(p.getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
 			}
-			query = "SELECT X FROM Pedido X WHERE X.estado < 4 AND X.estado > 0";
-			List<Pedido> pedidosEspera = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
+			//Obtiene la lista de pedidos que esten a punto de caducar en espera
+			List<String> caducidadEspera = new ArrayList<>();
+			List<String> fechaPedidoEspera = new ArrayList<>();
+			Iterator<Pedido> pedIteratorEsp = pedidosEspera.iterator();
+			while(pedIteratorEsp.hasNext()){
+				Pedido p = pedIteratorEsp.next();
+				caducidadEspera.add(p.getFechaPedido().plusMinutes(30).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
+				fechaPedidoEspera.add(p.getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
+			}
+			model.addAttribute("caducidad", caducidad);
+			model.addAttribute("fechaPedido", fechaPedido);
+			model.addAttribute("caducidadEspera", caducidadEspera);
+			model.addAttribute("fechaPedidoEspera", fechaPedidoEspera);
 			model.addAttribute("pedidosEspera", pedidosEspera);
 			model.addAttribute("pedidos", pedidos);
-			model.addAttribute("fechaCaducidad", fechaCaducidad);
 		}
 		return "listaChats";
 	}

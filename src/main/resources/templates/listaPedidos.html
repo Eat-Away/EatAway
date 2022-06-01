@@ -31,6 +31,8 @@
             <thead class="table-success">
               <tr>
                 <th scope="col">PEDIDO</th>
+                <th scope="col">FECHA</th>
+                <th scope="col">CADUCIDAD</th>
                 <th scope="col">CLIENTE</th>
                 <th scope="col">RESTAURANTE</th>
                 <!-- <th scope="col">TIEMPO RESTANTE</th> -->
@@ -39,10 +41,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:each="x, data: ${pedidos}">
+              <tr th:each="x, attrs : ${pedidos}">
                 <th scope="row" th:text=${x.id}></th>
-                <th scope="row" th:text=${fechaPedido[data.index]}></th>
-                <th scope="row" th:text="${caducidad[data.index]}"></th>
+                <th scope="row" th:text=${fechaPedido[attrs.index]}></th>
+                <th scope="row" th:text="${caducidad[attrs.index]}"></th>
                 <td th:text=${x.cliente.firstName}></td>
                 <td th:text=${x.restaurante.nombre}></td>
                 <!-- <td th:text=${x.firstName}></td>
