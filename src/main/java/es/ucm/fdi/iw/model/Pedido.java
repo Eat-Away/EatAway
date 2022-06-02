@@ -1,12 +1,15 @@
 package es.ucm.fdi.iw.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * Información de un pedido
@@ -14,7 +17,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name="Pedido")
-public class Pedido {
+public class Pedido implements Transferable<Pedido.Transfer>{
 
     public enum Estado{
         NO_CONFIRMADO,  // -> 0
@@ -48,4 +51,29 @@ public class Pedido {
 
     private double lat;
     private double lng;
+    @Getter
+    @AllArgsConstructor
+    public static class Transfer{
+        private long id;
+        private String dir;
+        private String stat;
+        private double precio;
+        private String fecha;
+        private String cliente;
+        //TODO: Añadir los productos
+        public Transfer(Pedido p){
+            this.id = p.getId();
+            this.dir = p.getDirEntrega();
+            this.stat = p.getEstado().toString();
+            this.precio =  p.getPrecioEntrega() + p.getPrecioServicio();
+            this.fecha = p.getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            this.cliente = p.getCliente().getFirstName() + " " + p.getCliente().getLastName();
+        }
+    }
+
+    @Override
+    public Transfer toTransfer(){
+        return new Transfer(getId(), getDirEntrega(), getEstado().toString(), getPrecioEntrega() + getPrecioServicio(), getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), getCliente().getFirstName() + " " + getCliente().getLastName());
+    }
+
 }

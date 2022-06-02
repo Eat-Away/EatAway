@@ -50,10 +50,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *  User management.
@@ -524,7 +528,16 @@ public class UserController {
 		User u = entityManager.find(User.class, userId);
 		log.info("Generating message list for user {} ({} messages)", 
 				u.getUsername(), u.getReceived().size());
-		return  u.getReceived().stream().map(Transferable::toTransfer).collect(Collectors.toList());
+		//Obtiene los mensajes enviados y recibidos por el usuario
+		List<Message> mensajes = new ArrayList<>();
+		mensajes = Stream.concat(u.getReceived().stream(), u.getSent().stream()).collect(Collectors.toList());
+		Collections.sort(mensajes, new Comparator<Message>(){
+			@Override
+			public int compare(Message a, Message b){
+				return a.getDateSent().compareTo(b.getDateSent());
+			}
+		});
+		return  mensajes.stream().map(Transferable::toTransfer).collect(Collectors.toList());
 	}	
 	
 	/**
@@ -569,15 +582,19 @@ public class UserController {
 		entityManager.persist(m);
 		entityManager.flush(); // to get Id before commit
 		
-		// construye json
 		ObjectMapper mapper = new ObjectMapper();
+		/*
+		// construye json: método manual
 		ObjectNode rootNode = mapper.createObjectNode();
 		rootNode.put("from", sender.getUsername());
 		rootNode.put("to", u.getUsername());
 		rootNode.put("text", text);
 		rootNode.put("id", m.getId());
 		String json = mapper.writeValueAsString(rootNode);
-		
+		*/
+		// persiste objeto a json usando Jackson
+		String json = mapper.writeValueAsString(m.toTransfer());
+
 		log.info("Sending a message to {} with contents '{}'", id, json);
 
 		messagingTemplate.convertAndSend("/user/"+u.getUsername()+"/queue/updates", json);

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpSession;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import es.ucm.fdi.iw.LocalData;
@@ -38,6 +41,7 @@ import es.ucm.fdi.iw.model.Pedido;
 import es.ucm.fdi.iw.model.Plato;
 import es.ucm.fdi.iw.model.PlatoPedido;
 import es.ucm.fdi.iw.model.Restaurante;
+import es.ucm.fdi.iw.model.Transferable;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.Pedido.Estado;
 
@@ -317,4 +321,15 @@ public class RootController {
             model.addAttribute("message", "Se ha añadido el producto al carrito");
 			return platos(model, id);
 		 }
+    
+
+    @GetMapping(path = "pedidos", produces = "application/json")
+    @Transactional
+    @ResponseBody
+    public List<Pedido.Transfer> obtienePedidos(HttpSession session, @RequestParam("id") long id){
+        Restaurante r = entityManager.find(Restaurante.class, id);
+        String query = "SELECT X FROM Pedido X WHERE X.estado >= 1 AND X.estado <= 4 AND X.restaurante.id ="+r.getId();
+        List<Pedido> p = (List<Pedido>) entityManager.createQuery(query, Pedido.class).getResultList();
+        return p.stream().map(Transferable::toTransfer).collect(Collectors.toList());
+    }
 }

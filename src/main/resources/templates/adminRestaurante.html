@@ -157,8 +157,8 @@
             </div>
             <div class="container">
                 <h2 class="text-center" th:text="|Pedidos activos para ${restaurante.nombre}|"></h2>
-                <p th:if="${#lists.isEmpty(pedidos)}">Este restaurante no tiene pedidos pendientes</p>
-                <table class="table" th:if="${!(#lists.isEmpty(pedidos))}">
+                <p th:if="${#lists.isEmpty(pedidos)}" id="pedidosEmpty">Este restaurante no tiene pedidos pendientes</p>
+                <table class="table" th:if="${!(#lists.isEmpty(pedidos))}" id="pedidosTabla">
                     <thead>
                         <th scope="col">ID</th>
                         <th scope="col">Estado</th>
@@ -169,7 +169,7 @@
                         <th scope="col">Productos</th>
                         <th scope="col">Cambiar estado a</th>
                     </thead>
-                    <tbody>
+                    <tbody id="pedidos">
                         <tr th:each="ped: ${pedidos}">
                             <th th:text="${ped.id}" scope="row"></th>
                             <th:block th:switch="${ped.estado}">
@@ -260,7 +260,6 @@
                                     </form>
                                 </td>
                             </th:block>
-                            
                         </tr>
                     </tbody>
                 </table>
@@ -268,37 +267,10 @@
         </div>
         
         <th:block th:replace="fragments/footer.html :: footer" />
-        
-        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
         <script>
-/* 
-            function updateImage(logoDivId){
-                let logoDiv = document.getElementById(logoDivId).parentElement;
-                let restaurantId = logoDivId.replaceAll("Logo", "");
-                
-                let fileSelector = document.createElement('input');
-                fileSelector.setAttribute('type', 'file');
-                fileSelector.setAttribute('hidden', 'true');
-
-                logoDiv.appendChild(fileSelector);
-
-                fileSelector.click();
-    
-                fileSelector.onchange = e =>{
-                    let img = document.getElementById(logoDivId + "Edit");
-                    console.log(img.src);
-                    readImageFileData(fileSelector.files[0], img);
-
-                    let url = config.rootUrl + "/restaurante/rimg/" + restaurantId;
-                    console.log(img.src);
-                    postImage(img, url, "photo").then(() => {
-                        let cacheBuster = "?" + new Date().getTime();
-                        img.src = url + cacheBuster;
-                    });
-                }
-            }
-
- */
+            console.log(window.location.search.substring(1));
         </script>
+        <script th:src="@{/js/confirmaEliminar.js}" src="js/confirmaEliminar.js"></script>
+        <script src="js/pedidos.js"></script>
     </body>
 </html>
