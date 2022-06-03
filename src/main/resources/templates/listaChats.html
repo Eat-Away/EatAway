@@ -24,6 +24,8 @@
                 <th scope="col">DIR RESTAURANTE</th>
                 <th scope="col">FECHA PEDIDO</th>
                 <th scope="col">FECHA DE CADUCIDAD</th>
+                <th scope="col">TIEMPO </th>
+                <th scope="col">RESTANTE </th>
                 <th scope="col">ACCIONES</th>
               </tr>
             </thead>
@@ -35,6 +37,8 @@
                 <td th:text=${x.restaurante.direccion}></td>
                 <td th:text=${fechaPedido[data.index]}></td>
                 <td th:text=${caducidad[data.index]}></td>
+                <td th:id="minutos" th:text=${timerM[data.index]}></td>
+                <td th:id="segundos" th:text= ${timerS[data.index]}></td>
                 <td>
                     <form th:action="@{/user/} + ${user.id}+ @{/chat/} + ${x.id}" method="GET">
                         <button type="submit" class="btn btn-success">HABLAR</button></td>
@@ -89,3 +93,4 @@
 
 </body>
 </html>
+<script src="/js/countdown.js"></script>

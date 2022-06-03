@@ -154,12 +154,42 @@ public class UserController {
 			List<Pedido> pedidosEspera = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
 			//Obtiene la lista de pedidos que esten a punto de caducar
 			List<String> caducidad = new ArrayList<>();
+			List<Integer> timerM = new ArrayList<>();
+			List<Integer> timerS = new ArrayList<>();
 			List<String> fechaPedido = new ArrayList<>();
 			Iterator<Pedido> pedIterator = pedidos.iterator();
 			while(pedIterator.hasNext()){
 				Pedido p = pedIterator.next();
 				caducidad.add(p.getFechaPedido().plusMinutes(30).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
 				fechaPedido.add(p.getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
+				LocalDateTime y = p.getFechaPedido().plusMinutes(30);
+				LocalDateTime x = LocalDateTime.now();
+				int min;
+				int sec;
+				int hora;
+				if(y.getSecond() >= x.getSecond()){
+					sec = y.getSecond() - x.getSecond();
+					if(y.getMinute() >= x.getMinute()){
+						min = y.getMinute() - x.getMinute();
+					}
+					else{
+						hora = y.getHour() - x.getHour() - 1;
+						min = y.getMinute() - x.getMinute() + 60 - 1;
+					}
+				}
+				else{
+					if(y.getMinute() >= x.getMinute()){
+						min = y.getMinute() - x.getMinute() - 1;
+						sec = 60 + y.getSecond() - x.getSecond();
+					}
+					else{
+						hora = y.getHour() - x.getHour() - 1;
+						min = y.getMinute() - x.getMinute() + 60 - 1;
+						sec = 60 + y.getSecond() - x.getSecond();
+					}
+				}
+				timerM.add(min);
+				timerS.add(sec);
 			}
 			//Obtiene la lista de pedidos que esten a punto de caducar en espera
 			List<String> caducidadEspera = new ArrayList<>();
@@ -171,6 +201,8 @@ public class UserController {
 				fechaPedidoEspera.add(p.getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).toString());
 			}
 			model.addAttribute("caducidad", caducidad);
+			model.addAttribute("timerM",timerM);
+			model.addAttribute("timerS",timerS);
 			model.addAttribute("fechaPedido", fechaPedido);
 			model.addAttribute("caducidadEspera", caducidadEspera);
 			model.addAttribute("fechaPedidoEspera", fechaPedidoEspera);
