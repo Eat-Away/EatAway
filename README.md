@@ -116,11 +116,11 @@ La vista *finRegistro.html* nos sale cuando nos hemos registrado correctamente c
 
 ### Participantes
 
-Para la implementación de las mejoras propuestas han participado María de Lluc Bonet Seguí, Carmen Gloria Jaén Campos, y Camilo Andres D'isidoro
+Para la implementación de las mejoras propuestas han participado María de Lluc Bonet Seguí, Carmen Gloria Jaén Campos, Camilo Andres D'isidoro y Víctor Moreno Pérez.
 
 ### Mejoras
 
 * Arreglos en el addToCart: Relativo al cálculo correcto del precio, se tiene establecida una tarifa fija de envío de la comida (3.54€), y luego dentro de los controladores se calcula el precio del servicio como el coste de todos los productos ordenados. Y para la obtención de coordenadas se ha utilizado la API Geocoding de Google Maps para obtener coordenadas reales de la dirección del cliente, y en caso de que no se obtengan coordenadas se usará en su lugar las coordenadas de la Facultad de Informática
 * Implementación de WebSockets: Se han implementado que en el chat entre el cliente y el repartidor se pueda establecer una conversación actualizando la lista de mensajes del chat utilizando websockets cada vez que se envía/recibe un mensaje. También se ha intentado hacer que se actualicen en tiempo real el estado de los pedidos, pero no ha sido posible terminar la implementación
-* Mejora del seguimiento de pedidos: Se ha implementado que se pueda ver en la lista de pedidos del usuario y del repartidor la fecha y hora en la que el pedido fue realizado y en la fecha que caduca. No ha sido posible implementar el temporizador para cada pedido de cuanto tiempo queda antes de que caduque
+* Mejora del seguimiento de pedidos: Se ha implementado que se pueda ver en la lista de pedidos del usuario y del repartidor la fecha y hora en la que el pedido fue realizado y en la fecha que caduca. Además se ha añadido un temporizador de cuánto tiempo le queda para caducar al pedido.
 * Mejora de la usabilidad y botón de repetir pedido: Para esta mejora en el front-end de la página hemos añadido en el perfil del cliente un botón nuevo para cada pedido que haya hecho anteriormente en el que se puede repetir el pedido, de modo que lo que hará será limpiar su carrito actual (si tenía uno), buscar el pedido hecho anteriormente, y hacer una copia del contenido de ese pedido, asegurandose de tener los precios correctos, y redirigiendole a la ventana donde podrá confirmar su información y procesar el pedido
