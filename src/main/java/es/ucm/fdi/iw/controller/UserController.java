@@ -167,14 +167,22 @@ public class UserController {
 				int min;
 				int sec;
 				int hora;
+				int dia;
 				if(y.getSecond() >= x.getSecond()){
 					sec = y.getSecond() - x.getSecond();
 					if(y.getMinute() >= x.getMinute()){
 						min = y.getMinute() - x.getMinute();
 					}
 					else{
-						hora = y.getHour() - x.getHour() - 1;
-						min = y.getMinute() - x.getMinute() + 60 - 1;
+						if(y.getHour() >= x.getHour()){
+							hora = y.getHour() - x.getHour() - 1;
+							min = y.getMinute() - x.getMinute() + 60 - 1;
+						}
+						else{
+							dia = y.getDayOfYear() - x.getDayOfYear() - 1;
+							hora = y.getHour() - x.getHour() + 24 - 1;
+							min = y.getMinute() - x.getMinute() + 60 - 1;
+						}
 					}
 				}
 				else{
@@ -183,9 +191,17 @@ public class UserController {
 						sec = 60 + y.getSecond() - x.getSecond();
 					}
 					else{
-						hora = y.getHour() - x.getHour() - 1;
-						min = y.getMinute() - x.getMinute() + 60 - 1;
-						sec = 60 + y.getSecond() - x.getSecond();
+						if(y.getHour() >= x.getHour()){
+							hora = y.getHour() - x.getHour() - 1;
+							min = y.getMinute() - x.getMinute() + 60 - 1;
+							sec = 60 + y.getSecond() - x.getSecond();
+						}
+						else{
+							dia = y.getDayOfYear() - x.getDayOfYear() - 1;
+							hora = y.getHour() - x.getHour() + 24 - 1;
+							min = y.getMinute() - x.getMinute() + 60 - 1;
+							sec = 60 + y.getSecond() - x.getSecond();
+						}
 					}
 				}
 				timerM.add(min);
