@@ -154,8 +154,6 @@ public class UserController {
 			List<Pedido> pedidosEspera = (List<Pedido>)entityManager.createQuery(query, Pedido.class).getResultList();
 			//Obtiene la lista de pedidos que esten a punto de caducar
 			List<String> caducidad = new ArrayList<>();
-			List<Integer> timerM = new ArrayList<>();
-			List<Integer> timerS = new ArrayList<>();
 			List<String> fechaPedido = new ArrayList<>();
 			Iterator<Pedido> pedIterator = pedidos.iterator();
 			while(pedIterator.hasNext()){
