@@ -1,15 +1,18 @@
+let table = document.getElementById('tablaPedidos');
 
-function update_timmer() {
-    var mins = document.getElementById("minutos"); 
-    var segs = document.getElementById("segundos");
+for(let i = 1, row; row = table.rows[i]; i++){
 
-        segs.innerText = segs.innerText - 1;
 
-        if(segs.innerText <= 0){
-            segs.innerText = 60;
-            mins.innerText = mins.innerText -1 ;
-        }
-    
+  let caducidad = new Date(row.cells[2].textContent);
+  let mes = caducidad.getDate();
+  caducidad.setDate(caducidad.getMonth() +1);
+  caducidad.setMonth(mes - 1);
+
+  let interval = window.setInterval(function(){
+    let today = new Date();
+
+    let tiempoRestante = Math.round((caducidad - today) /  60000);
+
+    row.cells[5].textContent = tiempoRestante + ' minutos';
+  }, 1000);
 }
-
-setInterval(update_timmer,1000);

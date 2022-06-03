@@ -15,36 +15,36 @@
       <div class="row">
         <!-- Pedidos-->
         <div class="col">
-          <table th:id = "tablePedidos" class="table table-hover" th:if="${!(#lists.isEmpty(pedidos))}">
+          <table id="tablaPedidos" class="table table-hover">
             <thead class="table-success">
               <tr>
                 <th scope="col">PEDIDO</th>
-                <th scope="col">REPARTIDOR</th>
+                <th scope="col">FECHA</th>
+                <th scope="col">CADUCIDAD</th>
+                <th scope="col">CLIENTE</th>
                 <th scope="col">RESTAURANTE</th>
-                <th scope="col">DIR RESTAURANTE</th>
-                <th scope="col">FECHA PEDIDO</th>
-                <th scope="col">FECHA DE CADUCIDAD</th>
-                <th scope="col">TIEMPO </th>
-                <th scope="col">RESTANTE </th>
-                <th scope="col">ACCIONES</th>
+                <th scope="col">TIEMPO RESTANTE</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              <tr th:each="x, data : ${pedidos}">
-                <th scope="row" th:text=${x.id}></th>
-                <td th:text=${x.repartidor.id}></td>
+              <tr th:each="x, attrs : ${pedidos}">
+                <td scope="row" th:text=${x.id}></td>
+                <td scope="row" th:text=${fechaPedido[attrs.index]}></td>
+                <td scope="row" class="caducidad"  th:text="${caducidad[attrs.index]}"></td>
+                <td th:text=${x.cliente.firstName}></td>
                 <td th:text=${x.restaurante.nombre}></td>
-                <td th:text=${x.restaurante.direccion}></td>
-                <td th:text=${fechaPedido[data.index]}></td>
-                <td th:text=${caducidad[data.index]}></td>
-                <td th:id="minutos" th:text=${timerM[data.index]}></td>
-                <td th:id="segundos" th:text= ${timerS[data.index]}></td>
+                <td class="'tiempoRestante'"></td>
+                <td><button type="button" th:attr="data-lat=${x.lat},data-lng=${x.lng},data-id=${x.id},data-dir= ${x.dirEntrega},
+                  data-nombre=${x.restaurante.nombre},data-direccion=${x.restaurante.direccion},
+                  data-nom=${x.cliente.firstName}, data-apellido=${x.cliente.lastName}" class="btn info btn-success">Info</button></td>
                 <td>
-                    <form th:action="@{/user/} + ${user.id}+ @{/chat/} + ${x.id}" method="GET">
-                        <button type="submit" class="btn btn-success">HABLAR</button></td>
-                      </form>
-                </td>
+                  <form th:action="@{/repartidor/} + ${idRepartidor}+ @{/getPedido/} + ${x.id}" method="post">
+                    <button type="submit" class="btn btn-success">Recoger</button></td>
+                  </form>
               </tr>
+            </tbody>
           </table>
         </div>
       </div>
