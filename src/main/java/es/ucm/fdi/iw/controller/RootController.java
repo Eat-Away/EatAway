@@ -217,7 +217,7 @@ public class RootController {
      */
     private Pedido getCoords(Pedido cart){
         GeoApiContext geoContext = new GeoApiContext.Builder()
-		.apiKey("AIzaSyA6OCoRWbqZwfRgHV6z9b4C36fB252sEvI")
+		.apiKey("API KEY REMOVIDA POR SEGURIDAD")
 		.build();
         try{
             log.debug("Buscando coordenadas de la direccion: " + cart.getDirEntrega());
